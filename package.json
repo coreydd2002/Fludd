@@ -1,0 +1,11 @@
+{
+  "name": "fludd-landing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Fludd marketing landing page and early-access form (IS 581).",
+  "scripts": {
+    "dev": "vercel dev",
+    "start": "vercel dev"
+  }
+}
