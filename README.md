@@ -16,22 +16,35 @@ No build step, no framework, no runtime npm dependencies.
 |---|---|
 | `index.html` | The whole page |
 | `styles.css` | Hand-written styles (design tokens in `:root`) |
-| `script.js` | Progressive enhancement: form submit, reveal-on-scroll, footer year |
+| `script.js` | Progressive enhancement: form submit, footer year |
 | `favicon.svg` | Wordmark drop mark |
-| `api/subscribe.js` | Vercel serverless function → sends the form to email via Resend |
+| `api/subscribe.js` | Vercel serverless function → emails the form via Resend |
 | `vercel.json` | Clean URLs + security headers (incl. a strict CSP) |
 
 ## How the form works
 
-Browser → `POST /api/subscribe` (same-origin Vercel function) → **Resend API** →
-email to `coreydd2002@gmail.com` (with `reply_to` set to the lead's address).
+Browser → `POST /api/subscribe` (same-origin Vercel function) → **Resend API**, which
+sends **two** emails:
+
+1. **Notification** to `coreydd2002@gmail.com` with the submission (`reply_to` = the
+   lead), from `onboarding@resend.dev`.
+2. **Confirmation** to the person who filled in the form — *"Thanks for your
+   submission, {first name}! An associate will get back to you shortly."*
+   (`reply_to` = `coreydd2002@gmail.com`).
+
+Details:
 
 - `RESEND_API_KEY` lives only as a server environment variable, never in the client.
 - The function drops bots via a honeypot field and a minimum fill-time check.
-- Sender is Resend's shared `onboarding@resend.dev`. **That sender only delivers to
-  the email the Resend account was created with**, so `coreydd2002@gmail.com` must be
-  that account email until a domain is verified in Resend. Change `NOTIFY_TO` /
-  `FROM` at the top of `api/subscribe.js` if that changes.
+- The notification uses Resend's shared `onboarding@resend.dev`. **That sender only
+  delivers to the email the Resend account was created with**, so
+  `coreydd2002@gmail.com` must be that account email until a domain is verified.
+- **The confirmation to the lead needs a verified Resend domain** — the shared sender
+  can't deliver to arbitrary addresses. Until then that send fails (logged as a
+  warning) and the submission still succeeds; the lead just gets no confirmation.
+  To turn it on: verify a domain in Resend, then set the `CONFIRM_FROM` env var in
+  Vercel to an address on it, e.g. `Fludd <hello@yourdomain.com>`.
+- Change `NOTIFY_TO` / `FROM` at the top of `api/subscribe.js` if the inbox changes.
 
 ## Run locally
 
@@ -55,7 +68,8 @@ vercel dev           # serves the site + /api/subscribe
    Framework preset **Other**, no build command, output directory = root.
    Vercel auto-detects `api/` as serverless functions.
 2. **Project → Settings → Environment Variables**: add `RESEND_API_KEY`
-   (Production + Preview) from the Resend dashboard.
+   (Production + Preview) from the Resend dashboard. Optionally add `CONFIRM_FROM`
+   once a sending domain is verified (see "How the form works").
 3. Deploy, then submit the form on the live URL and confirm the email arrives.
 4. Update `canonical`, `og:url` and `og:image` in `index.html` to the real domain.
 

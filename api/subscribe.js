@@ -1,15 +1,24 @@
-// Vercel serverless function: receive the early-access form and email it via Resend.
+// Vercel serverless function: receive the early-access form, email the details to
+// the Fludd inbox, and send the submitter a confirmation.
 //
 // The Resend API key must never reach the browser, so it lives here as the
 // RESEND_API_KEY environment variable (set in the Vercel project settings).
 //
-// Sender note: `onboarding@resend.dev` is Resend's shared test sender. It can
-// only deliver to the email address the Resend account was created with, so
-// NOTIFY_TO below must be that address until a domain is verified in Resend.
+// Two senders:
+//  - FROM  (internal notification -> NOTIFY_TO): Resend's shared
+//    `onboarding@resend.dev` is allowed to deliver to the Resend account's own
+//    email, and NOTIFY_TO must be that address, so this works with zero setup.
+//  - CONFIRM_FROM  (confirmation -> whoever filled in the form): the shared
+//    sender CANNOT deliver to arbitrary addresses. The confirmation only reaches
+//    leads once a domain is verified in Resend. Then set the CONFIRM_FROM env var
+//    in Vercel to an address on that domain, e.g. `Fludd <hello@yourdomain.com>`.
+//    Until then the confirmation send fails, is logged, and the submission still
+//    succeeds.
 
 const RESEND_ENDPOINT = 'https://api.resend.com/emails';
 const FROM = 'Fludd early access <onboarding@resend.dev>';
 const NOTIFY_TO = 'coreydd2002@gmail.com';
+const CONFIRM_FROM = process.env.CONFIRM_FROM || FROM;
 
 const MAX = { name: 120, email: 120, company: 120, poolCount: 20, message: 2000 };
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -44,6 +53,21 @@ function respond(req, res, status, ok, message) {
     '<h1 style="font-size:1.5rem">' + heading + '</h1><p>' + body + '</p>' +
     '<p><a href="/#early-access" style="color:#085aa8">← Back to Fludd</a></p></div>'
   );
+}
+
+async function sendEmail(apiKey, message) {
+  const resendRes = await fetch(RESEND_ENDPOINT, {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer ' + apiKey,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(message)
+  });
+  if (!resendRes.ok) {
+    const detail = await resendRes.text().catch(function () { return ''; });
+    throw new Error('Resend responded ' + resendRes.status + ' ' + detail);
+  }
 }
 
 export default async function handler(req, res) {
@@ -97,7 +121,7 @@ export default async function handler(req, res) {
   const referer = req.headers.referer || req.headers.referrer || '—';
   const userAgent = req.headers['user-agent'] || '—';
 
-  const text = [
+  const notifyText = [
     'New Fludd early-access request',
     '',
     'Name:        ' + name,
@@ -114,7 +138,7 @@ export default async function handler(req, res) {
     'User agent:  ' + userAgent
   ].join('\n');
 
-  const html =
+  const notifyHtml =
     '<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;' +
     'font-size:15px;line-height:1.6;color:#0e1b2c">' +
     '<h2 style="margin:0 0 12px">New Fludd early-access request</h2>' +
@@ -134,34 +158,39 @@ export default async function handler(req, res) {
     '<br>UA: ' + escapeHtml(userAgent) + '</p>' +
     '</div>';
 
+  // 1. Internal notification — must succeed for the submission to count.
   try {
-    const resendRes = await fetch(RESEND_ENDPOINT, {
-      method: 'POST',
-      headers: {
-        Authorization: 'Bearer ' + apiKey,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: FROM,
-        to: [NOTIFY_TO],
-        reply_to: email,
-        subject: 'New Fludd early-access request — ' + company,
-        text: text,
-        html: html
-      })
+    await sendEmail(apiKey, {
+      from: FROM,
+      to: [NOTIFY_TO],
+      reply_to: email,
+      subject: 'New Fludd early-access request — ' + company,
+      text: notifyText,
+      html: notifyHtml
     });
-
-    if (!resendRes.ok) {
-      const detail = await resendRes.text().catch(function () { return ''; });
-      console.error('Resend responded', resendRes.status, detail);
-      return respond(req, res, 502, false, 'Could not send that right now.');
-    }
-
-    return respond(req, res, 200, true);
   } catch (err) {
-    console.error('subscribe handler failed', err);
+    console.error('notification email failed', err);
     return respond(req, res, 502, false, 'Could not send that right now.');
   }
+
+  // 2. Confirmation to the submitter — best effort. Needs a verified Resend
+  //    domain (see CONFIRM_FROM note at the top); a failure here is logged but
+  //    does not fail the submission.
+  try {
+    const firstName = name.split(/\s+/)[0] || name;
+    await sendEmail(apiKey, {
+      from: CONFIRM_FROM,
+      to: [email],
+      reply_to: NOTIFY_TO,
+      subject: 'Thanks for reaching out to Fludd',
+      text: confirmationText(firstName),
+      html: confirmationHtml(firstName)
+    });
+  } catch (err) {
+    console.warn('confirmation email not sent (verify a domain in Resend to enable):', err.message);
+  }
+
+  return respond(req, res, 200, true);
 }
 
 function row(label, valueHtml) {
@@ -171,5 +200,37 @@ function row(label, valueHtml) {
     '</td><td><strong>' +
     valueHtml +
     '</strong></td></tr>'
+  );
+}
+
+function confirmationText(firstName) {
+  return [
+    'Hi ' + firstName + ',',
+    '',
+    'Thanks for your submission! An associate will get back to you shortly.',
+    '',
+    'You reached out about early access to Fludd, the client-experience platform',
+    'for pool service companies. We are onboarding a small group of companies now',
+    'and will follow up soon about next steps.',
+    '',
+    'Need something sooner? Just reply to this email.',
+    '',
+    '— The Fludd team'
+  ].join('\n');
+}
+
+function confirmationHtml(firstName) {
+  return (
+    '<div style="font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;' +
+    'font-size:15px;line-height:1.6;color:#0e1b2c;max-width:520px">' +
+    '<h2 style="margin:0 0 12px;color:#0b6bcb">Thanks for your submission, ' +
+    escapeHtml(firstName) + '!</h2>' +
+    '<p style="margin:0 0 12px">An associate will get back to you shortly.</p>' +
+    '<p style="margin:0 0 12px">You reached out about early access to <strong>Fludd</strong>, ' +
+    'the client-experience platform for pool service companies. We’re onboarding a small ' +
+    'group of companies right now and will follow up soon about next steps.</p>' +
+    '<p style="margin:0 0 12px">Need something sooner? Just reply to this email.</p>' +
+    '<p style="margin:16px 0 0;color:#4a5b6d">— The Fludd team</p>' +
+    '</div>'
   );
 }
