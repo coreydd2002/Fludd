@@ -17,7 +17,8 @@ No build step, no framework, no runtime npm dependencies.
 | `index.html` | The whole page |
 | `styles.css` | Hand-written styles (design tokens in `:root`) |
 | `script.js` | Progressive enhancement: form submit, footer year |
-| `favicon.svg` | Wordmark drop mark |
+| `logo.jpg` | The Fludd duck logo (source asset) |
+| `favicon.png` · `apple-touch-icon.png` · `hero-logo.jpg` · `og-image.jpg` | Icons, hero image and social-preview image derived from the logo |
 | `api/subscribe.js` | Vercel serverless function → emails the form via Resend |
 | `vercel.json` | Clean URLs + security headers (incl. a strict CSP) |
 
@@ -81,6 +82,5 @@ redirect from `/api/subscribe` to `/.netlify/functions/subscribe`, and set the s
 
 ## Open items
 
-- `og-image.png` (1200×630) and `apple-touch-icon.png` — meta tags reference them; images still to be made.
 - Exact pricing number — intentionally omitted on the page.
 - USPTO trademark check on "Fludd".

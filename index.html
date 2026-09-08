@@ -15,13 +15,14 @@
   <meta property="og:title" content="Fludd — the client experience that keeps pool customers from shopping around" />
   <meta property="og:description" content="A consumer-grade app for every pool you service, optimized routing for your crew, and retention analytics for the office — in one platform." />
   <meta property="og:url" content="https://fludd.vercel.app/" />
-  <meta property="og:image" content="https://fludd.vercel.app/og-image.png" />
+  <meta property="og:image" content="https://fludd.vercel.app/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Fludd — pool service, built around the customer" />
   <meta name="twitter:description" content="The client experience that keeps your customers from shopping around." />
-  <meta name="twitter:image" content="https://fludd.vercel.app/og-image.png" />
+  <meta name="twitter:image" content="https://fludd.vercel.app/og-image.jpg" />
 
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -46,22 +47,12 @@
   <header class="site-header">
     <div class="container">
       <a class="brand" href="#top" aria-label="Fludd home">
-        <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-          <defs>
-            <linearGradient id="brandGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#2ba9e0" />
-              <stop offset="1" stop-color="#0b6bcb" />
-            </linearGradient>
-          </defs>
-          <rect width="64" height="64" rx="16" fill="url(#brandGrad)" />
-          <path d="M32 12c8.5 10.5 13.5 17.2 13.5 25a13.5 13.5 0 0 1-27 0c0-7.8 5-14.5 13.5-25z" fill="#fff" />
-        </svg>
+        <img src="favicon.png" alt="" width="128" height="128" />
         <span>Fludd</span>
       </a>
 
       <nav class="nav-links" aria-label="Primary">
-        <a href="#management">Product</a>
-        <a href="#how">How it works</a>
+        <a href="#management">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -89,71 +80,13 @@
           </p>
           <div class="hero-actions">
             <a class="btn btn-lg" href="#early-access">Request early access</a>
-            <a class="btn btn-ghost btn-lg" href="#how">See how it works</a>
+            <a class="btn btn-ghost btn-lg" href="#management">See how it works</a>
           </div>
           <p class="hero-fine">Free to join · Help shape the roadmap · No spam, ever</p>
         </div>
 
         <div class="hero-art">
-          <svg class="mock" viewBox="0 0 300 600" role="img" aria-labelledby="phone-title" xmlns="http://www.w3.org/2000/svg">
-            <title id="phone-title">The Fludd customer app showing a homeowner's next visit, recent service and messages with their provider</title>
-            <defs>
-              <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#f2f8fd" />
-                <stop offset="1" stop-color="#ffffff" />
-              </linearGradient>
-              <linearGradient id="visitGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#0b6bcb" />
-                <stop offset="1" stop-color="#2ba9e0" />
-              </linearGradient>
-            </defs>
-
-            <rect x="8" y="8" width="284" height="584" rx="46" fill="#ffffff" stroke="#dce7ef" stroke-width="2" />
-            <rect x="20" y="20" width="260" height="560" rx="34" fill="url(#screenGrad)" />
-
-            <text x="44" y="52" font-size="13" font-weight="700" fill="#0e1b2c">9:41</text>
-            <rect x="120" y="30" width="60" height="18" rx="9" fill="#0e1b2c" />
-            <rect x="228" y="40" width="16" height="10" rx="2" fill="#0e1b2c" />
-            <rect x="250" y="38" width="20" height="12" rx="3" fill="#0e1b2c" />
-
-            <text x="40" y="92" font-size="19" font-weight="800" fill="#0e1b2c">Maple Street pool</text>
-            <text x="40" y="112" font-size="12.5" fill="#6a7b8b">Weekly service · Fridays</text>
-
-            <rect x="36" y="128" width="228" height="96" rx="18" fill="url(#visitGrad)" />
-            <text x="52" y="156" font-size="10.5" letter-spacing="1.5" font-weight="700" fill="#cfe6fb">NEXT VISIT</text>
-            <text x="52" y="180" font-size="17" font-weight="800" fill="#ffffff">Thursday, Sep 10</text>
-            <text x="52" y="200" font-size="12.5" fill="#e3f0fb">8:00–10:00 AM · with Marcus</text>
-            <circle cx="232" cy="176" r="18" fill="rgba(255,255,255,.18)" />
-            <path d="M224 176h16M232 168v16" stroke="#fff" stroke-width="2.5" stroke-linecap="round" />
-
-            <text x="40" y="256" font-size="10.5" letter-spacing="1.5" font-weight="700" fill="#8595a3">RECENT SERVICE</text>
-
-            <circle cx="48" cy="278" r="10" fill="#e3f5ec" />
-            <path d="M43 278l4 4 6-7" stroke="#1c9c6b" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-            <text x="68" y="275" font-size="13" font-weight="700" fill="#0e1b2c">Sep 3 — all readings normal</text>
-            <text x="68" y="291" font-size="11.5" fill="#6a7b8b">Chlorine 3.0 ppm · pH 7.4 · skimmed</text>
-
-            <circle cx="48" cy="320" r="10" fill="#e3f5ec" />
-            <path d="M43 320l4 4 6-7" stroke="#1c9c6b" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-            <text x="68" y="317" font-size="13" font-weight="700" fill="#0e1b2c">Aug 27 — filter cleaned</text>
-            <text x="68" y="333" font-size="11.5" fill="#6a7b8b">Cartridge rinsed · basket cleared</text>
-
-            <text x="40" y="366" font-size="10.5" letter-spacing="1.5" font-weight="700" fill="#8595a3">PHOTO REPORT</text>
-            <rect x="40" y="376" width="66" height="50" rx="10" fill="#bfe3f2" />
-            <rect x="114" y="376" width="66" height="50" rx="10" fill="#d9f0e4" />
-            <rect x="188" y="376" width="66" height="50" rx="10" fill="#cfe6fb" />
-
-            <rect x="40" y="446" width="180" height="38" rx="16" fill="#eef4fa" />
-            <text x="56" y="470" font-size="12" fill="#334b60">Water looks perfect — thanks!</text>
-            <rect x="92" y="492" width="168" height="38" rx="16" fill="#0b6bcb" />
-            <text x="108" y="516" font-size="12" fill="#ffffff">Anytime! See you Friday 👋</text>
-
-            <line x1="20" y1="548" x2="280" y2="548" stroke="#e7eef4" stroke-width="1.5" />
-            <circle cx="70" cy="566" r="5" fill="#0b6bcb" />
-            <circle cx="123" cy="566" r="5" fill="#c2d0dc" />
-            <circle cx="177" cy="566" r="5" fill="#c2d0dc" />
-            <circle cx="230" cy="566" r="5" fill="#c2d0dc" />
-          </svg>
+          <img src="hero-logo.jpg" alt="The Fludd logo: a cartoon rubber duck with a screw-head eye, on a deep blue background" width="768" height="768" />
         </div>
       </div>
     </section>
@@ -524,32 +457,8 @@
       </div>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <section id="how" class="section band">
-      <div class="container">
-        <div class="section-head center">
-          <p class="eyebrow">How it works</p>
-          <h2>Onboard your customers. Keep them.</h2>
-        </div>
-        <ol class="steps">
-          <li class="step">
-            <h4>Bring your customers in</h4>
-            <p class="muted">Invite the customers you already have into the Fludd app in minutes — no data migration marathon.</p>
-          </li>
-          <li class="step">
-            <h4>Your team runs the day</h4>
-            <p class="muted">Techs follow optimized routes and log every stop. The office sees it happen in real time.</p>
-          </li>
-          <li class="step">
-            <h4>Customers stay — and refer</h4>
-            <p class="muted">They see the value on every visit, so they don't go looking elsewhere — and they tell their neighbors.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
     <!-- PRICING -->
-    <section id="pricing" class="section">
+    <section id="pricing" class="section band">
       <div class="container">
         <div class="section-head center">
           <p class="eyebrow">Pricing</p>
@@ -683,15 +592,11 @@
     <div class="container">
       <div class="footer-row">
         <a class="brand" href="#top" aria-label="Fludd home">
-          <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-            <rect width="64" height="64" rx="16" fill="#0b6bcb" />
-            <path d="M32 12c8.5 10.5 13.5 17.2 13.5 25a13.5 13.5 0 0 1-27 0c0-7.8 5-14.5 13.5-25z" fill="#fff" />
-          </svg>
+          <img src="favicon.png" alt="" width="128" height="128" />
           <span>Fludd</span>
         </a>
         <nav class="footer-nav" aria-label="Footer">
-          <a href="#management">Product</a>
-          <a href="#how">How it works</a>
+          <a href="#management">How it works</a>
           <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
           <a href="#early-access">Early access</a>

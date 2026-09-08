@@ -181,7 +181,7 @@ section[id] { scroll-margin-top: 84px; }
   color: var(--ink);
   text-decoration: none;
 }
-.brand svg { width: 30px; height: 30px; display: block; }
+.brand img { width: 30px; height: 30px; display: block; border-radius: 8px; }
 
 .nav-links { display: none; gap: 28px; }
 .nav-links a {
@@ -222,14 +222,20 @@ section[id] { scroll-margin-top: 84px; }
 
 .hero-art {
   justify-self: center;
-  width: min(320px, 76vw);
-  filter: drop-shadow(var(--shadow-lg));
+  width: min(440px, 90vw);
+  filter: drop-shadow(var(--shadow-md));
+}
+.hero-art img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--r-lg);
 }
 .mock text { font-family: var(--font); }
 
 @media (min-width: 940px) {
   .hero .container { grid-template-columns: 1.05fr .95fr; align-items: center; }
-  .hero-art { justify-self: end; width: min(360px, 40vw); }
+  .hero-art { justify-self: end; width: min(520px, 46vw); }
 }
 
 /* ---- Band (why now / how it works background) --------------------------- */
@@ -318,40 +324,6 @@ section[id] { scroll-margin-top: 84px; }
   font-style: italic;
   color: var(--ink-faint);
 }
-
-/* ---- Steps --------------------------------------------------------- */
-
-.steps {
-  display: grid;
-  gap: 24px;
-  counter-reset: step;
-  list-style: none;
-}
-@media (min-width: 820px) {
-  .steps { grid-template-columns: repeat(3, 1fr); }
-}
-.step {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--r);
-  padding: 28px;
-  box-shadow: var(--shadow-sm);
-}
-.step::before {
-  counter-increment: step;
-  content: counter(step);
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
-  margin-bottom: 16px;
-  border-radius: 50%;
-  background: var(--blue);
-  color: #fff;
-  font-weight: 800;
-}
-.step h4 { font-size: 1.15rem; margin-bottom: 6px; }
-.step p { margin: 0; }
 
 /* ---- Pricing ----------------------------------------------------- */
 
@@ -531,7 +503,7 @@ section[id] { scroll-margin-top: 84px; }
 }
 .site-footer .container { display: grid; gap: 22px; }
 .site-footer .brand { color: #fff; }
-.site-footer .brand svg { width: 28px; height: 28px; }
+.site-footer .brand img { width: 28px; height: 28px; }
 
 .footer-row {
   display: flex;
