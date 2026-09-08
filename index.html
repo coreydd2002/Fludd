@@ -60,7 +60,7 @@
       </a>
 
       <nav class="nav-links" aria-label="Primary">
-        <a href="#portals">Portals</a>
+        <a href="#management">Product</a>
         <a href="#how">How it works</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
@@ -95,7 +95,7 @@
         </div>
 
         <div class="hero-art">
-          <svg class="phone" viewBox="0 0 300 600" role="img" aria-labelledby="phone-title" xmlns="http://www.w3.org/2000/svg">
+          <svg class="mock" viewBox="0 0 300 600" role="img" aria-labelledby="phone-title" xmlns="http://www.w3.org/2000/svg">
             <title id="phone-title">The Fludd customer app showing a homeowner's next visit, recent service and messages with their provider</title>
             <defs>
               <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
@@ -171,105 +171,354 @@
       </div>
     </section>
 
-    <!-- PORTALS -->
-    <section id="portals" class="section">
+    <!-- OVERALL MANAGEMENT -->
+    <section id="management" class="section">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow">The platform</p>
-          <h2>Three portals. One platform.</h2>
+        <div class="section-head center">
+          <p class="eyebrow">Admin portal · Desktop</p>
+          <h2>Overall management</h2>
           <p class="lead">
-            Everyone in a pool business has a different job. Fludd gives each of them the
-            screen that fits — and puts the customer's experience first.
+            Everything an owner needs on one screen — who's working, where they're
+            routed today, and how the month is tracking.
           </p>
         </div>
 
-        <div class="feature">
+        <div class="shot-desktop">
+          <svg class="mock" viewBox="0 0 960 620" role="img" aria-labelledby="admin-title" xmlns="http://www.w3.org/2000/svg">
+            <title id="admin-title">The Fludd admin dashboard on desktop: employee hours and routes, monthly pool totals, revenue charts and a customer list</title>
+
+            <!-- browser chrome -->
+            <rect x="1" y="1" width="958" height="618" rx="14" fill="#ffffff" stroke="#dce7ef" stroke-width="2" />
+            <circle cx="22" cy="20" r="5" fill="#e8837a" />
+            <circle cx="40" cy="20" r="5" fill="#ecc069" />
+            <circle cx="58" cy="20" r="5" fill="#7cc98a" />
+            <rect x="84" y="9" width="240" height="22" rx="11" fill="#f2f6fa" />
+            <text x="98" y="24" font-size="11" fill="#5f6f81">app.fludd.com/dashboard</text>
+            <line x1="1" y1="38" x2="959" y2="38" stroke="#e7eef4" stroke-width="1.5" />
+
+            <!-- sidebar -->
+            <rect x="14" y="52" width="170" height="552" rx="12" fill="#f2f8fd" />
+            <rect x="28" y="68" width="24" height="24" rx="7" fill="#0b6bcb" />
+            <path d="M40 72.5c3.2 4 5.1 6.5 5.1 9.4a5.1 5.1 0 0 1-10.2 0c0-2.9 1.9-5.4 5.1-9.4z" fill="#fff" />
+            <text x="60" y="85" font-size="15" font-weight="800" fill="#0e1b2c">Fludd</text>
+            <rect x="26" y="108" width="146" height="30" rx="9" fill="#0b6bcb" />
+            <text x="42" y="128" font-size="12.5" font-weight="700" fill="#ffffff">Dashboard</text>
+            <text x="42" y="166" font-size="12.5" fill="#4a5b6d">Employees</text>
+            <text x="42" y="200" font-size="12.5" fill="#4a5b6d">Customers</text>
+            <text x="42" y="234" font-size="12.5" fill="#4a5b6d">Routes</text>
+            <text x="42" y="268" font-size="12.5" fill="#4a5b6d">Reports</text>
+            <text x="42" y="302" font-size="12.5" fill="#4a5b6d">Billing</text>
+
+            <!-- header -->
+            <text x="208" y="82" font-size="18" font-weight="800" fill="#0e1b2c">Good morning, Corey</text>
+            <text x="208" y="100" font-size="12" fill="#4a5b6d">Tuesday, September 8 · 4 techs on route</text>
+            <circle cx="928" cy="86" r="15" fill="#cfe6fb" />
+            <text x="928" y="90" font-size="11" font-weight="700" fill="#0b6bcb" text-anchor="middle">CD</text>
+
+            <!-- KPI tiles -->
+            <rect x="208" y="116" width="172" height="64" rx="10" fill="#f7fafc" stroke="#e7eef4" />
+            <text x="222" y="137" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">POOLS THIS MONTH</text>
+            <text x="222" y="162" font-size="18" font-weight="800" fill="#0e1b2c">636</text>
+            <text x="366" y="162" font-size="10.5" font-weight="700" fill="#1c9c6b" text-anchor="end">+8%</text>
+
+            <rect x="396" y="116" width="172" height="64" rx="10" fill="#f7fafc" stroke="#e7eef4" />
+            <text x="410" y="137" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">ON-TIME VISITS</text>
+            <text x="410" y="162" font-size="18" font-weight="800" fill="#0e1b2c">97%</text>
+
+            <rect x="584" y="116" width="172" height="64" rx="10" fill="#f7fafc" stroke="#e7eef4" />
+            <text x="598" y="137" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">ACTIVE CUSTOMERS</text>
+            <text x="598" y="162" font-size="18" font-weight="800" fill="#0e1b2c">214</text>
+            <text x="742" y="162" font-size="10.5" font-weight="700" fill="#1c9c6b" text-anchor="end">+11</text>
+
+            <rect x="772" y="116" width="172" height="64" rx="10" fill="#f7fafc" stroke="#e7eef4" />
+            <text x="786" y="137" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">REVENUE · SEPT</text>
+            <text x="786" y="162" font-size="18" font-weight="800" fill="#0e1b2c">$38.4k</text>
+            <text x="930" y="162" font-size="10.5" font-weight="700" fill="#1c9c6b" text-anchor="end">+6%</text>
+
+            <!-- bar chart: pools per week -->
+            <rect x="208" y="196" width="360" height="150" rx="12" fill="#ffffff" stroke="#e0eaf1" />
+            <text x="224" y="220" font-size="12" font-weight="700" fill="#0e1b2c">Pools serviced per week</text>
+            <line x1="224" y1="322" x2="552" y2="322" stroke="#e7eef4" stroke-width="1.5" />
+            <rect x="236" y="263" width="44" height="59" rx="4" fill="#a6d0f2" />
+            <rect x="296" y="256" width="44" height="66" rx="4" fill="#a6d0f2" />
+            <rect x="356" y="259" width="44" height="63" rx="4" fill="#a6d0f2" />
+            <rect x="416" y="251" width="44" height="71" rx="4" fill="#a6d0f2" />
+            <rect x="476" y="262" width="44" height="60" rx="4" fill="#0b6bcb" />
+            <text x="258" y="256" font-size="9" fill="#5f6f81" text-anchor="middle">118</text>
+            <text x="318" y="249" font-size="9" fill="#5f6f81" text-anchor="middle">131</text>
+            <text x="378" y="252" font-size="9" fill="#5f6f81" text-anchor="middle">126</text>
+            <text x="438" y="244" font-size="9" fill="#5f6f81" text-anchor="middle">142</text>
+            <text x="498" y="255" font-size="9" fill="#5f6f81" text-anchor="middle">119</text>
+            <text x="258" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">W1</text>
+            <text x="318" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">W2</text>
+            <text x="378" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">W3</text>
+            <text x="438" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">W4</text>
+            <text x="498" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">W5</text>
+
+            <!-- line chart: revenue -->
+            <rect x="584" y="196" width="360" height="150" rx="12" fill="#ffffff" stroke="#e0eaf1" />
+            <text x="600" y="220" font-size="12" font-weight="700" fill="#0e1b2c">Monthly revenue</text>
+            <line x1="600" y1="250" x2="928" y2="250" stroke="#eef3f8" stroke-width="1" />
+            <line x1="600" y1="286" x2="928" y2="286" stroke="#eef3f8" stroke-width="1" />
+            <line x1="600" y1="322" x2="928" y2="322" stroke="#e7eef4" stroke-width="1.5" />
+            <path d="M600 304 L655 292 L710 298 L765 272 L820 264 L875 250 L928 238 L928 322 L600 322 Z" fill="rgba(11,107,203,.12)" />
+            <path d="M600 304 L655 292 L710 298 L765 272 L820 264 L875 250 L928 238" fill="none" stroke="#0b6bcb" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" />
+            <circle cx="928" cy="238" r="4" fill="#0b6bcb" stroke="#ffffff" stroke-width="1.5" />
+            <text x="920" y="228" font-size="10.5" font-weight="700" fill="#0b6bcb" text-anchor="end">$38.4k</text>
+            <text x="608" y="337" font-size="9" fill="#5f6f81">May</text>
+            <text x="682" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">Jun</text>
+            <text x="764" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">Jul</text>
+            <text x="846" y="337" font-size="9" fill="#5f6f81" text-anchor="middle">Aug</text>
+            <text x="920" y="337" font-size="9" fill="#5f6f81" text-anchor="end">Sep</text>
+
+            <!-- team table -->
+            <rect x="208" y="362" width="448" height="238" rx="12" fill="#ffffff" stroke="#e0eaf1" />
+            <text x="224" y="388" font-size="12.5" font-weight="700" fill="#0e1b2c">Team this week</text>
+            <text x="224" y="410" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">EMPLOYEE</text>
+            <text x="358" y="410" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">HRS WK</text>
+            <text x="416" y="410" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81">ROUTE TODAY</text>
+            <text x="640" y="410" font-size="9.5" letter-spacing="1" font-weight="700" fill="#5f6f81" text-anchor="end">POOLS MO</text>
+
+            <rect x="216" y="420" width="432" height="32" rx="6" fill="#f7fafc" />
+            <circle cx="234" cy="436" r="11" fill="#eaf3fc" />
+            <text x="234" y="439" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">MW</text>
+            <text x="254" y="440" font-size="12" font-weight="600" fill="#0e1b2c">Marcus Webb</text>
+            <text x="358" y="440" font-size="12" fill="#0e1b2c">38.5</text>
+            <text x="416" y="440" font-size="11" fill="#4a5b6d">Northside · 14 stops</text>
+            <text x="640" y="440" font-size="12" font-weight="700" fill="#0e1b2c" text-anchor="end">212</text>
+
+            <circle cx="234" cy="476" r="11" fill="#eaf3fc" />
+            <text x="234" y="479" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">JO</text>
+            <text x="254" y="480" font-size="12" font-weight="600" fill="#0e1b2c">Jenna Ortiz</text>
+            <text x="358" y="480" font-size="12" fill="#0e1b2c">41.0</text>
+            <text x="416" y="480" font-size="11" fill="#4a5b6d">Lakeview · 16 stops</text>
+            <text x="640" y="480" font-size="12" font-weight="700" fill="#0e1b2c" text-anchor="end">246</text>
+
+            <rect x="216" y="500" width="432" height="32" rx="6" fill="#f7fafc" />
+            <circle cx="234" cy="516" r="11" fill="#eaf3fc" />
+            <text x="234" y="519" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">SP</text>
+            <text x="254" y="520" font-size="12" font-weight="600" fill="#0e1b2c">Sam Patel</text>
+            <text x="358" y="520" font-size="12" fill="#0e1b2c">29.5</text>
+            <text x="416" y="520" font-size="11" fill="#4a5b6d">Downtown · 11 stops</text>
+            <text x="640" y="520" font-size="12" font-weight="700" fill="#0e1b2c" text-anchor="end">178</text>
+
+            <circle cx="234" cy="556" r="11" fill="#eaf3fc" />
+            <text x="234" y="559" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">DC</text>
+            <text x="254" y="560" font-size="12" font-weight="600" fill="#0e1b2c">DeShawn Cole</text>
+            <text x="358" y="560" font-size="12" fill="#0e1b2c">35.0</text>
+            <text x="416" y="560" font-size="11" fill="#4a5b6d">Westside · 13 stops</text>
+            <text x="640" y="560" font-size="12" font-weight="700" fill="#0e1b2c" text-anchor="end">201</text>
+
+            <!-- customers panel -->
+            <rect x="672" y="362" width="272" height="238" rx="12" fill="#ffffff" stroke="#e0eaf1" />
+            <text x="686" y="388" font-size="12.5" font-weight="700" fill="#0e1b2c">Customers</text>
+            <text x="930" y="388" font-size="10.5" font-weight="700" fill="#0b6bcb" text-anchor="end">View all</text>
+
+            <circle cx="698" cy="424" r="11" fill="#eaf3fc" />
+            <text x="698" y="427" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">H</text>
+            <text x="718" y="421" font-size="12" font-weight="600" fill="#0e1b2c">Henderson family</text>
+            <text x="718" y="436" font-size="10.5" fill="#4a5b6d">Next visit Thu · Weekly</text>
+            <circle cx="922" cy="424" r="4" fill="#1c9c6b" />
+
+            <circle cx="698" cy="468" r="11" fill="#eaf3fc" />
+            <text x="698" y="471" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">A</text>
+            <text x="718" y="465" font-size="12" font-weight="600" fill="#0e1b2c">R. Alvarez</text>
+            <text x="718" y="480" font-size="10.5" fill="#4a5b6d">Next visit Fri · Weekly</text>
+            <circle cx="922" cy="468" r="4" fill="#1c9c6b" />
+
+            <circle cx="698" cy="512" r="11" fill="#eaf3fc" />
+            <text x="698" y="515" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">M</text>
+            <text x="718" y="509" font-size="12" font-weight="600" fill="#0e1b2c">Maple St. HOA</text>
+            <text x="718" y="524" font-size="10.5" fill="#4a5b6d">Next visit Mon · 3 pools</text>
+            <circle cx="922" cy="512" r="4" fill="#1c9c6b" />
+
+            <circle cx="698" cy="556" r="11" fill="#eaf3fc" />
+            <text x="698" y="559" font-size="8.5" font-weight="700" fill="#0b6bcb" text-anchor="middle">N</text>
+            <text x="718" y="553" font-size="12" font-weight="600" fill="#0e1b2c">K. Nguyen</text>
+            <text x="718" y="568" font-size="10.5" fill="#4a5b6d">Next visit Tue · Bi-weekly</text>
+            <circle cx="922" cy="556" r="4" fill="#1c9c6b" />
+          </svg>
+        </div>
+
+        <ul class="ticks ticks-row">
+          <li>Weekly logged hours and monthly pool totals for every tech</li>
+          <li>Today's routes at a glance, in real time</li>
+          <li>Charts for the big picture — plus every customer's status</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- DAILY USE -->
+    <section id="daily-use" class="section band">
+      <div class="container">
+        <div class="feature flip">
           <div class="feature-body">
-            <span class="tag">The differentiator</span>
-            <h3>Your brand, in every customer's pocket</h3>
+            <p class="eyebrow">Employee portal · Mobile</p>
+            <h2>Daily use</h2>
             <p class="lead">
-              A native, consumer-grade app for the homeowner — not a billing portal
-              bolted on. When your service looks this good from the couch, customers
-              stop price-shopping.
+              Techs open Fludd and the day is already planned — an optimized route,
+              the next stop, and everything they need to service it.
             </p>
             <ul class="ticks">
-              <li>Service history, upcoming visits and live ETAs</li>
-              <li>Photo and water-chemistry reports after every visit</li>
-              <li>One-tap messaging with their actual provider</li>
-              <li>Invoices and AutoPay-ready billing in the same place</li>
+              <li>Pools remaining today, with live progress</li>
+              <li>Next stop with the details that matter — time window, gate code, notes</li>
+              <li>One-tap directions along an optimized route</li>
             </ul>
+            <p class="note">Routing is table stakes — we just do it well.</p>
           </div>
-          <div class="feature-media">
-            <svg class="report" viewBox="0 0 380 280" role="img" aria-labelledby="report-title" xmlns="http://www.w3.org/2000/svg">
-              <title id="report-title">A Fludd service report showing water chemistry readings, a completed checklist and photos from the visit</title>
-              <rect x="1" y="1" width="378" height="278" rx="20" fill="#fff" stroke="#e0eaf1" stroke-width="2" />
-              <text x="24" y="40" font-size="16" font-weight="800" fill="#0e1b2c">Service report</text>
-              <rect x="268" y="24" width="88" height="24" rx="12" fill="#eaf3fc" />
-              <text x="284" y="40" font-size="11.5" font-weight="700" fill="#0b6bcb">Fri, Sep 5</text>
 
-              <rect x="24" y="62" width="102" height="60" rx="12" fill="#f2f8fd" />
-              <text x="36" y="86" font-size="10" letter-spacing="1" font-weight="700" fill="#8595a3">CHLORINE</text>
-              <text x="36" y="108" font-size="18" font-weight="800" fill="#0e1b2c">3.0<tspan font-size="11" fill="#6a7b8b"> ppm</tspan></text>
+          <div class="feature-phone">
+            <svg class="mock" viewBox="0 0 300 600" role="img" aria-labelledby="emp-title" xmlns="http://www.w3.org/2000/svg">
+              <title id="emp-title">The Fludd employee app on a phone: pools left today, the next stop with a directions button, and the upcoming route</title>
+              <defs>
+                <linearGradient id="routeGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#0b6bcb" />
+                  <stop offset="1" stop-color="#2ba9e0" />
+                </linearGradient>
+              </defs>
 
-              <rect x="139" y="62" width="102" height="60" rx="12" fill="#f2f8fd" />
-              <text x="151" y="86" font-size="10" letter-spacing="1" font-weight="700" fill="#8595a3">pH</text>
-              <text x="151" y="108" font-size="18" font-weight="800" fill="#0e1b2c">7.4</text>
+              <rect x="8" y="8" width="284" height="584" rx="46" fill="#ffffff" stroke="#dce7ef" stroke-width="2" />
+              <rect x="20" y="20" width="260" height="560" rx="34" fill="#f5fafd" />
 
-              <rect x="254" y="62" width="102" height="60" rx="12" fill="#f2f8fd" />
-              <text x="266" y="86" font-size="10" letter-spacing="1" font-weight="700" fill="#8595a3">ALKALINITY</text>
-              <text x="266" y="108" font-size="18" font-weight="800" fill="#0e1b2c">90<tspan font-size="11" fill="#6a7b8b"> ppm</tspan></text>
+              <text x="44" y="52" font-size="13" font-weight="700" fill="#0e1b2c">9:41</text>
+              <rect x="120" y="30" width="60" height="18" rx="9" fill="#0e1b2c" />
+              <rect x="228" y="40" width="16" height="10" rx="2" fill="#0e1b2c" />
+              <rect x="250" y="38" width="20" height="12" rx="3" fill="#0e1b2c" />
 
-              <circle cx="32" cy="150" r="9" fill="#e3f5ec" />
-              <path d="M27 150l4 4 6-7" stroke="#1c9c6b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-              <text x="50" y="155" font-size="12.5" fill="#334b60">Skimmed surface &amp; emptied baskets</text>
+              <text x="40" y="92" font-size="19" font-weight="800" fill="#0e1b2c">Tuesday's route</text>
+              <text x="40" y="112" font-size="12.5" fill="#6a7b8b">Northside · 14 stops</text>
 
-              <circle cx="32" cy="178" r="9" fill="#e3f5ec" />
-              <path d="M27 178l4 4 6-7" stroke="#1c9c6b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-              <text x="50" y="183" font-size="12.5" fill="#334b60">Brushed walls &amp; vacuumed</text>
+              <rect x="36" y="128" width="228" height="84" rx="18" fill="#ffffff" stroke="#e0eaf1" />
+              <text x="56" y="178" font-size="34" font-weight="800" fill="#0e1b2c">6</text>
+              <text x="92" y="160" font-size="12.5" font-weight="700" fill="#0e1b2c">pools left today</text>
+              <text x="92" y="176" font-size="11" fill="#6a7b8b">8 of 14 done · on schedule</text>
+              <rect x="56" y="190" width="188" height="8" rx="4" fill="#eaf3fc" />
+              <rect x="56" y="190" width="107" height="8" rx="4" fill="#0b6bcb" />
 
-              <circle cx="32" cy="206" r="9" fill="#e3f5ec" />
-              <path d="M27 206l4 4 6-7" stroke="#1c9c6b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-              <text x="50" y="211" font-size="12.5" fill="#334b60">Rinsed cartridge filter</text>
+              <rect x="36" y="228" width="228" height="150" rx="18" fill="url(#routeGrad)" />
+              <text x="52" y="254" font-size="10.5" letter-spacing="1.5" font-weight="700" fill="#cfe6fb">NEXT STOP</text>
+              <text x="52" y="278" font-size="17" font-weight="800" fill="#ffffff">The Hendersons</text>
+              <text x="52" y="296" font-size="12.5" fill="#e3f0fb">412 Maple St</text>
+              <text x="52" y="313" font-size="11.5" fill="#cfe6fb">Window 1:00–3:00 PM</text>
+              <text x="52" y="329" font-size="11" fill="#cfe6fb">Gate code 4821 · Dog in yard</text>
+              <rect x="52" y="338" width="124" height="32" rx="16" fill="#ffffff" />
+              <polygon points="68,360 73,348 80,357" fill="#0b6bcb" />
+              <text x="88" y="359" font-size="12.5" font-weight="700" fill="#0b6bcb">Directions</text>
+              <rect x="186" y="338" width="62" height="32" rx="16" fill="rgba(255,255,255,.18)" />
+              <text x="217" y="358" font-size="11.5" fill="#ffffff" text-anchor="middle">8.4 mi</text>
 
-              <rect x="24" y="228" width="104" height="34" rx="9" fill="#cfe6fb" />
-              <rect x="138" y="228" width="104" height="34" rx="9" fill="#d9f0e4" />
-              <rect x="252" y="228" width="104" height="34" rx="9" fill="#bfe3f2" />
+              <text x="40" y="408" font-size="10.5" letter-spacing="1.5" font-weight="700" fill="#5f6f81">UP NEXT</text>
+
+              <circle cx="48" cy="430" r="10" fill="#eaf3fc" />
+              <text x="48" y="434" font-size="10" font-weight="700" fill="#0b6bcb" text-anchor="middle">2</text>
+              <text x="68" y="427" font-size="13" font-weight="700" fill="#0e1b2c">R. Alvarez</text>
+              <text x="68" y="443" font-size="11" fill="#6a7b8b">2.1 mi · window 3:00–5:00</text>
+
+              <circle cx="48" cy="472" r="10" fill="#eaf3fc" />
+              <text x="48" y="476" font-size="10" font-weight="700" fill="#0b6bcb" text-anchor="middle">3</text>
+              <text x="68" y="469" font-size="13" font-weight="700" fill="#0e1b2c">Maple St. HOA</text>
+              <text x="68" y="485" font-size="11" fill="#6a7b8b">3.4 mi · anytime</text>
+
+              <circle cx="48" cy="514" r="10" fill="#eaf3fc" />
+              <text x="48" y="518" font-size="10" font-weight="700" fill="#0b6bcb" text-anchor="middle">4</text>
+              <text x="68" y="511" font-size="13" font-weight="700" fill="#0e1b2c">K. Nguyen</text>
+              <text x="68" y="527" font-size="11" fill="#6a7b8b">4.0 mi · by 6:00</text>
+
+              <line x1="20" y1="548" x2="280" y2="548" stroke="#e7eef4" stroke-width="1.5" />
+              <circle cx="70" cy="566" r="5" fill="#c2d0dc" />
+              <circle cx="123" cy="566" r="5" fill="#0b6bcb" />
+              <circle cx="177" cy="566" r="5" fill="#c2d0dc" />
+              <circle cx="230" cy="566" r="5" fill="#c2d0dc" />
             </svg>
           </div>
         </div>
+      </div>
+    </section>
 
-        <div class="portal-grid">
-          <div class="portal-card">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 20V4M4 20h16" />
-                <path d="M8 20v-6M13 20v-10M18 20v-4" />
-              </svg>
-            </div>
-            <h4>Admin portal</h4>
-            <p class="muted">Run the whole operation from one screen.</p>
+    <!-- CUSTOMER COMMUNICATION -->
+    <section id="customer-portal" class="section">
+      <div class="container">
+        <div class="feature">
+          <div class="feature-body">
+            <p class="eyebrow">Customer portal · Mobile</p>
+            <h2>Easy and transparent communication for customers</h2>
+            <p class="lead">
+              After every visit, homeowners see exactly what was done — and their pool
+              cleaner is one tap away. This is the part nobody else builds, and the
+              reason customers stay.
+            </p>
             <ul class="ticks">
-              <li>Manage employees, roles and permissions</li>
-              <li>Revenue, route and retention analytics at a glance</li>
-              <li>At-risk-account flags before customers churn</li>
+              <li>A full report after every service: readings, checklist, photos</li>
+              <li>Chat directly with their actual pool cleaner</li>
+              <li>Service history and upcoming visits in one place</li>
             </ul>
           </div>
 
-          <div class="portal-card">
-            <div class="icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11z" />
-                <circle cx="12" cy="10" r="2.5" />
-              </svg>
-            </div>
-            <h4>Employee portal</h4>
-            <p class="muted">Every tech's day, already planned.</p>
-            <ul class="ticks">
-              <li>Optimized route built from maps data</li>
-              <li>Customer time windows respected, with live ETAs</li>
-              <li>Tap to log service, readings and photos</li>
-            </ul>
-            <p class="note">Routing is table stakes — we just do it well.</p>
+          <div class="feature-phone">
+            <svg class="mock" viewBox="0 0 300 600" role="img" aria-labelledby="cust-title" xmlns="http://www.w3.org/2000/svg">
+              <title id="cust-title">The Fludd customer app on a phone: the latest service report with readings, checklist and photos, and a button to message the pool cleaner</title>
+
+              <rect x="8" y="8" width="284" height="584" rx="46" fill="#ffffff" stroke="#dce7ef" stroke-width="2" />
+              <rect x="20" y="20" width="260" height="560" rx="34" fill="#f5fafd" />
+
+              <text x="44" y="52" font-size="13" font-weight="700" fill="#0e1b2c">9:41</text>
+              <rect x="120" y="30" width="60" height="18" rx="9" fill="#0e1b2c" />
+              <rect x="228" y="40" width="16" height="10" rx="2" fill="#0e1b2c" />
+              <rect x="250" y="38" width="20" height="12" rx="3" fill="#0e1b2c" />
+
+              <text x="40" y="92" font-size="19" font-weight="800" fill="#0e1b2c">Your latest service</text>
+              <text x="40" y="112" font-size="12.5" fill="#6a7b8b">Maple Street pool</text>
+
+              <rect x="36" y="128" width="228" height="236" rx="18" fill="#ffffff" stroke="#e0eaf1" />
+              <circle cx="60" cy="158" r="14" fill="#cfe6fb" />
+              <text x="60" y="163" font-size="12" font-weight="700" fill="#0b6bcb" text-anchor="middle">M</text>
+              <text x="82" y="154" font-size="13.5" font-weight="700" fill="#0e1b2c">Serviced by Marcus</text>
+              <text x="82" y="170" font-size="11" fill="#6a7b8b">Fri, Sep 4 · 9:42 AM</text>
+              <line x1="52" y1="184" x2="248" y2="184" stroke="#eef3f8" stroke-width="1.5" />
+
+              <rect x="52" y="194" width="60" height="36" rx="8" fill="#f2f8fd" />
+              <text x="82" y="208" font-size="8.5" letter-spacing="1" font-weight="700" fill="#5f6f81" text-anchor="middle">CHLORINE</text>
+              <text x="82" y="223" font-size="13" font-weight="800" fill="#0e1b2c" text-anchor="middle">3.0</text>
+              <rect x="120" y="194" width="60" height="36" rx="8" fill="#f2f8fd" />
+              <text x="150" y="208" font-size="8.5" letter-spacing="1" font-weight="700" fill="#5f6f81" text-anchor="middle">PH</text>
+              <text x="150" y="223" font-size="13" font-weight="800" fill="#0e1b2c" text-anchor="middle">7.4</text>
+              <rect x="188" y="194" width="60" height="36" rx="8" fill="#f2f8fd" />
+              <text x="218" y="208" font-size="8.5" letter-spacing="1" font-weight="700" fill="#5f6f81" text-anchor="middle">ALK</text>
+              <text x="218" y="223" font-size="13" font-weight="800" fill="#0e1b2c" text-anchor="middle">90</text>
+
+              <circle cx="60" cy="252" r="8" fill="#e3f5ec" />
+              <path d="M56 252l3 3 5-6" stroke="#1c9c6b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              <text x="76" y="256" font-size="11" fill="#334b60">Skimmed &amp; emptied baskets</text>
+              <circle cx="60" cy="276" r="8" fill="#e3f5ec" />
+              <path d="M56 276l3 3 5-6" stroke="#1c9c6b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              <text x="76" y="280" font-size="11" fill="#334b60">Brushed walls &amp; vacuumed</text>
+              <circle cx="60" cy="300" r="8" fill="#e3f5ec" />
+              <path d="M56 300l3 3 5-6" stroke="#1c9c6b" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              <text x="76" y="304" font-size="11" fill="#334b60">Filter rinsed</text>
+
+              <rect x="52" y="316" width="58" height="36" rx="8" fill="#cfe6fb" />
+              <rect x="118" y="316" width="58" height="36" rx="8" fill="#d9f0e4" />
+              <rect x="184" y="316" width="58" height="36" rx="8" fill="#bfe3f2" />
+
+              <rect x="36" y="378" width="228" height="34" rx="12" fill="#e3f5ec" />
+              <circle cx="56" cy="395" r="8" fill="#1c9c6b" />
+              <path d="M52 395l3 3 5-6" stroke="#ffffff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+              <text x="70" y="399" font-size="10.5" font-weight="600" fill="#14724d">All readings in the healthy range</text>
+
+              <rect x="36" y="424" width="196" height="36" rx="14" fill="#ffffff" stroke="#e0eaf1" />
+              <text x="52" y="447" font-size="11.5" fill="#334b60">Marcus: Pool's looking great 👍</text>
+
+              <rect x="36" y="474" width="228" height="46" rx="23" fill="#0b6bcb" />
+              <rect x="86" y="483" width="26" height="18" rx="6" fill="#ffffff" />
+              <polygon points="92,500 92,507 100,500" fill="#ffffff" />
+              <text x="120" y="503" font-size="14" font-weight="700" fill="#ffffff">Message Marcus</text>
+
+              <line x1="20" y1="548" x2="280" y2="548" stroke="#e7eef4" stroke-width="1.5" />
+              <circle cx="70" cy="566" r="5" fill="#0b6bcb" />
+              <circle cx="123" cy="566" r="5" fill="#c2d0dc" />
+              <circle cx="177" cy="566" r="5" fill="#c2d0dc" />
+              <circle cx="230" cy="566" r="5" fill="#c2d0dc" />
+            </svg>
           </div>
         </div>
       </div>
@@ -441,7 +690,7 @@
           <span>Fludd</span>
         </a>
         <nav class="footer-nav" aria-label="Footer">
-          <a href="#portals">Portals</a>
+          <a href="#management">Product</a>
           <a href="#how">How it works</a>
           <a href="#pricing">Pricing</a>
           <a href="#faq">FAQ</a>
