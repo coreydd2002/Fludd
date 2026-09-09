@@ -18,7 +18,8 @@ No build step, no framework, no runtime npm dependencies.
 | `styles.css` | Hand-written styles (design tokens in `:root`) |
 | `script.js` | Progressive enhancement: form submit, footer year |
 | `logo.jpg` | The Fludd duck logo (source asset) |
-| `favicon.png` · `apple-touch-icon.png` · `hero-logo.jpg` · `og-image.jpg` | Icons, hero image and social-preview image derived from the logo |
+| `favicon.png` · `apple-touch-icon.png` · `og-image.jpg` | Icons and social-preview image derived from the logo |
+| `refraction.jpg` | Full-bleed hero background photo |
 | `api/subscribe.js` | Vercel serverless function → emails the form via Resend |
 | `vercel.json` | Clean URLs + security headers (incl. a strict CSP) |
 
