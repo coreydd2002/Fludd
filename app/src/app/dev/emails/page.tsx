@@ -4,6 +4,11 @@ import { notFound } from "next/navigation";
 
 import { FinishEmail, finishEmailSample } from "@/emails/FinishEmail";
 import { StartEmail, startEmailSample } from "@/emails/StartEmail";
+import {
+  UrgentAlertEmail,
+  urgentAlertSample,
+  urgentAlertSubject,
+} from "@/emails/UrgentAlertEmail";
 
 import { TestSendForm } from "./TestSendForm";
 
@@ -26,6 +31,11 @@ const TEMPLATES = {
     subject: "Your pool service is complete",
     element: FinishEmail(finishEmailSample),
   },
+  urgent: {
+    name: "Urgent alert",
+    subject: urgentAlertSubject(urgentAlertSample.customerName),
+    element: UrgentAlertEmail(urgentAlertSample),
+  },
 } as const;
 
 type TemplateKey = keyof typeof TEMPLATES;
@@ -36,7 +46,8 @@ export default async function EmailPreviewPage({
   if (process.env.NODE_ENV === "production") notFound();
 
   const { t } = await searchParams;
-  const key: TemplateKey = t === "finish" ? "finish" : "start";
+  const key: TemplateKey =
+    t === "finish" || t === "urgent" ? t : "start";
   const template = TEMPLATES[key];
   const html = await render(template.element);
 
