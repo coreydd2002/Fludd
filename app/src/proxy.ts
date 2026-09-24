@@ -83,7 +83,12 @@ export async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Everything except Next's own assets and the files in public/.
-    "/((?!_next/static|_next/image|favicon.png|apple-touch-icon.png|logo.jpg|og-image.jpg|manifest.webmanifest).*)",
+    // Everything except Next's own assets and any static file in public/.
+    //
+    // Matching on the extension rather than naming each file matters for the
+    // PWA: an installable app needs its manifest and icons fetchable without a
+    // session, and a newly added icon that got auth-gated would fail silently —
+    // the install prompt simply never appears.
+    "/((?!_next/static|_next/image|.*\.(?:png|jpg|jpeg|gif|svg|ico|webmanifest|txt|xml)$).*)",
   ],
 };

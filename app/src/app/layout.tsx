@@ -22,8 +22,21 @@ export const metadata: Metadata = {
     icon: "/favicon.png",
     apple: "/apple-touch-icon.png",
   },
+  // iOS ignores the manifest's display mode and reads these instead; without
+  // them "Add to Home Screen" produces a Safari bookmark rather than an app.
+  appleWebApp: {
+    capable: true,
+    title: "Fludd",
+    statusBarStyle: "default",
+  },
   // The app is a private tool and the report pages are unguessable-token URLs.
   robots: { index: false, follow: false },
+  other: {
+    // Next emits the standardized `mobile-web-app-capable`; iOS versions before
+    // 16.4 only honour this older spelling, and a working tech's phone is not
+    // necessarily new. Harmless to send both.
+    "apple-mobile-web-app-capable": "yes",
+  },
 };
 
 export const viewport: Viewport = {
@@ -32,6 +45,9 @@ export const viewport: Viewport = {
   initialScale: 1,
   // Lets a tech zoom into a photo or a reading; never trap accessibility zoom.
   maximumScale: 5,
+  // Draws under the notch and home indicator once installed. The app chrome
+  // uses the pad-safe utilities to stay clear of both.
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

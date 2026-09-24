@@ -71,7 +71,11 @@ Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind v4 · Supabase
 | `npm run check:phase1` | End-to-end: signup, onboarding, customers, and two-account isolation. Creates two throwaway users and deletes them afterwards. |
 | `npm run check:phase2` | End-to-end: a whole visit — one-open-visit-per-pool, the checklist snapshot, readings, private photos, and the feedback window. |
 | `npm run check:phase3` | Renders both owner emails through the real template path and checks their content. Needs `npm run dev` running. |
-| `npm run make:user`  | Creates a pre-confirmed dev login (`tech@fludd.test`). Re-run to reset it; `-- --delete` removes it. |
+| `npm run check:phase4` | The public report page: what it shows, and — asserted explicitly — that it never leaks last name, address, email or private notes. |
+| `npm run check:phase5` | The feedback loop: inbox, unread badges, notes carried to the next visit. |
+| `npm run check:phase6` | Installability: manifest, icons, and that none of them are auth-gated. |
+| `npm run make:user`  | Creates a pre-confirmed dev login (`tech@fludd.test`) with a random password, printed once. Re-run to reset; `-- --delete` removes it. |
+| `node scripts/make-icons.mjs` | Regenerates the PWA icons from `public/logo.jpg`. |
 
 ## Layout
 
@@ -124,6 +128,23 @@ other's customers, techs or company row; that onboarding cannot run twice; that
 a pool owner's feedback cannot be inserted by a signed-in tech; that a customer
 can only have one open visit at a time; and that `anon` is refused outright.
 Every check prints `PASS`, and the script exits non-zero on failure.
+
+## Installing on a phone
+
+The app is a PWA: `src/app/manifest.ts` is served at `/manifest.webmanifest`,
+and the icons come from `public/icon-*.png`, generated from the logo by
+`scripts/make-icons.mjs`.
+
+- **iOS** — open the site in Safari, Share → Add to Home Screen. Safari ignores
+  the manifest's display mode and reads the `appleWebApp` metadata in
+  `src/app/layout.tsx` instead.
+- **Android** — Chrome offers an install prompt once the manifest, a 192px and
+  a 512px icon all load.
+
+The trap worth knowing: the auth proxy must not intercept the manifest or the
+icons. If it redirects them to `/login`, the install prompt simply never
+appears, with nothing logged. `src/proxy.ts` excludes static files by
+extension for that reason, and `npm run check:phase6` asserts it.
 
 ## Deploying
 
