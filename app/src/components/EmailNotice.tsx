@@ -3,10 +3,53 @@
  * action that triggered it. A tech who finished a visit needs to know the
  * report didn't go out — but finding out must not have stopped them finishing.
  *
- * The four states are kept distinct on purpose. "Not configured" and "turned
- * off for this pool" have completely different fixes, and a single message
- * covering both sends you looking in the wrong place.
+ * The states are kept distinct on purpose. "Not configured", "turned off for
+ * this pool" and "Resend refused it" have completely different fixes, and a
+ * single message covering all three sends you looking in the wrong place.
  */
+
+/**
+ * Turns Resend's wording into the specific thing to change.
+ *
+ * Every one of these is a setup mistake with a known fix, and reading the raw
+ * API error leaves you guessing which. Matching is loose because Resend has
+ * reworded these messages before.
+ */
+function explain(reason: string): string | null {
+  const r = reason.toLowerCase();
+
+  if (r.includes("testing emails") || r.includes("own email address")) {
+    return (
+      "Resend's shared onboarding@resend.dev sender can only deliver to the " +
+      "address that owns the Resend account. Set DEV_EMAIL_OVERRIDE to that " +
+      "exact address — the one you signed up to Resend with — and redeploy."
+    );
+  }
+  if (r.includes("not verified") || r.includes("domain")) {
+    return (
+      "The from-address uses a domain Resend hasn't verified. Until you verify " +
+      "one, EMAIL_FROM must be exactly: Fludd <onboarding@resend.dev>"
+    );
+  }
+  if (r.includes("api key") || r.includes("unauthorized") || r.includes("401")) {
+    return (
+      "Resend rejected the API key. Check RESEND_API_KEY on this Vercel " +
+      "project — note it is separate from the landing page project's key — " +
+      "and redeploy after changing it."
+    );
+  }
+  if (r.includes("invalid") && r.includes("from")) {
+    return (
+      "The from-address is malformed. EMAIL_FROM needs the angle brackets: " +
+      "Fludd <onboarding@resend.dev>"
+    );
+  }
+  if (r.includes("rate") || r.includes("too many") || r.includes("429")) {
+    return "Resend is rate limiting. Wait a minute and try again.";
+  }
+  return null;
+}
+
 export function EmailNotice({
   status,
   reason,
@@ -52,7 +95,7 @@ export function EmailNotice({
     return (
       <div
         role="alert"
-        className="mt-4 rounded-sm bg-warn-tint px-3 py-2 text-sm text-warn"
+        className="mt-4 rounded-sm bg-warn-tint px-3 py-3 text-sm text-warn"
       >
         <p className="font-bold">No email sent — email isn&apos;t set up yet.</p>
         <p className="mt-1">
@@ -60,24 +103,30 @@ export function EmailNotice({
           <code className="font-mono">EMAIL_FROM</code> to this deployment&apos;s
           environment variables, then redeploy.
         </p>
-        {reason ? <p className="mt-1 opacity-80">{reason}</p> : null}
       </div>
     );
   }
 
+  const guidance = reason ? explain(reason) : null;
+
   return (
     <div
       role="alert"
-      className="mt-4 rounded-sm bg-warn-tint px-3 py-2 text-sm text-warn"
+      className="mt-4 rounded-sm bg-warn-tint px-3 py-3 text-sm text-warn"
     >
-      <p className="font-bold">The email didn&apos;t send.</p>
-      <p className="mt-1">
-        Everything else saved — you can tell the customer directly, and the
-        report link still works.
-      </p>
+      <p className="font-bold">Resend refused this email.</p>
+
+      {guidance ? <p className="mt-1.5 font-medium">{guidance}</p> : null}
+
       {reason ? (
-        <p className="mt-1 font-mono text-xs opacity-80">{reason}</p>
+        <p className="mt-2 rounded-sm bg-warn/10 px-2 py-1.5 font-mono text-[12px] break-words">
+          {reason}
+        </p>
       ) : null}
+
+      <p className="mt-2 text-ink-soft">
+        The visit saved normally — only the email failed.
+      </p>
     </div>
   );
 }
