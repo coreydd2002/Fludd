@@ -1,5 +1,6 @@
 import "server-only";
 
+import { render } from "@react-email/components";
 import type { ReactElement } from "react";
 import { Resend } from "resend";
 
@@ -56,11 +57,27 @@ export async function sendOwnerEmail({
   const finalSubject = override ? `[dev → ${to}] ${subject}` : subject;
 
   try {
+    // Render here rather than passing `react` to Resend.
+    //
+    // Resend's SDK renders React by dynamically importing @react-email/render.
+    // That package is only reachable as a transitive dependency, and a bundler
+    // cannot see a runtime require — so it resolves in development and fails in
+    // production with "Failed to render React component".
+    //
+    // Rendering ourselves removes the dynamic import, and lets us send a plain
+    // text alternative alongside the HTML, which meaningfully helps an email
+    // avoid spam filters.
+    const [html, text] = await Promise.all([
+      render(react),
+      render(react, { plainText: true }),
+    ]);
+
     const { data, error } = await new Resend(apiKey).emails.send({
       from,
       to: [recipient],
       subject: finalSubject,
-      react,
+      html,
+      text,
     });
 
     if (error) {
