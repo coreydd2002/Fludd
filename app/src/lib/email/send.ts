@@ -7,7 +7,10 @@ import { devEmailOverride, emailFrom, resendApiKey } from "@/lib/env.server";
 
 export type SendOutcome =
   | { status: "sent"; id: string | null; redirectedTo: string | null }
+  /** Email is not configured at all — no API key or no from-address. */
   | { status: "skipped"; reason: string }
+  /** Deliberately not sent; the customer has start emails turned off. */
+  | { status: "off"; reason: string }
   | { status: "failed"; reason: string };
 
 /**

@@ -19,7 +19,7 @@ export default async function VisitPage({
   searchParams,
 }: PageProps<"/visits/[id]">) {
   const { id } = await params;
-  const { email } = await searchParams;
+  const { email, why, to } = await searchParams;
   const { company } = await requireTech();
   const supabase = await createClient();
 
@@ -89,8 +89,9 @@ export default async function VisitPage({
 
       <EmailNotice
         status={typeof email === "string" ? email : undefined}
+        reason={typeof why === "string" ? why : undefined}
+        redirectedTo={typeof to === "string" ? to : undefined}
         sentLabel={`"On my way" email sent to ${customer?.first_name ?? "the owner"}.`}
-        redirected={Boolean(process.env.DEV_EMAIL_OVERRIDE)}
       />
 
       {customer?.internal_notes ? (

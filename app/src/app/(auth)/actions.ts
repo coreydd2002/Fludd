@@ -51,12 +51,17 @@ export async function signup(
 
   if (error) return { error: error.message };
 
-  // With "Confirm email" enabled in Supabase (the default for a new project),
-  // signUp returns a user but no session — nothing to redirect into yet.
+  // No session means one of two things, and Supabase deliberately makes them
+  // indistinguishable: either the account is new and awaiting confirmation, or
+  // it already exists — in which case nothing is sent at all. Telling them
+  // apart would let anyone probe this form for registered addresses, so the
+  // message has to cover both rather than promise an email that may never come.
   if (!data.session) {
     return {
       notice:
-        "Check your email for a confirmation link, then come back and sign in.",
+        "If that address is new, a confirmation link is on its way — click it, " +
+        "then sign in. If you already have an account, just sign in; no new " +
+        "email is sent for an address that's already registered.",
     };
   }
 

@@ -11,6 +11,22 @@ import { appUrl } from "@/lib/env";
 import { allReadingsHealthy, readingsSummary } from "@/lib/readings";
 import { createClient } from "@/lib/supabase/server";
 
+/**
+ * Carries the send result to the next screen. The reason travels too: when a
+ * send fails the operator needs Resend's actual complaint ("API key is
+ * invalid", "domain is not verified"), not a shrug.
+ */
+function emailQuery(outcome: SendOutcome): string {
+  const params = new URLSearchParams({ email: outcome.status });
+  if (outcome.status !== "sent" && outcome.reason) {
+    params.set("why", outcome.reason.slice(0, 200));
+  }
+  if (outcome.status === "sent" && outcome.redirectedTo) {
+    params.set("to", outcome.redirectedTo);
+  }
+  return params.toString();
+}
+
 /** Days a finished report keeps accepting feedback, absent a newer visit. */
 const FEEDBACK_WINDOW_DAYS = 30;
 
@@ -102,7 +118,7 @@ export async function startVisit(formData: FormData) {
     .neq("id", visit.id)
     .or(`feedback_closes_at.is.null,feedback_closes_at.gt.${now}`);
 
-  let outcome: SendOutcome = { status: "skipped", reason: "off for this pool" };
+  let outcome: SendOutcome = { status: "off", reason: "turned off for this pool" };
   if (customer.start_email_enabled) {
     outcome = await sendOwnerEmail({
       to: customer.email,
@@ -118,7 +134,7 @@ export async function startVisit(formData: FormData) {
   }
 
   revalidatePath("/");
-  redirect(`/visits/${visit.id}?email=${outcome.status}`);
+  redirect(`/visits/${visit.id}?${emailQuery(outcome)}`);
 }
 
 export async function finishVisit(formData: FormData) {
@@ -186,7 +202,7 @@ export async function finishVisit(formData: FormData) {
   });
 
   revalidatePath("/");
-  redirect(`/visits/${visitId}/done?email=${outcome.status}`);
+  redirect(`/visits/${visitId}/done?${emailQuery(outcome)}`);
 }
 
 export async function cancelVisit(formData: FormData) {

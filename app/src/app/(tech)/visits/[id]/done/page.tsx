@@ -18,7 +18,7 @@ export default async function VisitDonePage({
   searchParams,
 }: PageProps<"/visits/[id]/done">) {
   const { id } = await params;
-  const { email } = await searchParams;
+  const { email, why, to } = await searchParams;
   const { company } = await requireTech();
   const supabase = await createClient();
 
@@ -121,8 +121,9 @@ export default async function VisitDonePage({
 
       <EmailNotice
         status={typeof email === "string" ? email : undefined}
+        reason={typeof why === "string" ? why : undefined}
+        redirectedTo={typeof to === "string" ? to : undefined}
         sentLabel={`Report emailed to ${visit.customers?.first_name ?? "the owner"}.`}
-        redirected={Boolean(process.env.DEV_EMAIL_OVERRIDE)}
       />
 
       <p className="mt-4 rounded-card bg-brand-tint-2 px-4 py-3 text-sm text-ink-soft ring-1 ring-line">
