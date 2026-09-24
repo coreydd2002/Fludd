@@ -1,6 +1,7 @@
 import { requireTech } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
+import { ConfigHealth } from "./ConfigHealth";
 import { SettingsForm } from "./SettingsForm";
 
 export const metadata = { title: "Settings" };
@@ -26,6 +27,10 @@ export default async function SettingsPage() {
           mapsPref={company.maps_pref}
           checklist={(defaults ?? []).map((d) => d.label)}
         />
+      </div>
+
+      <div className="mt-8">
+        <ConfigHealth />
       </div>
     </>
   );

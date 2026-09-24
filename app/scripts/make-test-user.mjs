@@ -13,7 +13,11 @@
 import { createClient } from "@supabase/supabase-js";
 
 const EMAIL = "tech@fludd.test";
-const PASSWORD = "fludd-dev-password";
+
+// Generated per run and printed once, never stored. A fixed password here would
+// be a working credential committed to the repository, for an account that
+// lives in the same Supabase project as real data.
+const PASSWORD = `dev-${crypto.randomUUID().replaceAll("-", "").slice(0, 20)}`;
 
 const admin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -72,6 +76,8 @@ Development login ready — no email confirmation needed.
   email     ${EMAIL}
   password  ${PASSWORD}
 
+Copy that password now: it is random per run and is not stored anywhere.
 Sign in at http://localhost:3000/login and you'll land on onboarding.
-Run "npm run make:user" again to wipe it and start over.
+Re-run "npm run make:user" to wipe it and issue a fresh password;
+"npm run make:user -- --delete" removes it entirely.
 `);
