@@ -1,0 +1,38 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "check:db": "node --env-file=.env.local scripts/check-db.mjs",
+    "check:anon": "node --env-file=.env.local scripts/check-anon.mjs",
+    "check:phase1": "node --env-file=.env.local scripts/check-phase1.mjs",
+    "check:phase2": "node --env-file=.env.local scripts/check-phase2.mjs",
+    "check:phase3": "node scripts/check-phase3.mjs",
+    "make:user": "node --env-file=.env.local scripts/make-test-user.mjs"
+  },
+  "dependencies": {
+    "@react-email/components": "^1.0.12",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.117.0",
+    "browser-image-compression": "^2.0.2",
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "resend": "^6.28.1",
+    "server-only": "^0.0.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.6",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}

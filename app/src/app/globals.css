@@ -1,0 +1,118 @@
+@import "tailwindcss";
+
+/*
+  Fludd app design tokens.
+
+  These mirror the `:root` block in the landing page's ../styles.css so the app
+  and the marketing site read as one product. The landing page calls the primary
+  `--blue`; here it is `brand`, because a `blue` token would sit alongside
+  Tailwind's own blue-50..950 scale and `bg-blue-600` would silently be the
+  wrong blue.
+
+  landing page  ->  app
+  --blue        ->  brand
+  --blue-dark   ->  brand-dark
+  --blue-tint   ->  brand-tint
+  --blue-tint-2 ->  brand-tint-2
+  everything else keeps its name.
+
+  Light theme only, matching the landing page's committed light theme.
+*/
+
+@theme {
+  --color-ink: #0e1b2c;
+  --color-ink-soft: #4a5b6d;
+  --color-ink-faint: #5f6f81;
+
+  --color-brand: #0b6bcb;
+  --color-brand-dark: #085aa8;
+  --color-brand-tint: #eaf3fc;
+  --color-brand-tint-2: #f2f8fd;
+  --color-aqua: #2ba9e0;
+
+  --color-ground: #f6fbfe;
+  --color-card: #ffffff;
+  --color-line: #e0eaf1;
+
+  --color-ok: #1c9c6b;
+  --color-ok-tint: #e3f5ec;
+  --color-ok-deep: #14724d;
+  --color-err: #c0392b;
+  --color-warn: #b86e00;
+  --color-warn-tint: #fdf3e3;
+
+  --shadow-sm: 0 1px 2px rgba(11, 60, 110, 0.06), 0 2px 10px rgba(11, 60, 110, 0.06);
+  --shadow-md: 0 12px 34px rgba(11, 60, 110, 0.11);
+  --shadow-lg: 0 26px 64px rgba(11, 60, 110, 0.18);
+
+  --radius-sm: 10px;
+  --radius-card: 16px;
+  --radius-lg: 24px;
+  --radius-pill: 999px;
+
+  /* Minimum comfortable touch target for a wet hand on a phone at a pool. */
+  --spacing-tap: 48px;
+}
+
+@theme inline {
+  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, "Segoe UI",
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+@layer base {
+  html {
+    /* 16px+ keeps iOS Safari from zooming when an input takes focus. */
+    font-size: 17px;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    /* Stops the whole page rubber-banding while a checklist scrolls. */
+    overscroll-behavior-y: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-weight: 800;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-aqua);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* The app is a tool, not a document: text selection on tap targets reads as a bug. */
+  button,
+  a,
+  label {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-brand);
+}
+
+/* Respects the iPhone home indicator and notch on the fixed app chrome. */
+@utility pad-safe-bottom {
+  padding-bottom: max(1rem, env(safe-area-inset-bottom));
+}
+
+@utility pad-safe-top {
+  padding-top: max(1rem, env(safe-area-inset-top));
+}

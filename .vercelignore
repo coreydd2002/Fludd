@@ -1,0 +1,13 @@
+# Keeps the Fludd app out of the LANDING PAGE deployment.
+#
+# The root Vercel project has no build step, so it publishes every file in the
+# repo as a static asset. Without this, app/package.json, app/src/**, and the
+# migrations would all be fetchable at https://<landing-domain>/app/...
+#
+# The leading slash anchors the pattern to this directory. That matters: a bare
+# `app/` would also match `src/app/` at any depth, and if Vercel ever resolved
+# this file from the app project's root directory it would exclude the entire
+# App Router from that deployment.
+/app
+
+# The app is deployed as a SEPARATE Vercel project with Root Directory = "app".
