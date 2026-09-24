@@ -17,8 +17,13 @@ import type { Database } from "./database.types";
  * cookie write.
  */
 export async function createClient() {
-  assertSupabaseEnv();
+  // cookies() first, deliberately. Awaiting it is what tells Next this route is
+  // dynamic and must not be prerendered. Asserting before it means a build
+  // without Supabase credentials throws during static generation — an
+  // unbuildable app — instead of deferring the complaint to a real request,
+  // where it is both actionable and correct.
   const cookieStore = await cookies();
+  assertSupabaseEnv();
 
   return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
