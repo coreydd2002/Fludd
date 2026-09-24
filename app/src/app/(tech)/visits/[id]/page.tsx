@@ -63,6 +63,22 @@ export default async function VisitPage({
     }));
   }
 
+  // What the owner asked for last time. This is the single most useful thing on
+  // the screen at the moment a tech walks up to the pool, so it renders above
+  // the checklist rather than being buried in the inbox.
+  const { data: lastFeedback } = await supabase
+    .from("feedback")
+    .select("rating, review, next_visit_notes, is_urgent, created_at, visits!inner(customer_id)")
+    .eq("visits.customer_id", visit.customer_id)
+    .neq("visit_id", visit.id)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  const hasNotes = Boolean(
+    lastFeedback && (lastFeedback.next_visit_notes || lastFeedback.is_urgent),
+  );
+
   const customer = visit.customers;
   const name = [customer?.first_name, customer?.last_name]
     .filter(Boolean)
@@ -93,6 +109,36 @@ export default async function VisitPage({
         redirectedTo={typeof to === "string" ? to : undefined}
         sentLabel={`"On my way" email sent to ${customer?.first_name ?? "the owner"}.`}
       />
+
+      {hasNotes && lastFeedback ? (
+        <section
+          className={`mt-4 rounded-card p-4 ring-1 ${
+            lastFeedback.is_urgent
+              ? "bg-warn-tint ring-warn/30"
+              : "bg-brand-tint ring-brand/20"
+          }`}
+        >
+          <p
+            className={`text-[11px] font-bold tracking-wider uppercase ${
+              lastFeedback.is_urgent ? "text-warn" : "text-brand-dark"
+            }`}
+          >
+            {lastFeedback.is_urgent
+              ? "Urgent — reported by the owner"
+              : "From the owner, for this visit"}
+          </p>
+          {lastFeedback.next_visit_notes ? (
+            <p className="mt-1.5 text-sm whitespace-pre-wrap text-ink">
+              {lastFeedback.next_visit_notes}
+            </p>
+          ) : null}
+          {lastFeedback.is_urgent && lastFeedback.review ? (
+            <p className="mt-1.5 text-sm whitespace-pre-wrap text-ink">
+              {lastFeedback.review}
+            </p>
+          ) : null}
+        </section>
+      ) : null}
 
       {customer?.internal_notes ? (
         <p className="mt-4 rounded-card bg-brand-tint-2 px-4 py-3 text-sm text-ink-soft ring-1 ring-line">

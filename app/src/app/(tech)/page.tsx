@@ -43,6 +43,24 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
 
   const { data: customers, error } = await query;
 
+  // One query for the whole list rather than one per pool. RLS scopes it to the
+  // company, and the join gives us which customer each piece of feedback is for.
+  const { data: unreadFeedback } = await supabase
+    .from("feedback")
+    .select("is_urgent, next_visit_notes, visits(customer_id)")
+    .is("read_by_tech_at", null);
+
+  const waiting = new Map<string, { urgent: boolean; hasNotes: boolean }>();
+  for (const f of unreadFeedback ?? []) {
+    const id = f.visits?.customer_id;
+    if (!id) continue;
+    const prev = waiting.get(id) ?? { urgent: false, hasNotes: false };
+    waiting.set(id, {
+      urgent: prev.urgent || f.is_urgent,
+      hasNotes: prev.hasNotes || Boolean(f.next_visit_notes),
+    });
+  }
+
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
@@ -113,6 +131,7 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
                 .filter(Boolean)
                 .join(" ");
               const isOpen = customer.id === openCustomerId;
+              const flag = waiting.get(customer.id);
 
               return (
                 <li
@@ -143,6 +162,26 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
                       Directions
                     </a>
                   </div>
+
+                  {flag ? (
+                    <Link
+                      href="/inbox"
+                      className={`mt-3 flex items-center gap-2 rounded-sm px-3 py-2 text-sm font-bold ring-1 ${
+                        flag.urgent
+                          ? "bg-warn-tint text-warn ring-warn/30"
+                          : "bg-brand-tint text-brand-dark ring-brand/20"
+                      }`}
+                    >
+                      {flag.urgent
+                        ? "Urgent issue reported"
+                        : flag.hasNotes
+                          ? "Notes waiting for your next visit"
+                          : "New feedback"}
+                      <span aria-hidden className="ml-auto">
+                        →
+                      </span>
+                    </Link>
+                  ) : null}
 
                   {customer.internal_notes ? (
                     <p className="mt-3 rounded-sm bg-brand-tint-2 px-3 py-2 text-sm text-ink-soft">

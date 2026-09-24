@@ -13,6 +13,7 @@
     "check:phase2": "node --env-file=.env.local scripts/check-phase2.mjs",
     "check:phase3": "node scripts/check-phase3.mjs",
     "check:phase4": "node --env-file=.env.local scripts/check-phase4.mjs",
+    "check:phase5": "node --env-file=.env.local scripts/check-phase5.mjs",
     "make:user": "node --env-file=.env.local scripts/make-test-user.mjs"
   },
   "dependencies": {

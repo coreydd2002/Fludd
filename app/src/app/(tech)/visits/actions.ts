@@ -118,6 +118,26 @@ export async function startVisit(formData: FormData) {
     .neq("id", visit.id)
     .or(`feedback_closes_at.is.null,feedback_closes_at.gt.${now}`);
 
+  // The notes are about to be displayed on the visit screen, so this is the
+  // honest moment to clear their unread state. Doing it during the page render
+  // would be a side effect in a function React is free to re-run.
+  const { data: priorVisits } = await supabase
+    .from("visits")
+    .select("id")
+    .eq("customer_id", customerId)
+    .neq("id", visit.id);
+
+  if (priorVisits && priorVisits.length > 0) {
+    await supabase
+      .from("feedback")
+      .update({ read_by_tech_at: new Date().toISOString() })
+      .in(
+        "visit_id",
+        priorVisits.map((v) => v.id),
+      )
+      .is("read_by_tech_at", null);
+  }
+
   let outcome: SendOutcome = { status: "off", reason: "turned off for this pool" };
   if (customer.start_email_enabled) {
     outcome = await sendOwnerEmail({
