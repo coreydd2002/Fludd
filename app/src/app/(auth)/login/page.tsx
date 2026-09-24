@@ -9,12 +9,26 @@ import { Button, Card, Field, FormError, Input } from "@/components/ui";
 import { login, type AuthState } from "../actions";
 
 function LoginForm() {
-  const next = useSearchParams().get("next") ?? "";
+  const params = useSearchParams();
+  const next = params.get("next") ?? "";
+  const confirmFailed = params.get("confirm") === "failed";
   const [state, formAction, pending] = useActionState<AuthState, FormData>(login, {});
 
   return (
     <Card>
       <h1 className="text-xl">Sign in</h1>
+
+      {confirmFailed ? (
+        <p
+          role="alert"
+          className="mt-4 rounded-sm bg-warn-tint px-3 py-2 text-sm font-medium text-warn"
+        >
+          That confirmation link didn&apos;t work — it may have expired or
+          already been used. Try signing in, and request a new one if that
+          fails.
+        </p>
+      ) : null}
+
       <form action={formAction} className="mt-5 flex flex-col gap-4">
         <input type="hidden" name="next" value={next} />
         <Field label="Email" htmlFor="email">
