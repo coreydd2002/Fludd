@@ -183,6 +183,12 @@ section[id] { scroll-margin-top: 84px; }
 }
 .brand img { width: 30px; height: 30px; display: block; border-radius: 8px; }
 
+.header-cta { display: inline-flex; align-items: center; gap: 10px; }
+
+/* Below 780px the header only has room for the brand and one action, so the
+   demo link is hidden there and the hero carries it instead. */
+.header-demo { display: none; }
+
 .nav-links { display: none; gap: 28px; }
 .nav-links a {
   color: var(--ink-soft);
@@ -194,6 +200,7 @@ section[id] { scroll-margin-top: 84px; }
 
 @media (min-width: 780px) {
   .nav-links { display: inline-flex; }
+  .header-demo { display: inline-flex; }
 }
 
 /* ---- Hero ------------------------------------------------------------- */
