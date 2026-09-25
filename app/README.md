@@ -148,8 +148,12 @@ extension for that reason, and `npm run check:phase6` asserts it.
 
 ## Deploying
 
-This directory is a **second Vercel project** on the same repository, with
-**Root Directory** set to `app`. The repo root has a `.vercelignore` containing
+This directory is the **`fludd-app`** Vercel project, deployed from the same
+repository as the landing page (`fludd-landing`) with **Root Directory** set to
+`app`. It serves `app.fludd.work`; the landing page serves `fludd.work`.
+
+Environment variables are scoped per project and do **not** cross between the
+two — a key set on `fludd-landing` is invisible to `fludd-app`. The repo root has a `.vercelignore` containing
 `/app` so the landing page's deployment does not publish this source tree.
 
 Production needs the same variables as `.env.local`, plus
@@ -193,7 +197,12 @@ account's own address**. Until a domain is verified in Resend, keep
 `DEV_EMAIL_OVERRIDE` set so every customer-facing email is redirected to that
 inbox instead of being silently dropped on a real pool owner.
 
-To verify a domain: Resend → Domains → Add Domain, then add the DKIM `TXT`
-record and the SPF/return-path records it prints to that domain's DNS. Once it
-shows *Verified*, set `EMAIL_FROM` to an address on it and clear
-`DEV_EMAIL_OVERRIDE` in production.
+`fludd.work` is verified in Resend, so production sends from
+`Fludd <visits@fludd.work>` with `DEV_EMAIL_OVERRIDE` unset.
+
+Its DNS lives at Namecheap. Resend's current setup is two CNAMEs (`send` and
+`rsend`, both to `forge.rmta.net`) plus a DKIM `TXT` on `resend._domainkey`.
+Do **not** add an `MX` record on `send`: the CNAME already supplies one, and a
+name carrying a CNAME may not carry other record types. That conflict makes
+bounce notifications resolve inconsistently — sometimes to Resend, sometimes
+elsewhere — so failures stop being reported while the app still shows "sent".
