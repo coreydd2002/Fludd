@@ -39,7 +39,7 @@ export default async function EditCustomerPage({ params }: PageProps<"/customers
           href={directionsUrl(customer.address, company.maps_pref)}
           target="_blank"
           rel="noopener noreferrer"
-          className="shrink-0 inline-flex min-h-tap items-center rounded-pill bg-brand-tint px-4 text-sm font-bold text-brand-dark"
+          className="min-h-tap rounded-pill bg-brand-tint text-brand-dark inline-flex shrink-0 items-center px-4 text-sm font-bold"
         >
           Directions
         </a>
@@ -54,17 +54,13 @@ export default async function EditCustomerPage({ params }: PageProps<"/customers
         />
       </div>
 
-      <form action={archiveCustomer} className="mt-8 border-t border-line pt-5">
+      <form action={archiveCustomer} className="border-line mt-8 border-t pt-5">
         <input type="hidden" name="id" value={customer.id} />
-        <button
-          type="submit"
-          className="text-sm font-bold text-err underline underline-offset-2"
-        >
+        <button type="submit" className="text-err text-sm font-bold underline underline-offset-2">
           Archive this pool
         </button>
-        <p className="mt-1 text-xs text-ink-faint">
-          Hides it from your route. Past visits and any reports already sent stay
-          intact.
+        <p className="text-ink-faint mt-1 text-xs">
+          Hides it from your route. Past visits and any reports already sent stay intact.
         </p>
       </form>
     </>

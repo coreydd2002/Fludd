@@ -36,15 +36,9 @@ export function ButtonLink({
   return <Link className={`${base} ${variants[variant]} ${className}`} {...props} />;
 }
 
-export function Card({
-  children,
-  className = "",
-}: {
-  children: ReactNode;
-  className?: string;
-}) {
+export function Card({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <div className={`rounded-card bg-card p-5 shadow-sm ring-1 ring-line ${className}`}>
+    <div className={`rounded-card bg-card ring-line p-5 shadow-sm ring-1 ${className}`}>
       {children}
     </div>
   );
@@ -63,10 +57,10 @@ export function Field({
 }) {
   return (
     <div className="flex flex-col gap-1.5">
-      <label htmlFor={htmlFor} className="text-sm font-bold text-ink">
+      <label htmlFor={htmlFor} className="text-ink text-sm font-bold">
         {label}
       </label>
-      {hint ? <p className="text-xs text-ink-faint -mt-1">{hint}</p> : null}
+      {hint ? <p className="text-ink-faint -mt-1 text-xs">{hint}</p> : null}
       {children}
     </div>
   );
@@ -89,10 +83,7 @@ export function Textarea({ className = "", ...props }: ComponentProps<"textarea"
 export function FormError({ children }: { children?: ReactNode }) {
   if (!children) return null;
   return (
-    <p
-      role="alert"
-      className="rounded-sm bg-err/10 px-3 py-2 text-sm font-medium text-err"
-    >
+    <p role="alert" className="bg-err/10 text-err rounded-sm px-3 py-2 text-sm font-medium">
       {children}
     </p>
   );
@@ -112,9 +103,9 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-card bg-brand-tint-2 px-5 py-10 text-center ring-1 ring-line">
-      <p className="font-bold text-ink">{title}</p>
-      <p className="mx-auto mt-1 max-w-xs text-sm text-ink-soft">{body}</p>
+    <div className="rounded-card bg-brand-tint-2 ring-line px-5 py-10 text-center ring-1">
+      <p className="text-ink font-bold">{title}</p>
+      <p className="text-ink-soft mx-auto mt-1 max-w-xs text-sm">{body}</p>
       {action ? <div className="mt-5">{action}</div> : null}
     </div>
   );

@@ -5,22 +5,16 @@ import { useActionState, useState } from "react";
 import { submitFeedback, type FeedbackState } from "./actions";
 
 export function FeedbackForm({ token }: { token: string }) {
-  const [state, formAction, pending] = useActionState<FeedbackState, FormData>(
-    submitFeedback,
-    {},
-  );
+  const [state, formAction, pending] = useActionState<FeedbackState, FormData>(submitFeedback, {});
   const [rating, setRating] = useState<number | null>(null);
 
   if (state.done) {
     return (
-      <div
-        role="status"
-        className="rounded-card bg-ok-tint p-5 text-center ring-1 ring-ok/30"
-      >
-        <p className="text-lg font-extrabold text-ok-deep">Thank you</p>
-        <p className="mt-1 text-sm text-ok-deep/80">
-          Your pool service has this now. Anything you flagged for next visit
-          will be waiting for them when they arrive.
+      <div role="status" className="rounded-card bg-ok-tint ring-ok/30 p-5 text-center ring-1">
+        <p className="text-ok-deep text-lg font-extrabold">Thank you</p>
+        <p className="text-ok-deep/80 mt-1 text-sm">
+          Your pool service has this now. Anything you flagged for next visit will be waiting for
+          them when they arrive.
         </p>
       </div>
     );
@@ -42,7 +36,7 @@ export function FeedbackForm({ token }: { token: string }) {
               aria-checked={rating === n}
               aria-label={`${n} star${n === 1 ? "" : "s"}`}
               onClick={() => setRating(rating === n ? null : n)}
-              className={`grid size-tap flex-1 place-items-center rounded-sm text-2xl ring-1 transition-colors ${
+              className={`size-tap grid flex-1 place-items-center rounded-sm text-2xl ring-1 transition-colors ${
                 rating !== null && n <= rating
                   ? "bg-brand-tint text-brand ring-brand/30"
                   : "bg-card text-ink-faint ring-line"
@@ -58,14 +52,14 @@ export function FeedbackForm({ token }: { token: string }) {
         <label htmlFor="review" className="text-sm font-bold">
           Anything you&apos;d like to say?
         </label>
-        <p className="-mt-1 text-xs text-ink-faint">
+        <p className="text-ink-faint -mt-1 text-xs">
           Goes to your pool service privately — this is not published anywhere.
         </p>
         <textarea
           id="review"
           name="review"
           maxLength={2000}
-          className="min-h-24 w-full rounded-sm bg-card px-3 py-2.5 text-ink ring-1 ring-line placeholder:text-ink-faint focus:ring-2 focus:ring-brand focus:outline-none"
+          className="bg-card text-ink ring-line placeholder:text-ink-faint focus:ring-brand min-h-24 w-full rounded-sm px-3 py-2.5 ring-1 focus:ring-2 focus:outline-none"
         />
       </div>
 
@@ -73,7 +67,7 @@ export function FeedbackForm({ token }: { token: string }) {
         <label htmlFor="next_visit_notes" className="text-sm font-bold">
           Anything for next visit?
         </label>
-        <p className="-mt-1 text-xs text-ink-faint">
+        <p className="text-ink-faint -mt-1 text-xs">
           Shown to your tech when they arrive next time.
         </p>
         <textarea
@@ -81,11 +75,11 @@ export function FeedbackForm({ token }: { token: string }) {
           name="next_visit_notes"
           maxLength={2000}
           placeholder="e.g. the gate latch sticks, please check the skimmer lid"
-          className="min-h-24 w-full rounded-sm bg-card px-3 py-2.5 text-ink ring-1 ring-line placeholder:text-ink-faint focus:ring-2 focus:ring-brand focus:outline-none"
+          className="bg-card text-ink ring-line placeholder:text-ink-faint focus:ring-brand min-h-24 w-full rounded-sm px-3 py-2.5 ring-1 focus:ring-2 focus:outline-none"
         />
       </div>
 
-      <label className="flex min-h-tap items-start gap-3 rounded-sm bg-warn-tint px-3 py-3">
+      <label className="min-h-tap bg-warn-tint flex items-start gap-3 rounded-sm px-3 py-3">
         <input
           type="checkbox"
           name="is_urgent"
@@ -93,18 +87,15 @@ export function FeedbackForm({ token }: { token: string }) {
         />
         <span className="text-sm">
           <span className="font-bold">This is urgent</span>
-          <span className="block text-ink-soft">
-            Green water, a leak, broken equipment. Sends an alert straight away
-            rather than waiting for the next visit.
+          <span className="text-ink-soft block">
+            Green water, a leak, broken equipment. Sends an alert straight away rather than waiting
+            for the next visit.
           </span>
         </span>
       </label>
 
       {state.error ? (
-        <p
-          role="alert"
-          className="rounded-sm bg-err/10 px-3 py-2 text-sm font-medium text-err"
-        >
+        <p role="alert" className="bg-err/10 text-err rounded-sm px-3 py-2 text-sm font-medium">
           {state.error}
         </p>
       ) : null}
@@ -112,7 +103,7 @@ export function FeedbackForm({ token }: { token: string }) {
       <button
         type="submit"
         disabled={pending}
-        className="min-h-tap w-full rounded-pill bg-brand px-5 py-3.5 text-lg font-bold text-white hover:bg-brand-dark active:translate-y-px disabled:pointer-events-none disabled:opacity-50"
+        className="min-h-tap rounded-pill bg-brand hover:bg-brand-dark w-full px-5 py-3.5 text-lg font-bold text-white active:translate-y-px disabled:pointer-events-none disabled:opacity-50"
       >
         {pending ? "Sending…" : "Send to my pool service"}
       </button>

@@ -16,8 +16,7 @@ export const metadata: Metadata = {
     default: "Fludd",
     template: "%s · Fludd",
   },
-  description:
-    "Run your pool route and send every customer a real service report.",
+  description: "Run your pool route and send every customer a real service report.",
   icons: {
     icon: "/favicon.png",
     apple: "/apple-touch-icon.png",
@@ -53,7 +52,7 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className={`${plusJakarta.variable} h-full`}>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">{children}</body>
     </html>
   );
 }

@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: LayoutProps<"/">) {
         <Image src="/favicon.png" alt="" width={44} height={44} className="rounded-sm" priority />
         <div>
           <p className="text-2xl font-extrabold tracking-tight">Fludd</p>
-          <p className="text-sm text-ink-soft leading-snug">Pool service</p>
+          <p className="text-ink-soft text-sm leading-snug">Pool service</p>
         </div>
       </div>
       {children}

@@ -13,11 +13,7 @@ export default async function OnboardingPage() {
 
   // Already onboarded? Nothing to do here.
   const supabase = await createClient();
-  const { data: tech } = await supabase
-    .from("techs")
-    .select("id")
-    .eq("id", user.id)
-    .maybeSingle();
+  const { data: tech } = await supabase.from("techs").select("id").eq("id", user.id).maybeSingle();
   if (tech) redirect("/");
 
   return (

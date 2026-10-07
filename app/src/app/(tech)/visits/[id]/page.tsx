@@ -14,10 +14,7 @@ export const metadata = { title: "Visit" };
 
 const SIGNED_URL_TTL_SECONDS = 60 * 60;
 
-export default async function VisitPage({
-  params,
-  searchParams,
-}: PageProps<"/visits/[id]">) {
+export default async function VisitPage({ params, searchParams }: PageProps<"/visits/[id]">) {
   const { id } = await params;
   const { email, why, to } = await searchParams;
   const { company } = await requireTech();
@@ -39,23 +36,17 @@ export default async function VisitPage({
       .select("id, label, completed")
       .eq("visit_id", id)
       .order("position"),
-    supabase
-      .from("visit_photos")
-      .select("id, storage_path")
-      .eq("visit_id", id)
-      .order("position"),
+    supabase.from("visit_photos").select("id, storage_path").eq("visit_id", id).order("position"),
   ]);
 
   // The bucket is private, so each render mints fresh short-lived URLs rather
   // than storing anything publicly reachable.
   let photoItems: PhotoItem[] = [];
   if (photos && photos.length > 0) {
-    const { data: signed } = await supabase.storage
-      .from("visit-photos")
-      .createSignedUrls(
-        photos.map((p) => p.storage_path),
-        SIGNED_URL_TTL_SECONDS,
-      );
+    const { data: signed } = await supabase.storage.from("visit-photos").createSignedUrls(
+      photos.map((p) => p.storage_path),
+      SIGNED_URL_TTL_SECONDS,
+    );
     photoItems = photos.map((p, i) => ({
       id: p.id,
       storage_path: p.storage_path,
@@ -80,24 +71,20 @@ export default async function VisitPage({
   );
 
   const customer = visit.customers;
-  const name = [customer?.first_name, customer?.last_name]
-    .filter(Boolean)
-    .join(" ");
+  const name = [customer?.first_name, customer?.last_name].filter(Boolean).join(" ");
 
   return (
     <>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <h1 className="text-2xl">{name}</h1>
-          <p className="mt-0.5 truncate text-sm text-ink-soft">
-            {customer?.address}
-          </p>
+          <p className="text-ink-soft mt-0.5 truncate text-sm">{customer?.address}</p>
         </div>
         <a
           href={directionsUrl(customer?.address ?? "", company.maps_pref)}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-tap shrink-0 items-center rounded-pill bg-brand-tint px-4 text-sm font-bold text-brand-dark"
+          className="min-h-tap rounded-pill bg-brand-tint text-brand-dark inline-flex shrink-0 items-center px-4 text-sm font-bold"
         >
           Directions
         </a>
@@ -112,10 +99,8 @@ export default async function VisitPage({
 
       {hasNotes && lastFeedback ? (
         <section
-          className={`mt-4 rounded-card p-4 ring-1 ${
-            lastFeedback.is_urgent
-              ? "bg-warn-tint ring-warn/30"
-              : "bg-brand-tint ring-brand/20"
+          className={`rounded-card mt-4 p-4 ring-1 ${
+            lastFeedback.is_urgent ? "bg-warn-tint ring-warn/30" : "bg-brand-tint ring-brand/20"
           }`}
         >
           <p
@@ -128,21 +113,19 @@ export default async function VisitPage({
               : "From the owner, for this visit"}
           </p>
           {lastFeedback.next_visit_notes ? (
-            <p className="mt-1.5 text-sm whitespace-pre-wrap text-ink">
+            <p className="text-ink mt-1.5 text-sm whitespace-pre-wrap">
               {lastFeedback.next_visit_notes}
             </p>
           ) : null}
           {lastFeedback.is_urgent && lastFeedback.review ? (
-            <p className="mt-1.5 text-sm whitespace-pre-wrap text-ink">
-              {lastFeedback.review}
-            </p>
+            <p className="text-ink mt-1.5 text-sm whitespace-pre-wrap">{lastFeedback.review}</p>
           ) : null}
         </section>
       ) : null}
 
       {customer?.internal_notes ? (
-        <p className="mt-4 rounded-card bg-brand-tint-2 px-4 py-3 text-sm text-ink-soft ring-1 ring-line">
-          <span className="font-bold text-ink">Private note · </span>
+        <p className="rounded-card bg-brand-tint-2 text-ink-soft ring-line mt-4 px-4 py-3 text-sm ring-1">
+          <span className="text-ink font-bold">Private note · </span>
           {customer.internal_notes}
         </p>
       ) : null}
@@ -166,25 +149,22 @@ export default async function VisitPage({
         <input type="hidden" name="visit_id" value={visit.id} />
         <button
           type="submit"
-          className="min-h-tap w-full rounded-pill bg-brand px-5 py-4 text-lg font-bold text-white hover:bg-brand-dark active:translate-y-px"
+          className="min-h-tap rounded-pill bg-brand hover:bg-brand-dark w-full px-5 py-4 text-lg font-bold text-white active:translate-y-px"
         >
           Finish visit
         </button>
-        <p className="mt-2 text-center text-xs text-ink-faint">
+        <p className="text-ink-faint mt-2 text-center text-xs">
           Unchecked services are reported as not done today.
         </p>
       </form>
 
-      <div className="mt-8 flex items-center justify-between border-t border-line pt-5">
-        <Link href="/" className="text-sm font-bold text-ink-soft">
+      <div className="border-line mt-8 flex items-center justify-between border-t pt-5">
+        <Link href="/" className="text-ink-soft text-sm font-bold">
           ← Back to route
         </Link>
         <form action={cancelVisit}>
           <input type="hidden" name="visit_id" value={visit.id} />
-          <button
-            type="submit"
-            className="text-sm font-bold text-err underline underline-offset-2"
-          >
+          <button type="submit" className="text-err text-sm font-bold underline underline-offset-2">
             Cancel this visit
           </button>
         </form>

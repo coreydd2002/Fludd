@@ -22,17 +22,17 @@ export default function Error({
 
   return (
     <main className="mx-auto w-full max-w-[480px] px-5 py-12">
-      <div className="rounded-card bg-card p-6 text-center shadow-sm ring-1 ring-line">
+      <div className="rounded-card bg-card ring-line p-6 text-center shadow-sm ring-1">
         <h1 className="text-xl">Something went wrong</h1>
-        <p className="mt-2 text-sm text-ink-soft">
-          Nothing you saved has been lost. Try again, and if it keeps happening
-          your visit is still recorded — you can finish it later.
+        <p className="text-ink-soft mt-2 text-sm">
+          Nothing you saved has been lost. Try again, and if it keeps happening your visit is still
+          recorded — you can finish it later.
         </p>
 
         <button
           type="button"
           onClick={reset}
-          className="mt-5 min-h-tap w-full rounded-pill bg-brand px-5 font-bold text-white hover:bg-brand-dark"
+          className="min-h-tap rounded-pill bg-brand hover:bg-brand-dark mt-5 w-full px-5 font-bold text-white"
         >
           Try again
         </button>
@@ -43,15 +43,13 @@ export default function Error({
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
         <a
           href="/"
-          className="mt-3 inline-flex min-h-tap w-full items-center justify-center rounded-pill px-5 font-bold text-ink-soft ring-1 ring-line"
+          className="min-h-tap rounded-pill text-ink-soft ring-line mt-3 inline-flex w-full items-center justify-center px-5 font-bold ring-1"
         >
           Back to today&apos;s route
         </a>
 
         {error.digest ? (
-          <p className="mt-4 font-mono text-[11px] text-ink-faint">
-            Reference: {error.digest}
-          </p>
+          <p className="text-ink-faint mt-4 font-mono text-[11px]">Reference: {error.digest}</p>
         ) : null}
       </div>
     </main>

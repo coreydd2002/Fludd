@@ -23,16 +23,14 @@ export default async function ReportPage({ params }: PageProps<"/r/[token]">) {
   const healthy = allReadingsHealthy(r.readings);
   const done = r.items.filter((i) => i.completed);
   const skipped = r.items.filter((i) => !i.completed);
-  const anyReading = READINGS.some(
-    (spec) => statusOf(spec, r.readings[spec.key]) !== "empty",
-  );
+  const anyReading = READINGS.some((spec) => statusOf(spec, r.readings[spec.key]) !== "empty");
 
   return (
     <Shell>
       <header>
         <p className="eyebrow">Your latest service</p>
         <h1 className="mt-1 text-2xl">Hi {r.ownerFirstName}</h1>
-        <p className="mt-1 text-sm text-ink-soft">
+        <p className="text-ink-soft mt-1 text-sm">
           Serviced by {r.techName} · {r.servicedAt}
         </p>
       </header>
@@ -46,15 +44,15 @@ export default async function ReportPage({ params }: PageProps<"/r/[token]">) {
               return (
                 <div
                   key={spec.key}
-                  className="rounded-card bg-card p-3 text-center shadow-sm ring-1 ring-line"
+                  className="rounded-card bg-card ring-line p-3 text-center shadow-sm ring-1"
                 >
-                  <p className="text-[11px] font-bold tracking-wider text-ink-soft uppercase">
+                  <p className="text-ink-soft text-[11px] font-bold tracking-wider uppercase">
                     {spec.short}
                   </p>
                   <p className="mt-0.5 text-2xl font-extrabold tracking-tight">
                     {formatReading(spec, value)}
                   </p>
-                  <p className="text-[11px] text-ink-faint">
+                  <p className="text-ink-faint text-[11px]">
                     {status === "empty"
                       ? "not tested"
                       : status === "ok"
@@ -69,7 +67,7 @@ export default async function ReportPage({ params }: PageProps<"/r/[token]">) {
           </div>
 
           {healthy ? (
-            <p className="mt-2 rounded-card bg-ok-tint px-4 py-3 text-sm font-bold text-ok-deep ring-1 ring-ok/20">
+            <p className="rounded-card bg-ok-tint text-ok-deep ring-ok/20 mt-2 px-4 py-3 text-sm font-bold ring-1">
               ✓ All readings in the healthy range
             </p>
           ) : null}
@@ -77,19 +75,19 @@ export default async function ReportPage({ params }: PageProps<"/r/[token]">) {
       ) : null}
 
       {r.items.length > 0 ? (
-        <section className="mt-6 rounded-card bg-card p-5 shadow-sm ring-1 ring-line">
+        <section className="rounded-card bg-card ring-line mt-6 p-5 shadow-sm ring-1">
           <h2 className="eyebrow">What was done</h2>
           <ul className="mt-3 flex flex-col gap-1.5 text-sm">
             {done.map((item) => (
               <li key={item.label} className="flex gap-2">
-                <span aria-hidden className="font-bold text-ok">
+                <span aria-hidden className="text-ok font-bold">
                   ✓
                 </span>
                 <span>{item.label}</span>
               </li>
             ))}
             {skipped.map((item) => (
-              <li key={item.label} className="flex gap-2 text-ink-faint">
+              <li key={item.label} className="text-ink-faint flex gap-2">
                 <span aria-hidden>—</span>
                 <span>{item.label} (not done today)</span>
               </li>
@@ -111,7 +109,7 @@ export default async function ReportPage({ params }: PageProps<"/r/[token]">) {
                 src={url}
                 alt={`Pool service photo ${i + 1}`}
                 loading="lazy"
-                className="aspect-square w-full rounded-sm object-cover ring-1 ring-line"
+                className="ring-line aspect-square w-full rounded-sm object-cover ring-1"
               />
             ))}
           </div>
@@ -119,38 +117,36 @@ export default async function ReportPage({ params }: PageProps<"/r/[token]">) {
       ) : null}
 
       {r.techNotes ? (
-        <section className="mt-6 rounded-card bg-brand-tint-2 p-5 ring-1 ring-line">
+        <section className="rounded-card bg-brand-tint-2 ring-line mt-6 p-5 ring-1">
           <h2 className="eyebrow">A note from {r.techName}</h2>
-          <p className="mt-2 text-sm whitespace-pre-wrap text-ink">{r.techNotes}</p>
+          <p className="text-ink mt-2 text-sm whitespace-pre-wrap">{r.techNotes}</p>
         </section>
       ) : null}
 
-      <hr className="mt-8 border-line" />
+      <hr className="border-line mt-8" />
 
       <section className="mt-6">
         {r.alreadySubmitted ? (
-          <p className="rounded-card bg-ok-tint px-4 py-3 text-sm font-medium text-ok-deep ring-1 ring-ok/20">
+          <p className="rounded-card bg-ok-tint text-ok-deep ring-ok/20 px-4 py-3 text-sm font-medium ring-1">
             Thanks — you&apos;ve already sent feedback for this visit.
           </p>
         ) : r.feedbackOpen ? (
           <>
             <h2 className="text-xl">How did it go?</h2>
-            <p className="mt-1 mb-4 text-sm text-ink-soft">
+            <p className="text-ink-soft mt-1 mb-4 text-sm">
               Goes straight to {r.businessName}. Private — never published.
             </p>
             <FeedbackForm token={token} />
           </>
         ) : (
-          <p className="rounded-card bg-brand-tint-2 px-4 py-3 text-sm text-ink-soft ring-1 ring-line">
-            Feedback for this visit has closed — it stays open until your next
-            service. This report will keep working.
+          <p className="rounded-card bg-brand-tint-2 text-ink-soft ring-line px-4 py-3 text-sm ring-1">
+            Feedback for this visit has closed — it stays open until your next service. This report
+            will keep working.
           </p>
         )}
       </section>
 
-      <p className="mt-8 text-center text-xs text-ink-faint">
-        {r.businessName} · sent with Fludd
-      </p>
+      <p className="text-ink-faint mt-8 text-center text-xs">{r.businessName} · sent with Fludd</p>
     </Shell>
   );
 }
@@ -162,21 +158,21 @@ function Shell({ children }: { children: React.ReactNode }) {
 // Identical response for a malformed token and one that does not exist, so the
 // page cannot be used to test whether a guessed token is real.
 const invalidBody = (
-  <div className="rounded-card bg-card p-8 text-center shadow-sm ring-1 ring-line">
+  <div className="rounded-card bg-card ring-line p-8 text-center shadow-sm ring-1">
     <h1 className="text-xl">This link isn&apos;t valid</h1>
-    <p className="mt-2 text-sm text-ink-soft">
-      It may have been mistyped or replaced by a newer one. The most recent
-      email from your pool service will have a working link.
+    <p className="text-ink-soft mt-2 text-sm">
+      It may have been mistyped or replaced by a newer one. The most recent email from your pool
+      service will have a working link.
     </p>
   </div>
 );
 
 const notFinishedBody = (
-  <div className="rounded-card bg-card p-8 text-center shadow-sm ring-1 ring-line">
+  <div className="rounded-card bg-card ring-line p-8 text-center shadow-sm ring-1">
     <h1 className="text-xl">Your service isn&apos;t finished yet</h1>
-    <p className="mt-2 text-sm text-ink-soft">
-      This report fills in once your tech completes the visit. You&apos;ll get an
-      email the moment it&apos;s ready.
+    <p className="text-ink-soft mt-2 text-sm">
+      This report fills in once your tech completes the visit. You&apos;ll get an email the moment
+      it&apos;s ready.
     </p>
   </div>
 );

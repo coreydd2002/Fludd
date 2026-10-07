@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "anthropic.claude-code",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "bradlc.vscode-tailwindcss",
+    "vitest.explorer",
+    "ms-playwright.playwright",
+    "github.vscode-github-actions",
+    "github.vscode-pull-request-github"
+  ],
+  "unwantedRecommendations": ["github.copilot", "github.copilot-chat"]
+}

@@ -130,7 +130,11 @@ try {
       .from("customers")
       .update({ first_name: "Hijacked" })
       .eq("id", customer.id);
-    const { data: check } = await a.from("customers").select("first_name").eq("id", customer.id).single();
+    const { data: check } = await a
+      .from("customers")
+      .select("first_name")
+      .eq("id", customer.id)
+      .single();
     if (check?.first_name === "Hank") ok("account B cannot overwrite A's customer");
     else bad(`account B modified A's customer (${writeErr?.message ?? "no error"})`);
   }
@@ -138,7 +142,11 @@ try {
   bad(`threw: ${err.message}`);
 } finally {
   for (const id of created) {
-    const { data: tech } = await admin.from("techs").select("company_id").eq("id", id).maybeSingle();
+    const { data: tech } = await admin
+      .from("techs")
+      .select("company_id")
+      .eq("id", id)
+      .maybeSingle();
     if (tech) await admin.from("companies").delete().eq("id", tech.company_id);
     await admin.auth.admin.deleteUser(id);
   }

@@ -69,7 +69,7 @@ export function EmailNotice({
     return (
       <p
         role="status"
-        className="mt-4 rounded-sm bg-ok-tint px-3 py-2 text-sm font-medium text-ok-deep"
+        className="bg-ok-tint text-ok-deep mt-4 rounded-sm px-3 py-2 text-sm font-medium"
       >
         {sentLabel}
         {redirectedTo
@@ -81,27 +81,21 @@ export function EmailNotice({
 
   if (status === "off") {
     return (
-      <p
-        role="status"
-        className="mt-4 rounded-sm bg-brand-tint-2 px-3 py-2 text-sm text-ink-soft"
-      >
-        No email sent — &ldquo;on my way&rdquo; is turned off for this pool. You
-        can change that on the customer&apos;s page.
+      <p role="status" className="bg-brand-tint-2 text-ink-soft mt-4 rounded-sm px-3 py-2 text-sm">
+        No email sent — &ldquo;on my way&rdquo; is turned off for this pool. You can change that on
+        the customer&apos;s page.
       </p>
     );
   }
 
   if (status === "skipped") {
     return (
-      <div
-        role="alert"
-        className="mt-4 rounded-sm bg-warn-tint px-3 py-3 text-sm text-warn"
-      >
+      <div role="alert" className="bg-warn-tint text-warn mt-4 rounded-sm px-3 py-3 text-sm">
         <p className="font-bold">No email sent — email isn&apos;t set up yet.</p>
         <p className="mt-1">
           Add <code className="font-mono">RESEND_API_KEY</code> and{" "}
-          <code className="font-mono">EMAIL_FROM</code> to this deployment&apos;s
-          environment variables, then redeploy.
+          <code className="font-mono">EMAIL_FROM</code> to this deployment&apos;s environment
+          variables, then redeploy.
         </p>
       </div>
     );
@@ -110,23 +104,18 @@ export function EmailNotice({
   const guidance = reason ? explain(reason) : null;
 
   return (
-    <div
-      role="alert"
-      className="mt-4 rounded-sm bg-warn-tint px-3 py-3 text-sm text-warn"
-    >
+    <div role="alert" className="bg-warn-tint text-warn mt-4 rounded-sm px-3 py-3 text-sm">
       <p className="font-bold">Resend refused this email.</p>
 
       {guidance ? <p className="mt-1.5 font-medium">{guidance}</p> : null}
 
       {reason ? (
-        <p className="mt-2 rounded-sm bg-warn/10 px-2 py-1.5 font-mono text-[12px] break-words">
+        <p className="bg-warn/10 mt-2 rounded-sm px-2 py-1.5 font-mono text-[12px] break-words">
           {reason}
         </p>
       ) : null}
 
-      <p className="mt-2 text-ink-soft">
-        The visit saved normally — only the email failed.
-      </p>
+      <p className="text-ink-soft mt-2">The visit saved normally — only the email failed.</p>
     </div>
   );
 }

@@ -84,14 +84,14 @@ export function PhotoStrip({
             <img
               src={photo.url}
               alt="Pool service photo"
-              className="size-24 rounded-sm object-cover ring-1 ring-line"
+              className="ring-line size-24 rounded-sm object-cover ring-1"
             />
             {!disabled ? (
               <button
                 type="button"
                 onClick={() => remove(photo)}
                 aria-label="Remove photo"
-                className="absolute -right-1.5 -top-1.5 grid size-7 place-items-center rounded-pill bg-card text-lg leading-none text-ink-soft shadow-sm ring-1 ring-line"
+                className="rounded-pill bg-card text-ink-soft ring-line absolute -top-1.5 -right-1.5 grid size-7 place-items-center text-lg leading-none shadow-sm ring-1"
               >
                 ×
               </button>
@@ -100,7 +100,7 @@ export function PhotoStrip({
         ))}
 
         {busy > 0 ? (
-          <div className="grid size-24 place-items-center rounded-sm bg-brand-tint text-xs font-bold text-brand-dark ring-1 ring-line">
+          <div className="bg-brand-tint text-brand-dark ring-line grid size-24 place-items-center rounded-sm text-xs font-bold ring-1">
             Adding…
           </div>
         ) : null}
@@ -120,7 +120,7 @@ export function PhotoStrip({
           />
           <label
             htmlFor="photo-input"
-            className="mt-3 inline-flex min-h-tap cursor-pointer items-center rounded-pill bg-card px-5 font-bold text-ink ring-1 ring-line"
+            className="min-h-tap rounded-pill bg-card text-ink ring-line mt-3 inline-flex cursor-pointer items-center px-5 font-bold ring-1"
           >
             Add photo
           </label>
@@ -128,7 +128,7 @@ export function PhotoStrip({
       ) : null}
 
       {error ? (
-        <p role="alert" className="mt-2 text-sm text-err">
+        <p role="alert" className="text-err mt-2 text-sm">
           {error}
         </p>
       ) : null}

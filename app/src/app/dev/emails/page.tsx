@@ -4,11 +4,7 @@ import { notFound } from "next/navigation";
 
 import { FinishEmail, finishEmailSample } from "@/emails/FinishEmail";
 import { StartEmail, startEmailSample } from "@/emails/StartEmail";
-import {
-  UrgentAlertEmail,
-  urgentAlertSample,
-  urgentAlertSubject,
-} from "@/emails/UrgentAlertEmail";
+import { UrgentAlertEmail, urgentAlertSample, urgentAlertSubject } from "@/emails/UrgentAlertEmail";
 
 import { TestSendForm } from "./TestSendForm";
 
@@ -40,21 +36,18 @@ const TEMPLATES = {
 
 type TemplateKey = keyof typeof TEMPLATES;
 
-export default async function EmailPreviewPage({
-  searchParams,
-}: PageProps<"/dev/emails">) {
+export default async function EmailPreviewPage({ searchParams }: PageProps<"/dev/emails">) {
   if (process.env.NODE_ENV === "production") notFound();
 
   const { t } = await searchParams;
-  const key: TemplateKey =
-    t === "finish" || t === "urgent" ? t : "start";
+  const key: TemplateKey = t === "finish" || t === "urgent" ? t : "start";
   const template = TEMPLATES[key];
   const html = await render(template.element);
 
   return (
     <main className="mx-auto w-full max-w-[720px] px-5 py-8">
       <h1 className="text-2xl">Email preview</h1>
-      <p className="mt-1 text-sm text-ink-soft">
+      <p className="text-ink-soft mt-1 text-sm">
         Sample data, nothing sent. Resize the window to check it on a phone.
       </p>
 
@@ -63,10 +56,8 @@ export default async function EmailPreviewPage({
           <Link
             key={k}
             href={`/dev/emails?t=${k}`}
-            className={`inline-flex min-h-tap items-center rounded-pill px-4 text-sm font-bold ${
-              k === key
-                ? "bg-brand text-white"
-                : "bg-card text-ink ring-1 ring-line"
+            className={`min-h-tap rounded-pill inline-flex items-center px-4 text-sm font-bold ${
+              k === key ? "bg-brand text-white" : "bg-card text-ink ring-line ring-1"
             }`}
           >
             {TEMPLATES[k].name}
@@ -74,21 +65,18 @@ export default async function EmailPreviewPage({
         ))}
       </nav>
 
-      <p className="mt-5 rounded-sm bg-brand-tint-2 px-3 py-2 text-sm">
+      <p className="bg-brand-tint-2 mt-5 rounded-sm px-3 py-2 text-sm">
         <span className="font-bold">Subject: </span>
         {template.subject}
       </p>
 
-      <TestSendForm
-        template={key}
-        defaultTo={process.env.DEV_EMAIL_OVERRIDE ?? ""}
-      />
+      <TestSendForm template={key} defaultTo={process.env.DEV_EMAIL_OVERRIDE ?? ""} />
 
       {/* An iframe so the email's own styles cannot inherit from the app's. */}
       <iframe
         title={`${template.name} email preview`}
         srcDoc={html}
-        className="mt-4 h-[900px] w-full rounded-card bg-white ring-1 ring-line"
+        className="rounded-card ring-line mt-4 h-[900px] w-full bg-white ring-1"
       />
     </main>
   );

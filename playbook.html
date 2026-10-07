@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#0b6bcb" />
+
+  <title>Fludd Team Playbook</title>
+  <meta name="description" content="How the Fludd engineering team works: our language, editor, process, git rules, board, AI policy, code quality, testing and operations — and how to be shipping on day one." />
+  <link rel="canonical" href="https://fludd.work/playbook" />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Fludd" />
+  <meta property="og:title" content="Fludd Team Playbook" />
+  <meta property="og:description" content="Everything a new Fludd developer needs to get from laptop to first merged PR." />
+  <meta property="og:url" content="https://fludd.work/playbook" />
+  <meta property="og:image" content="https://fludd.work/og-image.jpg" />
+
+  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="playbook.css" />
+</head>
+<body class="playbook">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="container">
+      <a class="brand" href="/" aria-label="Fludd home">
+        <img src="favicon.png" alt="" width="128" height="128" />
+        <span>Fludd</span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="https://github.com/coreydd2002/Fludd">Repo</a>
+        <a href="https://github.com/users/coreydd2002/projects/2">Board</a>
+        <a href="https://github.com/coreydd2002/Fludd/actions">CI</a>
+      </nav>
+
+      <div class="header-cta">
+        <a class="btn btn-ghost" href="/">Back to site</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="pb-hero">
+      <div class="container">
+        <p class="eyebrow">Team playbook · v1 · October 2026</p>
+        <h1>Welcome to Fludd engineering.</h1>
+        <p class="lead">
+          This is the one document you need before your first day. It covers what we use, why we
+          chose it, and the exact steps to go from a fresh laptop to your first merged pull request.
+          Everything linked here is live and in use, not a plan.
+        </p>
+        <div class="pb-facts">
+          <div><strong>Team</strong><span>Founder (Corey) + you</span></div>
+          <div><strong>Product</strong><span><a href="https://app.fludd.work">app.fludd.work</a> · <a href="/">fludd.work</a></span></div>
+          <div><strong>Process</strong><span>Kanban, weekly review</span></div>
+          <div><strong>Questions</strong><span><a href="mailto:coreydd2002@gmail.com">coreydd2002@gmail.com</a></span></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="container pb-layout">
+      <nav class="pb-toc" aria-label="Playbook contents">
+        <p class="pb-toc-title">Contents</p>
+        <ol>
+          <li><a href="#day-one">Day-one checklist</a></li>
+          <li><a href="#language">Language selection</a></li>
+          <li><a href="#ide">IDE selection and setup</a></li>
+          <li><a href="#process">Development strategy</a></li>
+          <li><a href="#git">Git strategy and controls</a></li>
+          <li><a href="#issues">Issue tracking</a></li>
+          <li><a href="#ai">AI agents and controls</a></li>
+          <li><a href="#quality">Code quality</a></li>
+          <li><a href="#testing">Testing frameworks</a></li>
+          <li><a href="#other">Other controls, tools and procedures</a></li>
+        </ol>
+      </nav>
+
+      <article class="pb-doc">
+
+        <!-- ================================================================ -->
+        <section id="day-one" class="pb-section">
+          <h2>Day-one checklist</h2>
+          <p>Work through this list in order. Each item links to the section that explains it. By the end of the day you should have the app running locally and a small PR open.</p>
+          <ol class="pb-check">
+            <li>Send Corey your GitHub username. You'll be added to the <a href="https://github.com/coreydd2002/Fludd">Fludd repo</a> and the <a href="https://github.com/users/coreydd2002/projects/2">Fludd Roadmap board</a>.</li>
+            <li>Turn on two-factor authentication for GitHub: <a href="https://github.com/settings/security">github.com/settings/security</a>.</li>
+            <li>Install <a href="https://code.visualstudio.com/download">VS Code</a>, <a href="https://nodejs.org/en/download">Node.js 22 LTS</a> and <a href="https://git-scm.com/downloads">Git</a>. See <a href="#ide">§2</a>.</li>
+            <li>Clone the repo, open it in VS Code, and accept the recommended extensions.</li>
+            <li>Create your own free Supabase project and fill in <code>app/.env.local</code> (<a href="#ide-env">§2.4</a>).</li>
+            <li>Run <code>npm run dev</code> and sign up at <code>localhost:3000</code>.</li>
+            <li>Run the full local check: <code>npm run lint &amp;&amp; npm run typecheck &amp;&amp; npm test &amp;&amp; npm run test:e2e</code>.</li>
+            <li>Read <a href="#ai">§6 AI agents and controls</a> before you open Claude Code.</li>
+            <li>Take the <code>good first issue</code> card from <strong>Ready</strong>, branch, and open your first PR (<a href="#git">§4</a>).</li>
+          </ol>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="language" class="pb-section">
+          <h2><span class="num" aria-hidden="true">01</span>Language selection</h2>
+          <p class="lead">We write <strong>TypeScript</strong> everywhere it runs on a build step, plain <strong>HTML/CSS/JavaScript</strong> where it doesn't, and <strong>SQL</strong> for the database.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Where</th><th>Language</th><th>Why</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><code>app/</code>: the tech app and public report</td>
+                  <td>TypeScript 5 (<code>strict: true</code>) with React 19 on Next.js 16</td>
+                  <td>One language for UI, server actions and email templates. Next.js and Supabase are TypeScript-first. Database types are generated into <code>src/lib/supabase/database.types.ts</code>, so a schema change becomes a compile error, not a 2&nbsp;a.m. bug.</td>
+                </tr>
+                <tr>
+                  <td>Repo root: marketing site <code>fludd.work</code></td>
+                  <td>Hand-written HTML, CSS, vanilla JS; one Node serverless function (<code>api/subscribe.js</code>)</td>
+                  <td>A landing page doesn't need a framework. No build step means nothing to break, a strict Content Security Policy, and a near-instant page.</td>
+                </tr>
+                <tr>
+                  <td><code>app/supabase/</code></td>
+                  <td>PostgreSQL SQL</td>
+                  <td>The schema and every row-level-security rule live in migrations, so access control is code that gets reviewed and tested (<a href="#testing">§8</a>).</td>
+                </tr>
+                <tr>
+                  <td>Styling</td>
+                  <td>Tailwind CSS v4 (app); plain CSS with tokens in <code>:root</code> (landing)</td>
+                  <td>Design tokens live in <code>app/src/app/globals.css</code>. Shared components live in <code>app/src/components/ui.tsx</code>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="pb-callout"><strong>Rule of thumb:</strong> no new languages or frameworks without a written proposal on the board. Every extra tool is something the next hire has to learn.</p>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="ide" class="pb-section">
+          <h2><span class="num" aria-hidden="true">02</span>IDE selection and setup</h2>
+          <p class="lead">We use <strong>Visual Studio Code</strong>. The repo ships its settings and extension list, so your editor formats, lints and type-checks exactly the way CI does.</p>
+
+          <h3>2.1 Install</h3>
+          <div class="pb-links">
+            <a class="pb-link" href="https://code.visualstudio.com/download"><strong>VS Code</strong><span>code.visualstudio.com/download</span></a>
+            <a class="pb-link" href="https://nodejs.org/en/download"><strong>Node.js 22 LTS</strong><span>nodejs.org (CI runs Node 22)</span></a>
+            <a class="pb-link" href="https://git-scm.com/downloads"><strong>Git</strong><span>git-scm.com/downloads</span></a>
+            <a class="pb-link" href="https://cli.github.com/"><strong>GitHub CLI</strong><span>cli.github.com (optional, handy for PRs)</span></a>
+          </div>
+
+          <h3>2.2 Clone and open</h3>
+<pre><code>git clone https://github.com/coreydd2002/Fludd.git
+cd Fludd
+code .</code></pre>
+          <p>VS Code will show <em>“This workspace has extension recommendations.”</em> Click <strong>Install All</strong>. The list lives in <a href="https://github.com/coreydd2002/Fludd/blob/main/.vscode/extensions.json"><code>.vscode/extensions.json</code></a>:</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Extension</th><th>What it's for</th></tr></thead>
+              <tbody>
+                <tr><td>Claude Code</td><td>Our approved AI agent (<a href="#ai">§6</a>)</td></tr>
+                <tr><td>ESLint</td><td>Lint errors inline; auto-fix on save</td></tr>
+                <tr><td>Prettier</td><td>Formats on save using <code>app/.prettierrc.json</code></td></tr>
+                <tr><td>Tailwind CSS IntelliSense</td><td>Class autocomplete from our theme tokens</td></tr>
+                <tr><td>Vitest</td><td>Run and debug unit tests from the Testing sidebar</td></tr>
+                <tr><td>Playwright Test</td><td>Run end-to-end tests with a visible browser</td></tr>
+                <tr><td>GitHub Actions · GitHub Pull Requests</td><td>See CI status and review PRs without leaving the editor</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The extension list also marks GitHub Copilot as <em>unwanted</em>, since it isn't an approved tool (<a href="#ai">§6</a>).</p>
+
+          <h3>2.3 What the workspace settings do</h3>
+          <p><a href="https://github.com/coreydd2002/Fludd/blob/main/.vscode/settings.json"><code>.vscode/settings.json</code></a> is committed, so you don't configure anything by hand:</p>
+          <ul class="pb-list">
+            <li><strong>Format on save</strong> with Prettier, and <strong>ESLint fix on save</strong>.</li>
+            <li>ESLint runs in the <code>app/</code> folder; TypeScript uses the project's own version (accept the “Use Workspace Version” prompt).</li>
+            <li>LF line endings, final newline, trim trailing whitespace. These match <code>.gitattributes</code>, so Windows and CI agree.</li>
+          </ul>
+
+          <h3 id="ide-env">2.4 Run the app locally</h3>
+          <p>Use your <strong>own free Supabase project</strong> for development. You get a database nobody else touches, and no keys ever have to be sent to you.</p>
+          <ol class="pb-steps">
+            <li>Create a project at <a href="https://supabase.com/dashboard">supabase.com/dashboard</a>.</li>
+            <li>In its SQL Editor, paste and run <a href="https://github.com/coreydd2002/Fludd/blob/main/app/supabase/migrations/0001_init.sql"><code>app/supabase/migrations/0001_init.sql</code></a>.</li>
+            <li>Under Authentication → Sign In / Providers → Email, turn <strong>Confirm email</strong> off (dev only).</li>
+            <li>Then, in a terminal:</li>
+          </ol>
+<pre><code>cd app
+npm ci                         # exact versions from package-lock.json
+cp .env.example .env.local     # then fill in the three SUPABASE_* values
+npx playwright install chromium
+npm run dev                    # http://localhost:3000
+npm run make:user              # optional: a ready-made dev login</code></pre>
+          <p>The variables are described in <a href="https://github.com/coreydd2002/Fludd/blob/main/app/.env.example"><code>app/.env.example</code></a>. Leave the email ones blank until you work on email.</p>
+          <p>To preview the marketing site: <code>cd app &amp;&amp; node e2e/static-server.mjs</code> → <code>localhost:4000</code>. To test its form against Resend, use <code>vercel dev</code> at the repo root (see the root <a href="https://github.com/coreydd2002/Fludd#readme">README</a>).</p>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="process" class="pb-section">
+          <h2><span class="num" aria-hidden="true">03</span>Development strategy</h2>
+          <p class="lead">We run <strong>Kanban</strong>: work flows continuously across one board, and we limit how much is in progress at once, not how much is planned per sprint.</p>
+
+          <h3>Why Kanban, not Scrum</h3>
+          <p>We're a founder plus one developer, building for pool-service owners whose feedback arrives whenever they have it. Two-week sprint commitments would be broken by the first customer bug. Kanban lets us re-prioritize daily while still finishing what we start.</p>
+
+          <h3>The board</h3>
+          <div class="pb-flow" role="list">
+            <div role="listitem"><strong>Backlog</strong><span>Ideas and requests. Not yet ready.</span></div>
+            <div role="listitem"><strong>Ready</strong><span>Clear acceptance criteria, sized, ordered top = next.</span></div>
+            <div role="listitem"><strong>In Progress</strong><span>WIP limit <b>2 per person</b></span></div>
+            <div role="listitem"><strong>In Review</strong><span>PR open, CI green. WIP limit <b>3 total</b></span></div>
+            <div role="listitem"><strong>Done</strong><span>Merged and deployed to production</span></div>
+          </div>
+
+          <h3>How a day runs</h3>
+          <ol class="pb-steps">
+            <li><strong>Start of day (async, 2 minutes):</strong> post a short update on the issue you're working on: yesterday, today, anything blocking. No standing meeting.</li>
+            <li><strong>Finish before you start.</strong> If <em>In Review</em> has something waiting, review it before pulling new work. Unblocking a card beats starting one.</li>
+            <li><strong>Pull, don't wait to be assigned.</strong> When you have capacity, take the <em>top</em> card in Ready and assign yourself.</li>
+            <li><strong>Blocked for more than two hours?</strong> Say so on the issue and email Corey. Don't silently start something else.</li>
+          </ol>
+
+          <h3>Weekly rhythm</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>When</th><th>What</th><th>Length</th></tr></thead>
+              <tbody>
+                <tr><td>Monday</td><td><strong>Replenish:</strong> review Backlog, write acceptance criteria, order Ready. Triage Dependabot PRs.</td><td>30 min</td></tr>
+                <tr><td>Friday</td><td><strong>Review &amp; retro:</strong> demo what reached Done, look at cards that aged, agree on one process tweak.</td><td>30 min</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="pb-grid-2">
+            <div class="pb-card">
+              <h4>Definition of Ready</h4>
+              <ul class="pb-list">
+                <li>Written as who/why + acceptance criteria (the issue template asks for both)</li>
+                <li>Sized S or M; L gets split</li>
+                <li>No open questions for the founder</li>
+              </ul>
+            </div>
+            <div class="pb-card">
+              <h4>Definition of Done</h4>
+              <ul class="pb-list">
+                <li>Acceptance criteria met, with tests</li>
+                <li>All CI checks green; PR squash-merged</li>
+                <li>Verified on the production URL</li>
+                <li>Docs / <code>.env.example</code> updated if behavior or config changed</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="git" class="pb-section">
+          <h2><span class="num" aria-hidden="true">04</span>Git strategy and controls</h2>
+          <p class="lead">We use <strong>GitHub Flow</strong>: <code>main</code> is always deployable, all work happens on short-lived branches, and everything reaches <code>main</code> through a reviewed, green pull request.</p>
+          <p>Repository: <a href="https://github.com/coreydd2002/Fludd">github.com/coreydd2002/Fludd</a></p>
+
+          <h3>Branches</h3>
+<pre><code>git switch main &amp;&amp; git pull
+git switch -c feat/12-photo-captions     # type/issue-number-short-slug</code></pre>
+          <p>Types: <code>feat/</code> new behavior · <code>fix/</code> bug · <code>chore/</code> tooling, deps · <code>docs/</code> docs only. Branches should live <strong>under three days</strong>. If yours is getting bigger, split the card.</p>
+
+          <h3>Commit messages: Conventional Commits</h3>
+<pre><code>feat(app): add captions to visit photos
+fix(report): hide internal notes on the public report
+chore(deps): bump next to 16.3.7
+docs: explain RLS test setup in the playbook</code></pre>
+          <p>Format: <code>type(scope): imperative summary</code>, under 72 characters. Scopes we use: <code>app</code>, <code>landing</code>, <code>report</code>, <code>db</code>, <code>ci</code>, <code>deps</code>. The body explains <em>why</em>. PRs are squash-merged, so the PR title becomes the commit on <code>main</code> and must follow the same format.</p>
+
+          <h3>Pull requests</h3>
+          <ul class="pb-list">
+            <li>Open early as a draft if you want feedback; mark ready when CI is green.</li>
+            <li>Fill in the <a href="https://github.com/coreydd2002/Fludd/blob/main/.github/pull_request_template.md">PR template</a>: what and why, <code>Closes #12</code>, how you tested it, the safety checklist, and the AI-assistance box.</li>
+            <li>Every PR gets a <strong>Vercel preview URL</strong> in a comment. Click through it.</li>
+            <li><a href="https://github.com/coreydd2002/Fludd/blob/main/.github/CODEOWNERS"><code>CODEOWNERS</code></a> requests Corey's review automatically.</li>
+          </ul>
+
+          <h3>Controls on <code>main</code> (enforced by GitHub)</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Rule</th><th>Setting</th></tr></thead>
+              <tbody>
+                <tr><td>Direct pushes</td><td>Blocked. Changes arrive only by pull request.</td></tr>
+                <tr><td>Required status checks</td><td><code>quality</code>, <code>e2e</code>, <code>db-rls</code> (and CodeQL <code>analyze</code>) must pass</td></tr>
+                <tr><td>Up to date</td><td>Branch must be current with <code>main</code> before merging</td></tr>
+                <tr><td>Conversation resolution</td><td>All review comments resolved before merge</td></tr>
+                <tr><td>History</td><td>Linear (squash merge only); force-push and branch deletion blocked</td></tr>
+                <tr><td>Approvals</td><td>Founder reviews every PR. A required second approval switches on when the team reaches two developers.</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>See them yourself: <a href="https://github.com/coreydd2002/Fludd/settings/branches">Settings → Branches</a> (admin view).</p>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="issues" class="pb-section">
+          <h2><span class="num" aria-hidden="true">05</span>Issue tracking</h2>
+          <p class="lead">All work is tracked in <strong>GitHub Issues</strong> and visualized on a <strong>GitHub Projects</strong> board, right next to the code.</p>
+
+          <div class="pb-links">
+            <a class="pb-link pb-link-primary" href="https://github.com/users/coreydd2002/projects/2"><strong>Fludd Roadmap board →</strong><span>The live Kanban board</span></a>
+            <a class="pb-link" href="https://github.com/coreydd2002/Fludd/issues"><strong>All issues</strong><span>github.com/coreydd2002/Fludd/issues</span></a>
+            <a class="pb-link" href="https://github.com/coreydd2002/Fludd/issues/new/choose"><strong>File an issue</strong><span>Bug or Feature template</span></a>
+          </div>
+
+          <h3>Card fields</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Field</th><th>Values</th><th>Meaning</th></tr></thead>
+              <tbody>
+                <tr><td>Status</td><td>Backlog · Ready · In Progress · In Review · Done</td><td>The board columns (<a href="#process">§3</a>)</td></tr>
+                <tr><td>Priority</td><td>P0 · P1 · P2</td><td>P0 = customers are affected now, drop everything. P1 = this week. P2 = when there's room.</td></tr>
+                <tr><td>Size</td><td>S · M · L</td><td>S &lt; half a day, M = 1–2 days, L = must be split before Ready</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Labels</h3>
+          <p><span class="pb-tag">feature</span> <span class="pb-tag">bug</span> <span class="pb-tag">chore</span> <span class="pb-tag">docs</span> <span class="pb-tag pb-tag-red">security</span> <span class="pb-tag pb-tag-green">good first issue</span></p>
+
+          <h3>Automation</h3>
+          <ul class="pb-list">
+            <li>New issues and PRs are added to the board automatically.</li>
+            <li>Writing <code>Closes #12</code> in a PR moves card #12 to <strong>Done</strong> when the PR merges.</li>
+            <li>Blank issues are disabled. Use the <strong>Bug</strong> or <strong>Feature / task</strong> form so every card has acceptance criteria or reproduction steps.</li>
+          </ul>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="ai" class="pb-section">
+          <h2><span class="num" aria-hidden="true">06</span>AI agents and controls</h2>
+          <p class="lead">We are an AI-assisted team, deliberately. <strong>Claude Code</strong> is our one approved AI tool. The controls below exist so AI makes us faster without making us careless.</p>
+
+          <h3>Approved</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Tool</th><th>Status</th><th>Install</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Claude Code</strong> (VS Code extension + CLI)</td><td><span class="pb-tag pb-tag-green">Approved</span></td><td><a href="https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code">VS Code Marketplace</a> · <a href="https://www.claude.com/product/claude-code">claude.com/product/claude-code</a></td></tr>
+                <tr><td>GitHub Copilot, Cursor, other AI IDEs</td><td><span class="pb-tag pb-tag-red">Not approved</span></td><td>One tool means one set of guardrails to maintain</td></tr>
+                <tr><td>Pasting repo code into other chatbots</td><td><span class="pb-tag pb-tag-red">Not allowed</span></td><td>Code and customer data stay in approved tools</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>The rules</h3>
+          <ol class="pb-steps">
+            <li><strong>You own every line.</strong> AI-written code gets the same review as yours. Don't open a PR containing code you can't explain. Tick the AI-assistance box in the PR template.</li>
+            <li><strong>No secrets, no customer data in prompts.</strong> Never paste API keys, <code>.env.local</code> contents, or real names, addresses or emails of pool owners.</li>
+            <li><strong>The agent works on branches only.</strong> It doesn't push to <code>main</code>, force-push, deploy, or change Vercel or Supabase settings. A human opens and merges the PR.</li>
+            <li><strong>Verify, don't trust.</strong> The agent must run lint, typecheck and tests before claiming it's done, and CI checks the same things again. Next.js 16 differs from most AI training data, so check new APIs against <code>app/node_modules/next/dist/docs/</code> (see <code>app/AGENTS.md</code>).</li>
+            <li><strong>Read before approving.</strong> Don't click “allow” on a command or edit you haven't read.</li>
+          </ol>
+
+          <h3>How the rules are enforced in the repo</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>File</th><th>What it does</th></tr></thead>
+              <tbody>
+                <tr><td><a href="https://github.com/coreydd2002/Fludd/blob/main/CLAUDE.md"><code>CLAUDE.md</code></a></td><td>Loaded into every Claude Code session: branch rules, commit format, checks to run, migration rules.</td></tr>
+                <tr><td><a href="https://github.com/coreydd2002/Fludd/blob/main/app/AGENTS.md"><code>app/AGENTS.md</code></a></td><td>Next.js-specific instructions for agents working in <code>app/</code>.</td></tr>
+                <tr><td><a href="https://github.com/coreydd2002/Fludd/blob/main/.claude/settings.json"><code>.claude/settings.json</code></a></td><td>Shared permissions. <strong>Denied:</strong> reading <code>.env</code>/<code>.env.local</code> and <code>*.pem</code>, <code>git push --force</code>, pushing to <code>main</code>, <code>git reset --hard</code>, <code>vercel --prod</code>, <code>vercel env</code>, <code>supabase db push/reset</code>. <strong>Always asks:</strong> any <code>git push</code>, <code>gh pr merge</code>, <code>npm install</code>.</td></tr>
+                <tr><td>Branch protection + CI</td><td>Even if an agent tries, it can't land unreviewed or failing code on <code>main</code> (<a href="#git">§4</a>).</td></tr>
+                <tr><td>GitHub push protection</td><td>Blocks pushes that contain recognizable secrets (<a href="#quality">§7</a>).</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Personal preferences go in <code>.claude/settings.local.json</code>, which is git-ignored. You can tighten the shared rules there but never loosen them.</p>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="quality" class="pb-section">
+          <h2><span class="num" aria-hidden="true">07</span>Code quality</h2>
+          <p class="lead">Every tool below runs in your editor or with one command, and again in CI on every pull request. If CI is red, the PR doesn't merge.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Concern</th><th>Tool</th><th>Config</th><th>Run it</th></tr></thead>
+              <tbody>
+                <tr><td>Linting</td><td>ESLint 9 with <code>next/core-web-vitals</code> + <code>next/typescript</code></td><td><code>app/eslint.config.mjs</code></td><td><code>npm run lint</code></td></tr>
+                <tr><td>Formatting</td><td>Prettier 3 + Tailwind class sorting; <code>eslint-config-prettier</code> so the two never fight</td><td><code>app/.prettierrc.json</code></td><td><code>npm run format</code> · <code>format:check</code></td></tr>
+                <tr><td>Types</td><td>TypeScript <code>strict</code></td><td><code>app/tsconfig.json</code></td><td><code>npm run typecheck</code></td></tr>
+                <tr><td>Dependency vulnerabilities</td><td><code>npm audit</code> (fails CI on <em>high</em> in production deps)</td><td><code>.github/workflows/ci.yml</code></td><td><code>npm audit --omit=dev</code></td></tr>
+                <tr><td>Dependency updates</td><td>Dependabot: weekly PRs for npm (app + root) and GitHub Actions, minor/patch grouped</td><td><code>.github/dependabot.yml</code></td><td>Triaged Mondays</td></tr>
+                <tr><td>Code vulnerabilities (SAST)</td><td>GitHub CodeQL, <code>security-extended</code> queries, on every PR + weekly</td><td><code>.github/workflows/codeql.yml</code></td><td><a href="https://github.com/coreydd2002/Fludd/security/code-scanning">Code scanning alerts</a></td></tr>
+                <tr><td>Leaked secrets</td><td>GitHub secret scanning + push protection</td><td>Repo settings</td><td>Automatic on push</td></tr>
+                <tr><td>Line endings</td><td>Git normalizes to LF</td><td><code>.gitattributes</code></td><td>Automatic</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Before you push</h3>
+<pre><code>cd app
+npm run lint &amp;&amp; npm run typecheck &amp;&amp; npm run format:check &amp;&amp; npm test</code></pre>
+          <p>If Prettier complains, run <code>npm run format</code>. Format-on-save in VS Code usually means you never see this.</p>
+
+          <h3>Review checklist (what Corey looks for)</h3>
+          <ul class="pb-list">
+            <li>Does it match the surrounding code: naming, comment density, existing components in <code>ui.tsx</code>?</li>
+            <li>Server-only code stays server-only. Anything using <code>SUPABASE_SERVICE_ROLE_KEY</code> goes through <code>src/lib/supabase/admin.ts</code>, and its output is narrowed before it reaches a page.</li>
+            <li>The public report (<code>/r/[token]</code>) never shows last name, address, email or internal notes.</li>
+            <li>Loading, error and empty states exist for anything that fetches.</li>
+          </ul>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="testing" class="pb-section">
+          <h2><span class="num" aria-hidden="true">08</span>Testing frameworks</h2>
+          <p class="lead">Four layers, from fast and many to slow and few. A change ships with tests at the <em>lowest layer that can catch its bug</em>.</p>
+
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Layer</th><th>Framework</th><th>Where</th><th>Run</th><th>In CI?</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Unit</strong>: pure logic (readings, parsing, URLs)</td><td><a href="https://vitest.dev/">Vitest</a></td><td><code>app/src/**/*.test.ts</code>, next to the code</td><td><code>npm test</code> · <code>npm run test:watch</code></td><td>✅ <code>quality</code></td></tr>
+                <tr><td><strong>Database security</strong>: row-level security between companies</td><td>SQL assertions on plain PostgreSQL 16</td><td><code>app/supabase/tests/</code></td><td>see below</td><td>✅ <code>db-rls</code></td></tr>
+                <tr><td><strong>End-to-end smoke</strong>: real browser against both sites</td><td><a href="https://playwright.dev/">Playwright</a> (Chromium, desktop + Pixel 7)</td><td><code>app/e2e/*.spec.ts</code></td><td><code>npm run build &amp;&amp; npm run test:e2e</code></td><td>✅ <code>e2e</code></td></tr>
+                <tr><td><strong>Integration</strong>: full flows against a live Supabase project</td><td>Node scripts</td><td><code>app/scripts/check-*.mjs</code></td><td><code>npm run check:phase1</code> … <code>check:phase6</code></td><td>Manual, before a release (needs real keys)</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Which test do I write?</h3>
+          <ul class="pb-list">
+            <li><strong>Changed a function in <code>src/lib/</code>?</strong> Add a Vitest case. Example: <a href="https://github.com/coreydd2002/Fludd/blob/main/app/src/lib/readings.test.ts"><code>readings.test.ts</code></a>.</li>
+            <li><strong>Changed the schema or a policy?</strong> Add assertions to <code>01_rls_test.sql</code>, including one proving another company <em>can't</em> see the data.</li>
+            <li><strong>New page or route?</strong> Add a Playwright smoke test if it renders without a login. Otherwise cover the flow in a <code>check:*</code> script.</li>
+            <li><strong>Bug fix?</strong> First write a test that fails because of the bug, then fix it.</li>
+          </ul>
+
+          <h3>Running the RLS tests locally</h3>
+<pre><code>createdb fludd_test
+psql -d fludd_test -v ON_ERROR_STOP=1 -f app/supabase/tests/00_supabase_stub.sql
+psql -d fludd_test -v ON_ERROR_STOP=1 -f app/supabase/migrations/0001_init.sql
+psql -d fludd_test -v ON_ERROR_STOP=1 -f app/supabase/tests/01_rls_test.sql</code></pre>
+          <p>No local Postgres? Push your branch. The <code>db-rls</code> job runs exactly these commands in a <code>postgres:16</code> container.</p>
+        </section>
+
+        <!-- ================================================================ -->
+        <section id="other" class="pb-section">
+          <h2><span class="num" aria-hidden="true">09</span>Other controls, tools and procedures</h2>
+
+          <h3>Accounts you'll be given</h3>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Service</th><th>Used for</th><th>Your access</th></tr></thead>
+              <tbody>
+                <tr><td><a href="https://github.com/coreydd2002/Fludd">GitHub</a></td><td>Code, issues, board, CI, security alerts</td><td>Write (2FA required)</td></tr>
+                <tr><td><a href="https://vercel.com/dashboard">Vercel</a></td><td>Hosting for both sites, preview deployments</td><td>Viewer: see builds and logs</td></tr>
+                <tr><td><a href="https://supabase.com/dashboard">Supabase</a></td><td>Production Postgres, Auth, photo storage</td><td>Your own dev project. Production is founder-only.</td></tr>
+                <tr><td><a href="https://resend.com/">Resend</a></td><td>Transactional email (visit reports, early-access form)</td><td>Founder-only</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Deployment</h3>
+          <p>One repo, <strong>two Vercel projects</strong>. Nobody deploys by hand.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Project</th><th>Root dir</th><th>Domain</th><th>Build</th></tr></thead>
+              <tbody>
+                <tr><td><code>fludd-landing</code></td><td><code>/</code></td><td><a href="https://fludd.work">fludd.work</a></td><td>None (static + <code>api/</code> function)</td></tr>
+                <tr><td><code>fludd-app</code></td><td><code>app/</code></td><td><a href="https://app.fludd.work">app.fludd.work</a></td><td><code>next build</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <ol class="pb-steps">
+            <li><strong>Every PR</strong> gets a preview URL for each project. Test there.</li>
+            <li><strong>Merge to <code>main</code></strong> deploys production automatically, about a minute later.</li>
+            <li><strong>Verify</strong> the change on the production URL, then move the card to Done.</li>
+            <li><strong>Roll back</strong> if production breaks: Vercel → project → Deployments → the last good deployment → <em>Promote to Production</em>. This takes seconds, needs no code, and is always the first move. Fix forward afterwards with a normal PR.</li>
+          </ol>
+
+          <h3>Secrets and environment variables</h3>
+          <ul class="pb-list">
+            <li>Real values live <strong>only</strong> in Vercel (Project → Settings → Environment Variables) and in your local, git-ignored <code>.env.local</code>.</li>
+            <li><code>.env.example</code> files are committed with <strong>names and comments only</strong>. Check them before every commit that touches them.</li>
+            <li><strong>Variables don't cross projects.</strong> A key set on <code>fludd-landing</code> isn't visible to <code>fludd-app</code>. When something env-related fails, check which project holds it first.</li>
+            <li><code>NEXT_PUBLIC_*</code> values are compiled into the browser bundle at build time. Changing one requires a <strong>redeploy</strong>, and they must never hold anything secret.</li>
+            <li><code>SUPABASE_SERVICE_ROLE_KEY</code> bypasses all row-level security. It is imported only through <code>src/lib/env.server.ts</code>, which is guarded by <code>server-only</code>.</li>
+            <li>Never send a secret over email, text or chat.</li>
+          </ul>
+          <div class="pb-callout pb-callout-red">
+            <strong>If a secret leaks</strong> (committed, pasted, screenshotted): tell Corey immediately, <strong>rotate it first</strong> in the provider's dashboard, update Vercel, redeploy, and only then clean up the history. Deleting the commit doesn't un-leak a key.
+          </div>
+
+          <h3>Database changes</h3>
+          <ol class="pb-steps">
+            <li>Add a <strong>new</strong> numbered file, e.g. <code>app/supabase/migrations/0002_add_photo_captions.sql</code>. Never edit a migration that has already shipped.</li>
+            <li>Every new table enables RLS and gets policies scoped by <code>current_company_id()</code>. <code>anon</code> is granted nothing.</li>
+            <li>Add RLS assertions; regenerate <code>database.types.ts</code>; apply to your dev project.</li>
+            <li>After merge, the founder applies the migration to production <em>before</em> the code that depends on it is promoted.</li>
+          </ol>
+
+          <h3>Incidents and on-call</h3>
+          <p>We're pre-launch, so there is no pager rotation yet. The founder is on call. Once you've shipped your first month, you join a weekday-hours rotation.</p>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Severity</th><th>Example</th><th>Response</th></tr></thead>
+              <tbody>
+                <tr><td><span class="pb-tag pb-tag-red">P0</span></td><td>App down; one company can see another's data; secret leaked</td><td>Drop everything. Roll back, email Corey, open a P0 issue, write a short post-mortem within 48 hours.</td></tr>
+                <tr><td><span class="pb-tag">P1</span></td><td>A feature broken for some users; emails not sending</td><td>Fix the same day, through a normal PR</td></tr>
+                <tr><td><span class="pb-tag">P2</span></td><td>Cosmetic, has a workaround</td><td>Goes on the board</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>First places to look: <a href="https://www.vercel-status.com/">Vercel status</a> · <a href="https://status.supabase.com/">Supabase status</a> · <a href="https://resend-status.com/">Resend status</a> · Vercel → Logs for the affected project.</p>
+
+          <h3>Security baseline</h3>
+          <ul class="pb-list">
+            <li>2FA on GitHub, Vercel and Supabase.</li>
+            <li>The landing page ships a strict Content Security Policy in <code>vercel.json</code>: no inline scripts or third-party JavaScript. The app sets its own in <code>app/next.config.ts</code>.</li>
+            <li>Customer photos live in a private bucket and reach reports only as short-lived signed URLs.</li>
+            <li>Report a vulnerability privately to <a href="mailto:coreydd2002@gmail.com">coreydd2002@gmail.com</a>, not in a public issue.</li>
+          </ul>
+
+          <h3>Glossary</h3>
+          <dl class="pb-dl">
+            <div><dt>Tech</dt><dd>A pool technician, our primary app user.</dd></div>
+            <div><dt>Company</dt><dd>A pool-service business, the tenant boundary every RLS policy enforces.</dd></div>
+            <div><dt>Visit</dt><dd>One service stop: checklist, chemical readings, photos, notes.</dd></div>
+            <div><dt>Report</dt><dd>The public page a pool owner receives at <code>/r/[token]</code> after a visit.</dd></div>
+            <div><dt>RLS</dt><dd>Postgres row-level security. Data isolation between companies is enforced here.</dd></div>
+          </dl>
+        </section>
+
+        <p class="pb-foot">Something here wrong or out of date? That's a bug: <a href="https://github.com/coreydd2002/Fludd/issues/new/choose">file it</a>, or edit <a href="https://github.com/coreydd2002/Fludd/blob/main/playbook.html"><code>playbook.html</code></a> in a <code>docs/</code> PR.</p>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-row">
+        <a class="brand" href="/" aria-label="Fludd home">
+          <img src="favicon.png" alt="" width="128" height="128" />
+          <span>Fludd</span>
+        </a>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="/">Home</a>
+          <a href="https://github.com/coreydd2002/Fludd">GitHub</a>
+          <a href="https://github.com/users/coreydd2002/projects/2">Board</a>
+          <a href="/playbook">Team playbook</a>
+        </nav>
+      </div>
+      <p class="footer-legal">
+        Fludd engineering team playbook.
+        <br />
+        &copy; <span id="year">2026</span> Fludd.
+      </p>
+    </div>
+  </footer>
+
+  <script src="script.js" defer></script>
+</body>
+</html>

@@ -12,20 +12,11 @@ const TONE = {
   info: "bg-brand-tint-2 text-ink-soft",
 } as const;
 
-export function TestSendForm({
-  template,
-  defaultTo,
-}: {
-  template: string;
-  defaultTo: string;
-}) {
-  const [state, formAction, pending] = useActionState<TestSendState, FormData>(
-    sendTestEmail,
-    {},
-  );
+export function TestSendForm({ template, defaultTo }: { template: string; defaultTo: string }) {
+  const [state, formAction, pending] = useActionState<TestSendState, FormData>(sendTestEmail, {});
 
   return (
-    <form action={formAction} className="mt-4 rounded-card bg-card p-4 ring-1 ring-line">
+    <form action={formAction} className="rounded-card bg-card ring-line mt-4 p-4 ring-1">
       <input type="hidden" name="template" value={template} />
       <label htmlFor="to" className="text-sm font-bold">
         Send this one to yourself
@@ -38,7 +29,7 @@ export function TestSendForm({
           inputMode="email"
           defaultValue={defaultTo}
           placeholder="you@example.com"
-          className="flex-1 min-w-[220px]"
+          className="min-w-[220px] flex-1"
         />
         <Button type="submit" disabled={pending}>
           {pending ? "Sending…" : "Send test"}

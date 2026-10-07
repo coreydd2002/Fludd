@@ -6,7 +6,6 @@ import { requireTech } from "@/lib/auth";
 import { parseChecklist } from "@/lib/checklist";
 import { createClient } from "@/lib/supabase/server";
 
-
 export type SettingsState = { error?: string; saved?: boolean };
 
 export async function saveSettings(
@@ -52,9 +51,9 @@ export async function saveSettings(
   // that is the point of copying the checklist at create time.
   await supabase.from("default_checklist_items").delete().eq("company_id", company.id);
   if (checklist.length > 0) {
-    await supabase.from("default_checklist_items").insert(
-      checklist.map((label, position) => ({ company_id: company.id, label, position })),
-    );
+    await supabase
+      .from("default_checklist_items")
+      .insert(checklist.map((label, position) => ({ company_id: company.id, label, position })));
   }
 
   revalidatePath("/");

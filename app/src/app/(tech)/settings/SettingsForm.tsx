@@ -20,10 +20,7 @@ export function SettingsForm({
   mapsPref: string;
   checklist: string[];
 }) {
-  const [state, formAction, pending] = useActionState<SettingsState, FormData>(
-    saveSettings,
-    {},
-  );
+  const [state, formAction, pending] = useActionState<SettingsState, FormData>(saveSettings, {});
 
   return (
     <form action={formAction} className="flex flex-col gap-5">
@@ -55,7 +52,7 @@ export function SettingsForm({
               id="maps_pref"
               name="maps_pref"
               defaultValue={mapsPref}
-              className="w-full rounded-sm bg-card px-3 py-2.5 text-ink ring-1 ring-line min-h-tap focus:ring-2 focus:ring-brand focus:outline-none"
+              className="bg-card text-ink ring-line min-h-tap focus:ring-brand w-full rounded-sm px-3 py-2.5 ring-1 focus:ring-2 focus:outline-none"
             >
               <option value="google">Google Maps</option>
               <option value="apple">Apple Maps</option>
@@ -66,9 +63,8 @@ export function SettingsForm({
 
       <Card>
         <h2 className="text-lg">Default checklist</h2>
-        <p className="mt-1 mb-4 text-sm text-ink-soft">
-          Used for pools you add from now on. Pools you already added keep their
-          own checklist.
+        <p className="text-ink-soft mt-1 mb-4 text-sm">
+          Used for pools you add from now on. Pools you already added keep their own checklist.
         </p>
         <ChecklistEditor initial={checklist} />
       </Card>
@@ -77,7 +73,7 @@ export function SettingsForm({
       {state.saved ? (
         <p
           role="status"
-          className="rounded-sm bg-ok-tint px-3 py-2 text-sm font-medium text-ok-deep"
+          className="bg-ok-tint text-ok-deep rounded-sm px-3 py-2 text-sm font-medium"
         >
           Settings saved.
         </p>

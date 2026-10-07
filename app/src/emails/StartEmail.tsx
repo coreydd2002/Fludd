@@ -34,8 +34,8 @@ export function StartEmail({
       <H1>{techName} is on the way</H1>
 
       <P>
-        Hi {ownerFirstName}, {techName} is heading to your pool now. The service
-        usually takes about {estMinutes} minutes.
+        Hi {ownerFirstName}, {techName} is heading to your pool now. The service usually takes about{" "}
+        {estMinutes} minutes.
       </P>
 
       {services.length > 0 ? (
@@ -65,9 +65,7 @@ export function StartEmail({
         </>
       ) : null}
 
-      <P>
-        You&apos;ll get a full report with photos once the service is finished.
-      </P>
+      <P>You&apos;ll get a full report with photos once the service is finished.</P>
     </EmailLayout>
   );
 }
@@ -78,11 +76,5 @@ export const startEmailSample: StartEmailProps = {
   techName: "Marcus",
   businessName: "Blue Water Pools",
   estMinutes: 45,
-  services: [
-    "Skim surface",
-    "Brush walls",
-    "Vacuum",
-    "Test & balance chemicals",
-    "Empty baskets",
-  ],
+  services: ["Skim surface", "Brush walls", "Vacuum", "Test & balance chemicals", "Empty baskets"],
 };

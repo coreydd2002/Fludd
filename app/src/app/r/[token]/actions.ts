@@ -2,10 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 
-import {
-  UrgentAlertEmail,
-  urgentAlertSubject,
-} from "@/emails/UrgentAlertEmail";
+import { UrgentAlertEmail, urgentAlertSubject } from "@/emails/UrgentAlertEmail";
 import { sendOwnerEmail } from "@/lib/email/send";
 import { appUrl } from "@/lib/env";
 import { createAdminClient } from "@/lib/supabase/admin";
@@ -32,7 +29,9 @@ export async function submitFeedback(
 
   const ratingRaw = String(formData.get("rating") ?? "");
   const rating = ratingRaw ? Number(ratingRaw) : null;
-  const review = String(formData.get("review") ?? "").trim().slice(0, MAX_REVIEW);
+  const review = String(formData.get("review") ?? "")
+    .trim()
+    .slice(0, MAX_REVIEW);
   const nextVisitNotes = String(formData.get("next_visit_notes") ?? "")
     .trim()
     .slice(0, MAX_NOTES);

@@ -80,7 +80,7 @@ export function CustomerForm({
             />
           </Field>
 
-          <label className="flex items-center gap-3 rounded-sm bg-brand-tint-2 px-3 py-3 min-h-tap">
+          <label className="bg-brand-tint-2 min-h-tap flex items-center gap-3 rounded-sm px-3 py-3">
             <input
               type="checkbox"
               name="start_email_enabled"
@@ -89,7 +89,7 @@ export function CustomerForm({
             />
             <span className="text-sm">
               <span className="font-bold">Send an &ldquo;on my way&rdquo; email</span>
-              <span className="block text-ink-soft">
+              <span className="text-ink-soft block">
                 Emailed when you start a visit at this pool.
               </span>
             </span>
@@ -111,9 +111,9 @@ export function CustomerForm({
 
       <Card>
         <h2 className="text-lg">Checklist for this pool</h2>
-        <p className="mt-1 mb-4 text-sm text-ink-soft">
-          Starts from your default checklist. Changing it here only affects this
-          pool, and never changes a report from a past visit.
+        <p className="text-ink-soft mt-1 mb-4 text-sm">
+          Starts from your default checklist. Changing it here only affects this pool, and never
+          changes a report from a past visit.
         </p>
         <ChecklistEditor initial={checklist} />
       </Card>
@@ -126,7 +126,7 @@ export function CustomerForm({
         </Button>
         <Link
           href="/"
-          className="inline-flex min-h-tap items-center justify-center rounded-pill px-5 font-bold text-ink-soft ring-1 ring-line"
+          className="min-h-tap rounded-pill text-ink-soft ring-line inline-flex items-center justify-center px-5 font-bold ring-1"
         >
           Cancel
         </Link>

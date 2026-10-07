@@ -13,9 +13,7 @@ import { supabaseAnonKey, supabaseUrl } from "@/lib/env";
 const PUBLIC_PREFIXES = ["/login", "/signup", "/r/", "/auth/", "/dev/"];
 
 function isPublic(pathname: string) {
-  return PUBLIC_PREFIXES.some(
-    (p) => pathname === p.replace(/\/$/, "") || pathname.startsWith(p),
-  );
+  return PUBLIC_PREFIXES.some((p) => pathname === p.replace(/\/$/, "") || pathname.startsWith(p));
 }
 
 /**

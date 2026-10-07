@@ -56,7 +56,7 @@ export function OnboardingForm() {
 
       <Card>
         <h2 className="text-lg">Default checklist</h2>
-        <p className="mt-1 mb-4 text-sm text-ink-soft">
+        <p className="text-ink-soft mt-1 mb-4 text-sm">
           Applied to every new pool you add. You can change it per pool later.
         </p>
         <ChecklistEditor initial={DEFAULT_CHECKLIST} />

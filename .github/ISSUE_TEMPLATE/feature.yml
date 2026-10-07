@@ -1,0 +1,26 @@
+name: Feature / task
+description: Something we should build or change.
+labels: [feature]
+body:
+  - type: textarea
+    id: why
+    attributes:
+      label: Who is this for and why?
+      placeholder: "As a pool tech, I want … so that …"
+    validations:
+      required: true
+  - type: textarea
+    id: done
+    attributes:
+      label: Acceptance criteria
+      description: How we will know it is done. These become the PR's test plan.
+      placeholder: |
+        - [ ] …
+        - [ ] …
+    validations:
+      required: true
+  - type: dropdown
+    id: size
+    attributes:
+      label: Size guess
+      options: ["S (< half a day)", "M (1–2 days)", "L (split it up)"]

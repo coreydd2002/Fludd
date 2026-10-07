@@ -9,8 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Fludd — pool service",
     short_name: "Fludd",
-    description:
-      "Run your pool route and send every customer a real service report.",
+    description: "Run your pool route and send every customer a real service report.",
     // Opens on Today's route; the proxy sends you to /login if signed out.
     start_url: "/",
     // No browser chrome once installed, so it reads as an app rather than a

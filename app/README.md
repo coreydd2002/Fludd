@@ -60,22 +60,22 @@ Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind v4 · Supabase
 
 ## Commands
 
-| Command              | What it does                                        |
-| -------------------- | --------------------------------------------------- |
-| `npm run dev`        | Dev server on :3000                                 |
-| `npm run build`      | Production build                                    |
-| `npm run lint`       | ESLint (`next lint` was removed in Next 16)         |
-| `npx tsc --noEmit`   | Type-check without emitting                         |
-| `npm run check:db`   | Confirms the migration is applied to the live project |
-| `npm run check:anon` | Confirms logged-out requests cannot read customer data |
-| `npm run check:phase1` | End-to-end: signup, onboarding, customers, and two-account isolation. Creates two throwaway users and deletes them afterwards. |
-| `npm run check:phase2` | End-to-end: a whole visit — one-open-visit-per-pool, the checklist snapshot, readings, private photos, and the feedback window. |
-| `npm run check:phase3` | Renders both owner emails through the real template path and checks their content. Needs `npm run dev` running. |
-| `npm run check:phase4` | The public report page: what it shows, and — asserted explicitly — that it never leaks last name, address, email or private notes. |
-| `npm run check:phase5` | The feedback loop: inbox, unread badges, notes carried to the next visit. |
-| `npm run check:phase6` | Installability: manifest, icons, and that none of them are auth-gated. |
-| `npm run make:user`  | Creates a pre-confirmed dev login (`tech@fludd.test`) with a random password, printed once. Re-run to reset; `-- --delete` removes it. |
-| `node scripts/make-icons.mjs` | Regenerates the PWA icons from `public/logo.jpg`. |
+| Command                       | What it does                                                                                                                           |
+| ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| `npm run dev`                 | Dev server on :3000                                                                                                                    |
+| `npm run build`               | Production build                                                                                                                       |
+| `npm run lint`                | ESLint (`next lint` was removed in Next 16)                                                                                            |
+| `npx tsc --noEmit`            | Type-check without emitting                                                                                                            |
+| `npm run check:db`            | Confirms the migration is applied to the live project                                                                                  |
+| `npm run check:anon`          | Confirms logged-out requests cannot read customer data                                                                                 |
+| `npm run check:phase1`        | End-to-end: signup, onboarding, customers, and two-account isolation. Creates two throwaway users and deletes them afterwards.         |
+| `npm run check:phase2`        | End-to-end: a whole visit — one-open-visit-per-pool, the checklist snapshot, readings, private photos, and the feedback window.        |
+| `npm run check:phase3`        | Renders both owner emails through the real template path and checks their content. Needs `npm run dev` running.                        |
+| `npm run check:phase4`        | The public report page: what it shows, and — asserted explicitly — that it never leaks last name, address, email or private notes.     |
+| `npm run check:phase5`        | The feedback loop: inbox, unread badges, notes carried to the next visit.                                                              |
+| `npm run check:phase6`        | Installability: manifest, icons, and that none of them are auth-gated.                                                                 |
+| `npm run make:user`           | Creates a pre-confirmed dev login (`tech@fludd.test`) with a random password, printed once. Re-run to reset; `-- --delete` removes it. |
+| `node scripts/make-icons.mjs` | Regenerates the PWA icons from `public/logo.jpg`.                                                                                      |
 
 ## Layout
 
@@ -186,7 +186,7 @@ the Resend account's own address — mail to anyone else is silently dropped, no
 bounced.
 
 With no key configured at all, sending is skipped and the app says so. It never
-blocks a tech: the visit is written to the database *before* the send is
+blocks a tech: the visit is written to the database _before_ the send is
 attempted, and `sendOwnerEmail` returns an outcome rather than throwing.
 
 ### Email deliverability (blocks production)

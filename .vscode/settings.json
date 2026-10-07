@@ -1,0 +1,23 @@
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+
+  "eslint.workingDirectories": ["app"],
+  "typescript.tsdk": "app/node_modules/typescript/lib",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+
+  "tailwindCSS.experimental.configFile": "app/src/app/globals.css",
+
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.next": true,
+    "**/playwright-report": true,
+    "**/test-results": true
+  }
+}
