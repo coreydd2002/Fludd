@@ -35,11 +35,7 @@ const existing = list.users.find((u) => u.email === EMAIL);
 
 /** Removes the company too, so a reset returns to a true first-run state. */
 async function removeExisting(id) {
-  const { data: tech } = await admin
-    .from("techs")
-    .select("company_id")
-    .eq("id", id)
-    .maybeSingle();
+  const { data: tech } = await admin.from("techs").select("company_id").eq("id", id).maybeSingle();
   if (tech) await admin.from("companies").delete().eq("id", tech.company_id);
   await admin.auth.admin.deleteUser(id);
 }

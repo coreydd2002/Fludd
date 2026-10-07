@@ -31,8 +31,7 @@ export function ChecklistEditor({
   const update = (key: string, label: string) =>
     setItems((prev) => prev.map((i) => (i.key === key ? { ...i, label } : i)));
 
-  const remove = (key: string) =>
-    setItems((prev) => prev.filter((i) => i.key !== key));
+  const remove = (key: string) => setItems((prev) => prev.filter((i) => i.key !== key));
 
   const move = (index: number, delta: number) =>
     setItems((prev) => {
@@ -47,9 +46,7 @@ export function ChecklistEditor({
 
   // Blank rows are dropped rather than rejected — an empty box the tech never
   // filled in is not an error worth blocking a save for.
-  const payload = JSON.stringify(
-    items.map((i) => i.label.trim()).filter(Boolean),
-  );
+  const payload = JSON.stringify(items.map((i) => i.label.trim()).filter(Boolean));
 
   return (
     <div className="flex flex-col gap-2">
@@ -72,7 +69,7 @@ export function ChecklistEditor({
                 onClick={() => move(index, -1)}
                 disabled={index === 0}
                 aria-label={`Move ${item.label || `item ${index + 1}`} up`}
-                className="px-2 text-ink-faint hover:text-brand disabled:opacity-30"
+                className="text-ink-faint hover:text-brand px-2 disabled:opacity-30"
               >
                 ↑
               </button>
@@ -81,7 +78,7 @@ export function ChecklistEditor({
                 onClick={() => move(index, 1)}
                 disabled={index === items.length - 1}
                 aria-label={`Move ${item.label || `item ${index + 1}`} down`}
-                className="px-2 text-ink-faint hover:text-brand disabled:opacity-30"
+                className="text-ink-faint hover:text-brand px-2 disabled:opacity-30"
               >
                 ↓
               </button>
@@ -90,7 +87,7 @@ export function ChecklistEditor({
               type="button"
               onClick={() => remove(item.key)}
               aria-label={`Remove ${item.label || `item ${index + 1}`}`}
-              className="shrink-0 px-2 text-lg text-ink-faint hover:text-err"
+              className="text-ink-faint hover:text-err shrink-0 px-2 text-lg"
             >
               ×
             </button>
@@ -99,9 +96,9 @@ export function ChecklistEditor({
       </ul>
 
       {items.length === 0 ? (
-        <p className="text-sm text-ink-faint">
-          No items yet — a visit with an empty checklist is allowed, but the
-          owner&apos;s report will not list any services.
+        <p className="text-ink-faint text-sm">
+          No items yet — a visit with an empty checklist is allowed, but the owner&apos;s report
+          will not list any services.
         </p>
       ) : null}
 

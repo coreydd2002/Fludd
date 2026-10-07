@@ -7,7 +7,6 @@ import { requireTech } from "@/lib/auth";
 import { parseChecklist } from "@/lib/checklist";
 import { createClient } from "@/lib/supabase/server";
 
-
 export type CustomerState = { error?: string };
 
 type Parsed = {
@@ -57,9 +56,9 @@ async function replaceChecklist(customerId: string, labels: string[]) {
   const supabase = await createClient();
   await supabase.from("customer_checklist_items").delete().eq("customer_id", customerId);
   if (labels.length > 0) {
-    await supabase.from("customer_checklist_items").insert(
-      labels.map((label, position) => ({ customer_id: customerId, label, position })),
-    );
+    await supabase
+      .from("customer_checklist_items")
+      .insert(labels.map((label, position) => ({ customer_id: customerId, label, position })));
   }
 }
 

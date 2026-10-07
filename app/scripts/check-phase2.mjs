@@ -107,11 +107,14 @@ try {
     .select("label, position")
     .eq("customer_id", customer.id)
     .order("position");
-  await tech.from("visit_items").insert(
-    poolItems.map((i, position) => ({ visit_id: visit.id, label: i.label, position })),
-  );
+  await tech
+    .from("visit_items")
+    .insert(poolItems.map((i, position) => ({ visit_id: visit.id, label: i.label, position })));
 
-  const { data: snap } = await tech.from("visit_items").select("id, label").eq("visit_id", visit.id);
+  const { data: snap } = await tech
+    .from("visit_items")
+    .select("id, label")
+    .eq("visit_id", visit.id);
   if (snap.length === poolItems.length) ok(`checklist snapshotted (${snap.length} items)`);
   else bad(`snapshot has ${snap.length}, pool has ${poolItems.length}`);
 
@@ -133,10 +136,7 @@ try {
   if (readErr) bad(`readings: ${readErr.message}`);
   else ok("chlorine / pH / alkalinity saved");
 
-  const { error: rangeErr } = await tech
-    .from("visits")
-    .update({ ph: 99 })
-    .eq("id", visit.id);
+  const { error: rangeErr } = await tech.from("visits").update({ ph: 99 }).eq("id", visit.id);
   if (rangeErr) ok("an impossible pH is rejected by the database");
   else bad("pH 99 was accepted");
 
@@ -157,9 +157,7 @@ try {
     if (res.ok) bad("photo is readable WITHOUT a signed URL — bucket is public");
     else ok(`photo is not publicly readable (HTTP ${res.status})`);
 
-    const { data: signed } = await tech.storage
-      .from("visit-photos")
-      .createSignedUrl(path, 60);
+    const { data: signed } = await tech.storage.from("visit-photos").createSignedUrl(path, 60);
     const signedRes = await fetch(signed.signedUrl);
     if (signedRes.ok) ok("photo is readable through a signed URL");
     else bad(`signed URL failed: HTTP ${signedRes.status}`);
@@ -170,7 +168,11 @@ try {
   const closesAt = new Date(Date.now() + 30 * 86400000).toISOString();
   await tech
     .from("visits")
-    .update({ status: "completed", finished_at: new Date().toISOString(), feedback_closes_at: closesAt })
+    .update({
+      status: "completed",
+      finished_at: new Date().toISOString(),
+      feedback_closes_at: closesAt,
+    })
     .eq("id", visit.id);
 
   const { data: finished } = await tech
@@ -188,14 +190,25 @@ try {
     .from("customer_checklist_items")
     .insert({ customer_id: customer.id, label: "Totally different", position: 0 });
 
-  const { data: stillSnap } = await tech.from("visit_items").select("label").eq("visit_id", visit.id);
-  if (stillSnap.length === poolItems.length && !stillSnap.some((i) => i.label === "Totally different")) {
+  const { data: stillSnap } = await tech
+    .from("visit_items")
+    .select("label")
+    .eq("visit_id", visit.id);
+  if (
+    stillSnap.length === poolItems.length &&
+    !stillSnap.some((i) => i.label === "Totally different")
+  ) {
     ok("rewriting the pool checklist does not alter the finished visit");
   } else bad("the finished visit's checklist changed");
 
   const { data: second } = await tech
     .from("visits")
-    .insert({ customer_id: customer.id, company_id: companyId, tech_id: userId, status: "on_the_way" })
+    .insert({
+      customer_id: customer.id,
+      company_id: companyId,
+      tech_id: userId,
+      status: "on_the_way",
+    })
     .select("id")
     .single();
   if (second) ok("a new visit can start once the previous one is finished");
@@ -226,9 +239,7 @@ try {
       const prefix = `${companyId}/${folder.name}`;
       const { data: files } = await admin.storage.from("visit-photos").list(prefix);
       if (files?.length) {
-        await admin.storage
-          .from("visit-photos")
-          .remove(files.map((f) => `${prefix}/${f.name}`));
+        await admin.storage.from("visit-photos").remove(files.map((f) => `${prefix}/${f.name}`));
       }
     }
   }

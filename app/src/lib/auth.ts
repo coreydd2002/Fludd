@@ -24,11 +24,7 @@ export async function requireTech(): Promise<{ tech: Tech; company: Company }> {
   } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: tech } = await supabase
-    .from("techs")
-    .select("*")
-    .eq("id", user.id)
-    .maybeSingle();
+  const { data: tech } = await supabase.from("techs").select("*").eq("id", user.id).maybeSingle();
   if (!tech) redirect("/onboarding");
 
   const { data: company } = await supabase

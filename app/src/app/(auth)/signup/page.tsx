@@ -13,12 +13,12 @@ export default function SignupPage() {
   return (
     <Card>
       <h1 className="text-xl">Create your account</h1>
-      <p className="mt-1 text-sm text-ink-soft">
+      <p className="text-ink-soft mt-1 text-sm">
         One account per pool business. You&apos;ll set up your checklist next.
       </p>
 
       {state.notice ? (
-        <p className="mt-5 rounded-sm bg-ok-tint px-3 py-2 text-sm font-medium text-ok-deep">
+        <p className="bg-ok-tint text-ok-deep mt-5 rounded-sm px-3 py-2 text-sm font-medium">
           {state.notice}
         </p>
       ) : (
@@ -50,9 +50,9 @@ export default function SignupPage() {
         </form>
       )}
 
-      <p className="mt-5 text-sm text-ink-soft">
+      <p className="text-ink-soft mt-5 text-sm">
         Already have an account?{" "}
-        <Link href="/login" className="font-bold text-brand-dark underline">
+        <Link href="/login" className="text-brand-dark font-bold underline">
           Sign in
         </Link>
       </p>

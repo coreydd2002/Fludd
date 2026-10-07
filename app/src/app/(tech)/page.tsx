@@ -28,17 +28,13 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
 
   let query = supabase
     .from("customers")
-    .select(
-      "id, first_name, last_name, address, est_duration_minutes, internal_notes",
-    )
+    .select("id, first_name, last_name, address, est_duration_minutes, internal_notes")
     .eq("archived", false)
     .order("first_name");
 
   if (search) {
     // Row-level security still scopes this; the filter only narrows further.
-    query = query.or(
-      `first_name.ilike.%${search}%,last_name.ilike.%${search}%`,
-    );
+    query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%`);
   }
 
   const { data: customers, error } = await query;
@@ -62,8 +58,7 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
   }
 
   const hour = new Date().getHours();
-  const greeting =
-    hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+  const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   const openCustomerId = openVisit?.customer_id;
 
@@ -84,7 +79,7 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
       {openVisit ? (
         <Link
           href={`/visits/${openVisit.id}`}
-          className="mt-5 block rounded-card bg-gradient-to-br from-brand to-aqua p-5 text-white shadow-md"
+          className="rounded-card from-brand to-aqua mt-5 block bg-gradient-to-br p-5 text-white shadow-md"
         >
           <p className="text-[11px] font-bold tracking-wider uppercase opacity-80">
             Visit in progress
@@ -94,10 +89,8 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
               .filter(Boolean)
               .join(" ")}
           </p>
-          <p className="mt-0.5 text-sm opacity-90">
-            {openVisit.customers?.address}
-          </p>
-          <p className="mt-3 inline-flex min-h-tap items-center rounded-pill bg-white/20 px-4 text-sm font-bold">
+          <p className="mt-0.5 text-sm opacity-90">{openVisit.customers?.address}</p>
+          <p className="min-h-tap rounded-pill mt-3 inline-flex items-center bg-white/20 px-4 text-sm font-bold">
             Continue visit →
           </p>
         </Link>
@@ -110,15 +103,12 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
           defaultValue={search}
           placeholder="Search pools by name"
           aria-label="Search pools by name"
-          className="min-h-tap w-full rounded-pill bg-card px-4 py-2.5 text-ink ring-1 ring-line placeholder:text-ink-faint focus:ring-2 focus:ring-brand focus:outline-none"
+          className="min-h-tap rounded-pill bg-card text-ink ring-line placeholder:text-ink-faint focus:ring-brand w-full px-4 py-2.5 ring-1 focus:ring-2 focus:outline-none"
         />
       </form>
 
       {error ? (
-        <p
-          role="alert"
-          className="mt-5 rounded-sm bg-err/10 px-3 py-2 text-sm text-err"
-        >
+        <p role="alert" className="bg-err/10 text-err mt-5 rounded-sm px-3 py-2 text-sm">
           Could not load your pools: {error.message}
         </p>
       ) : null}
@@ -127,29 +117,25 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
         {customers && customers.length > 0 ? (
           <ul className="flex flex-col gap-3">
             {customers.map((customer) => {
-              const name = [customer.first_name, customer.last_name]
-                .filter(Boolean)
-                .join(" ");
+              const name = [customer.first_name, customer.last_name].filter(Boolean).join(" ");
               const isOpen = customer.id === openCustomerId;
               const flag = waiting.get(customer.id);
 
               return (
                 <li
                   key={customer.id}
-                  className="rounded-card bg-card p-4 shadow-sm ring-1 ring-line"
+                  className="rounded-card bg-card ring-line p-4 shadow-sm ring-1"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <Link
                         href={`/customers/${customer.id}`}
-                        className="font-bold text-ink hover:text-brand-dark"
+                        className="text-ink hover:text-brand-dark font-bold"
                       >
                         {name}
                       </Link>
-                      <p className="mt-0.5 truncate text-sm text-ink-soft">
-                        {customer.address}
-                      </p>
-                      <p className="mt-0.5 text-xs text-ink-faint">
+                      <p className="text-ink-soft mt-0.5 truncate text-sm">{customer.address}</p>
+                      <p className="text-ink-faint mt-0.5 text-xs">
                         About {customer.est_duration_minutes} min
                       </p>
                     </div>
@@ -157,7 +143,7 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
                       href={directionsUrl(customer.address, company.maps_pref)}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex min-h-tap shrink-0 items-center rounded-pill bg-brand-tint px-4 text-sm font-bold text-brand-dark"
+                      className="min-h-tap rounded-pill bg-brand-tint text-brand-dark inline-flex shrink-0 items-center px-4 text-sm font-bold"
                     >
                       Directions
                     </a>
@@ -184,30 +170,23 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
                   ) : null}
 
                   {customer.internal_notes ? (
-                    <p className="mt-3 rounded-sm bg-brand-tint-2 px-3 py-2 text-sm text-ink-soft">
+                    <p className="bg-brand-tint-2 text-ink-soft mt-3 rounded-sm px-3 py-2 text-sm">
                       {customer.internal_notes}
                     </p>
                   ) : null}
 
                   <div className="mt-3">
                     {isOpen ? (
-                      <ButtonLink
-                        href={`/visits/${openVisit?.id}`}
-                        className="w-full"
-                      >
+                      <ButtonLink href={`/visits/${openVisit?.id}`} className="w-full">
                         Continue visit
                       </ButtonLink>
                     ) : (
                       <form action={startVisit}>
-                        <input
-                          type="hidden"
-                          name="customer_id"
-                          value={customer.id}
-                        />
+                        <input type="hidden" name="customer_id" value={customer.id} />
                         <button
                           type="submit"
                           disabled={Boolean(openVisit)}
-                          className="min-h-tap w-full rounded-pill bg-brand px-5 font-bold text-white hover:bg-brand-dark active:translate-y-px disabled:pointer-events-none disabled:opacity-40"
+                          className="min-h-tap rounded-pill bg-brand hover:bg-brand-dark w-full px-5 font-bold text-white active:translate-y-px disabled:pointer-events-none disabled:opacity-40"
                         >
                           On my way
                         </button>
@@ -232,15 +211,13 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
           <EmptyState
             title="No pools yet"
             body="Add your first customer and Fludd will copy your default checklist onto their pool."
-            action={
-              <ButtonLink href="/customers/new">Add your first pool</ButtonLink>
-            }
+            action={<ButtonLink href="/customers/new">Add your first pool</ButtonLink>}
           />
         )}
       </div>
 
       {openVisit ? (
-        <p className="mt-5 text-center text-xs text-ink-faint">
+        <p className="text-ink-faint mt-5 text-center text-xs">
           Finish or cancel the visit in progress before starting another.
         </p>
       ) : null}

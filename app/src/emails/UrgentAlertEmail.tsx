@@ -29,10 +29,7 @@ export function UrgentAlertEmail({
   inboxUrl,
 }: UrgentAlertProps) {
   return (
-    <EmailLayout
-      preview={`${customerName} reported an urgent issue`}
-      signOff="Fludd"
-    >
+    <EmailLayout preview={`${customerName} reported an urgent issue`} signOff="Fludd">
       <H1>{customerName} reported an urgent issue</H1>
 
       <P>
@@ -63,8 +60,8 @@ export function UrgentAlertEmail({
       </Section>
 
       <P>
-        Hi {techName} — this is waiting in your feedback inbox at {inboxUrl}, and
-        it will show at the top of this pool&apos;s next visit.
+        Hi {techName} — this is waiting in your feedback inbox at {inboxUrl}, and it will show at
+        the top of this pool&apos;s next visit.
       </P>
     </EmailLayout>
   );
@@ -74,7 +71,8 @@ export const urgentAlertSample: UrgentAlertProps = {
   techName: "Marcus",
   customerName: "Dana Henderson",
   servicedAt: "Friday, September 4 at 9:42 AM",
-  message: "The water has gone cloudy green since yesterday and the pump is making a grinding noise.",
+  message:
+    "The water has gone cloudy green since yesterday and the pump is making a grinding noise.",
   rating: 2,
   inboxUrl: "https://app.fludd.com/inbox",
 };

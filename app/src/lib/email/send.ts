@@ -67,10 +67,7 @@ export async function sendOwnerEmail({
     // Rendering ourselves removes the dynamic import, and lets us send a plain
     // text alternative alongside the HTML, which meaningfully helps an email
     // avoid spam filters.
-    const [html, text] = await Promise.all([
-      render(react),
-      render(react, { plainText: true }),
-    ]);
+    const [html, text] = await Promise.all([render(react), render(react, { plainText: true })]);
 
     const { data, error } = await new Resend(apiKey).emails.send({
       from,

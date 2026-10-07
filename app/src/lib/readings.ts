@@ -81,12 +81,8 @@ export function allReadingsHealthy(values: Partial<Record<ReadingKey, number | n
 }
 
 /** One-line summary for the finish email subject area. */
-export function readingsSummary(
-  values: Partial<Record<ReadingKey, number | null>>,
-): string | null {
-  const recorded = READINGS.filter(
-    (spec) => statusOf(spec, values[spec.key]) !== "empty",
-  );
+export function readingsSummary(values: Partial<Record<ReadingKey, number | null>>): string | null {
+  const recorded = READINGS.filter((spec) => statusOf(spec, values[spec.key]) !== "empty");
   if (recorded.length === 0) return null;
   if (allReadingsHealthy(values)) return "All readings in the healthy range";
 

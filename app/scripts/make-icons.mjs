@@ -56,10 +56,7 @@ const trimmed = await sharp(duck).trim().png().toBuffer();
 /** The duck centred on brand blue, occupying `fill` of the tile. */
 async function icon(size, fill, out) {
   const box = Math.round(size * fill);
-  const inner = await sharp(trimmed)
-    .resize(box, box, { fit: "inside" })
-    .png()
-    .toBuffer();
+  const inner = await sharp(trimmed).resize(box, box, { fit: "inside" }).png().toBuffer();
 
   await sharp({ create: { width: size, height: size, channels: 4, background: BRAND } })
     .composite([{ input: inner, gravity: "centre" }])

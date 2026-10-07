@@ -34,7 +34,7 @@ export default async function InboxPage() {
           <form action={markAllRead}>
             <button
               type="submit"
-              className="shrink-0 text-sm font-bold text-brand-dark underline underline-offset-2"
+              className="text-brand-dark shrink-0 text-sm font-bold underline underline-offset-2"
             >
               Mark all read
             </button>
@@ -54,9 +54,8 @@ export default async function InboxPage() {
               const isUnread = !item.read_by_tech_at;
               const customer = item.visits?.customers;
               const name =
-                [customer?.first_name, customer?.last_name]
-                  .filter(Boolean)
-                  .join(" ") || "A customer";
+                [customer?.first_name, customer?.last_name].filter(Boolean).join(" ") ||
+                "A customer";
               const serviced = item.visits?.finished_at
                 ? new Date(item.visits.finished_at).toLocaleDateString("en-US", {
                     timeZone: company.timezone,
@@ -100,13 +99,13 @@ export default async function InboxPage() {
                         ) : null}
                       </p>
                       {serviced ? (
-                        <p className="text-xs text-ink-faint">Serviced {serviced}</p>
+                        <p className="text-ink-faint text-xs">Serviced {serviced}</p>
                       ) : null}
                     </div>
 
                     {item.rating ? (
                       <p
-                        className="shrink-0 text-sm font-bold text-brand"
+                        className="text-brand shrink-0 text-sm font-bold"
                         aria-label={`Rated ${item.rating} out of 5`}
                       >
                         <span aria-hidden>{"★".repeat(item.rating)}</span>
@@ -118,17 +117,15 @@ export default async function InboxPage() {
                   </div>
 
                   {item.review ? (
-                    <p className="mt-3 text-sm whitespace-pre-wrap text-ink">
-                      {item.review}
-                    </p>
+                    <p className="text-ink mt-3 text-sm whitespace-pre-wrap">{item.review}</p>
                   ) : null}
 
                   {item.next_visit_notes ? (
-                    <div className="mt-3 rounded-sm bg-card/70 px-3 py-2 ring-1 ring-line">
-                      <p className="text-[11px] font-bold tracking-wider text-ink-soft uppercase">
+                    <div className="bg-card/70 ring-line mt-3 rounded-sm px-3 py-2 ring-1">
+                      <p className="text-ink-soft text-[11px] font-bold tracking-wider uppercase">
                         For next visit
                       </p>
-                      <p className="mt-0.5 text-sm whitespace-pre-wrap text-ink">
+                      <p className="text-ink mt-0.5 text-sm whitespace-pre-wrap">
                         {item.next_visit_notes}
                       </p>
                     </div>
@@ -139,7 +136,7 @@ export default async function InboxPage() {
                       <input type="hidden" name="id" value={item.id} />
                       <button
                         type="submit"
-                        className="text-sm font-bold text-brand-dark underline underline-offset-2"
+                        className="text-brand-dark text-sm font-bold underline underline-offset-2"
                       >
                         Mark as read
                       </button>
@@ -153,9 +150,8 @@ export default async function InboxPage() {
       </div>
 
       {rows.length > 0 ? (
-        <p className="mt-5 text-center text-xs text-ink-faint">
-          Notes for next visit also appear at the top of that pool&apos;s next
-          visit screen.
+        <p className="text-ink-faint mt-5 text-center text-xs">
+          Notes for next visit also appear at the top of that pool&apos;s next visit screen.
         </p>
       ) : null}
     </>

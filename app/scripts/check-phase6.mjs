@@ -28,7 +28,8 @@ try {
   else bad(`expected 200, got ${res.status} — the proxy is probably gating it`);
 
   const type = res.headers.get("content-type") ?? "";
-  if (/manifest\+json|application\/json/.test(type)) ok(`correct content type (${type.split(";")[0]})`);
+  if (/manifest\+json|application\/json/.test(type))
+    ok(`correct content type (${type.split(";")[0]})`);
   else bad(`unexpected content type: ${type}`);
 
   const m = await res.json();
@@ -39,7 +40,11 @@ try {
     ["start_url", () => Boolean(m.start_url), m.start_url],
     ["display: standalone", () => m.display === "standalone", m.display],
     ["theme_color", () => /^#[0-9a-f]{6}$/i.test(m.theme_color ?? ""), m.theme_color],
-    ["background_color", () => /^#[0-9a-f]{6}$/i.test(m.background_color ?? ""), m.background_color],
+    [
+      "background_color",
+      () => /^#[0-9a-f]{6}$/i.test(m.background_color ?? ""),
+      m.background_color,
+    ],
   ]) {
     if (test()) ok(`${field} — ${detail}`);
     else bad(`${field} is wrong or missing (${JSON.stringify(detail)})`);

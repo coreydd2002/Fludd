@@ -72,7 +72,12 @@ try {
 
   const { data: visit } = await tech
     .from("visits")
-    .insert({ customer_id: customer.id, company_id: companyId, tech_id: userId, status: "on_the_way" })
+    .insert({
+      customer_id: customer.id,
+      company_id: companyId,
+      tech_id: userId,
+      status: "on_the_way",
+    })
     .select("id, public_token")
     .single();
 
@@ -145,7 +150,12 @@ try {
 
   const { data: open } = await tech
     .from("visits")
-    .insert({ customer_id: customer.id, company_id: companyId, tech_id: userId, status: "on_the_way" })
+    .insert({
+      customer_id: customer.id,
+      company_id: companyId,
+      tech_id: userId,
+      status: "on_the_way",
+    })
     .select("public_token")
     .single();
   const pending = await fetch(`${BASE}/r/${open.public_token}`);
@@ -181,7 +191,10 @@ try {
   else bad("the report stopped rendering after feedback");
 
   // Starting a new visit closes the old window; the report must survive.
-  await admin.from("visits").update({ feedback_closes_at: new Date().toISOString() }).eq("id", visit.id);
+  await admin
+    .from("visits")
+    .update({ feedback_closes_at: new Date().toISOString() })
+    .eq("id", visit.id);
   await admin.from("feedback").delete().eq("visit_id", visit.id);
   const closed = await fetch(`${BASE}/r/${token}`);
   const closedHtml = await closed.text();

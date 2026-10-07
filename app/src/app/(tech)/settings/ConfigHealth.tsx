@@ -69,11 +69,10 @@ export function ConfigHealth() {
   const overrideOff = rows.find((c) => c.name === "DEV_EMAIL_OVERRIDE" && !c.set);
 
   return (
-    <div className="rounded-card bg-card p-5 shadow-sm ring-1 ring-line">
+    <div className="rounded-card bg-card ring-line p-5 shadow-sm ring-1">
       <h2 className="text-lg">This deployment</h2>
-      <p className="mt-1 mb-4 text-sm text-ink-soft">
-        What the server can see right now. Values are never shown — only whether
-        they are set.
+      <p className="text-ink-soft mt-1 mb-4 text-sm">
+        What the server can see right now. Values are never shown — only whether they are set.
       </p>
 
       <ul className="flex flex-col gap-2.5">
@@ -83,9 +82,9 @@ export function ConfigHealth() {
               aria-hidden
               className={
                 check.set
-                  ? "font-bold text-ok"
+                  ? "text-ok font-bold"
                   : check.required
-                    ? "font-bold text-err"
+                    ? "text-err font-bold"
                     : "text-warn"
               }
             >
@@ -94,7 +93,7 @@ export function ConfigHealth() {
             <span className="min-w-0">
               <span className="font-mono text-[13px] break-all">{check.name}</span>
               <span className="sr-only">{check.set ? " is set" : " is not set"}</span>
-              <span className="block text-xs text-ink-faint">{check.note}</span>
+              <span className="text-ink-faint block text-xs">{check.note}</span>
             </span>
           </li>
         ))}
@@ -103,20 +102,19 @@ export function ConfigHealth() {
       {missing.length > 0 ? (
         <p
           role="alert"
-          className="mt-4 rounded-sm bg-warn-tint px-3 py-2 text-sm font-medium text-warn"
+          className="bg-warn-tint text-warn mt-4 rounded-sm px-3 py-2 text-sm font-medium"
         >
-          {missing.length} required setting{missing.length === 1 ? " is" : "s are"}{" "}
-          missing on this deployment. Add {missing.length === 1 ? "it" : "them"} in
-          the Vercel project&apos;s environment variables, then redeploy —
-          changing a variable does not affect a build that already happened.
+          {missing.length} required setting{missing.length === 1 ? " is" : "s are"} missing on this
+          deployment. Add {missing.length === 1 ? "it" : "them"} in the Vercel project&apos;s
+          environment variables, then redeploy — changing a variable does not affect a build that
+          already happened.
         </p>
       ) : overrideOff ? (
-        <p className="mt-4 rounded-sm bg-warn-tint px-3 py-2 text-sm font-medium text-warn">
-          Customer email is live. Every finished visit will email the real pool
-          owner.
+        <p className="bg-warn-tint text-warn mt-4 rounded-sm px-3 py-2 text-sm font-medium">
+          Customer email is live. Every finished visit will email the real pool owner.
         </p>
       ) : (
-        <p className="mt-4 rounded-sm bg-ok-tint px-3 py-2 text-sm font-medium text-ok-deep">
+        <p className="bg-ok-tint text-ok-deep mt-4 rounded-sm px-3 py-2 text-sm font-medium">
           Everything this deployment needs is configured.
         </p>
       )}

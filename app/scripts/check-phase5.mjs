@@ -69,7 +69,12 @@ try {
   // --- Visit 1, finished ------------------------------------------------
   const { data: v1 } = await tech
     .from("visits")
-    .insert({ customer_id: customer.id, company_id: companyId, tech_id: userId, status: "on_the_way" })
+    .insert({
+      customer_id: customer.id,
+      company_id: companyId,
+      tech_id: userId,
+      status: "on_the_way",
+    })
     .select("id")
     .single();
   await tech
@@ -129,7 +134,12 @@ try {
 
   const { data: v2 } = await tech
     .from("visits")
-    .insert({ customer_id: customer.id, company_id: companyId, tech_id: userId, status: "on_the_way" })
+    .insert({
+      customer_id: customer.id,
+      company_id: companyId,
+      tech_id: userId,
+      status: "on_the_way",
+    })
     .select("id")
     .single();
 
@@ -156,7 +166,10 @@ try {
   await tech
     .from("feedback")
     .update({ read_by_tech_at: new Date().toISOString() })
-    .in("visit_id", prior.map((v) => v.id))
+    .in(
+      "visit_id",
+      prior.map((v) => v.id),
+    )
     .is("read_by_tech_at", null);
 
   if ((await unreadCount(tech)) === 0) ok("the badge clears once the visit starts");
@@ -176,7 +189,12 @@ try {
   await tech.from("visits").update({ status: "cancelled" }).eq("id", v2.id);
   const { data: v3 } = await tech
     .from("visits")
-    .insert({ customer_id: customer.id, company_id: companyId, tech_id: userId, status: "on_the_way" })
+    .insert({
+      customer_id: customer.id,
+      company_id: companyId,
+      tech_id: userId,
+      status: "on_the_way",
+    })
     .select("id")
     .single();
   await tech

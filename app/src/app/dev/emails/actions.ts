@@ -33,10 +33,7 @@ export async function sendTestEmail(
       which === "finish"
         ? "Your pool service is complete"
         : "Marcus is on the way to service your pool",
-    react:
-      which === "finish"
-        ? FinishEmail(finishEmailSample)
-        : StartEmail(startEmailSample),
+    react: which === "finish" ? FinishEmail(finishEmailSample) : StartEmail(startEmailSample),
   });
 
   if (outcome.status === "sent") {

@@ -30,9 +30,7 @@ export type PublicReport = {
 };
 
 export type ReportLookup =
-  | { state: "ok"; report: PublicReport }
-  | { state: "invalid" }
-  | { state: "not_finished" };
+  { state: "ok"; report: PublicReport } | { state: "invalid" } | { state: "not_finished" };
 
 /**
  * Resolves a report token.
@@ -72,32 +70,22 @@ export async function loadReport(token: string): Promise<ReportLookup> {
       .select("label, completed")
       .eq("visit_id", visit.id)
       .order("position"),
-    supabase
-      .from("visit_photos")
-      .select("storage_path")
-      .eq("visit_id", visit.id)
-      .order("position"),
+    supabase.from("visit_photos").select("storage_path").eq("visit_id", visit.id).order("position"),
     supabase.from("feedback").select("id").eq("visit_id", visit.id).maybeSingle(),
   ]);
 
   // The bucket is private; these URLs are minted per request and expire.
   let photoUrls: string[] = [];
   if (photos && photos.length > 0) {
-    const { data: signed } = await supabase.storage
-      .from("visit-photos")
-      .createSignedUrls(
-        photos.map((p) => p.storage_path),
-        SIGNED_URL_TTL_SECONDS,
-      );
-    photoUrls = (signed ?? [])
-      .map((s) => s.signedUrl)
-      .filter((u): u is string => Boolean(u));
+    const { data: signed } = await supabase.storage.from("visit-photos").createSignedUrls(
+      photos.map((p) => p.storage_path),
+      SIGNED_URL_TTL_SECONDS,
+    );
+    photoUrls = (signed ?? []).map((s) => s.signedUrl).filter((u): u is string => Boolean(u));
   }
 
   const timezone = visit.companies?.timezone ?? "America/Los_Angeles";
-  const closesAt = visit.feedback_closes_at
-    ? new Date(visit.feedback_closes_at)
-    : null;
+  const closesAt = visit.feedback_closes_at ? new Date(visit.feedback_closes_at) : null;
 
   return {
     state: "ok",

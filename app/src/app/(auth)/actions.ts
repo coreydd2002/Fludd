@@ -19,10 +19,7 @@ function safeNext(next: string) {
   return next.startsWith("/") && !next.startsWith("//") ? next : "/";
 }
 
-export async function login(
-  _prev: AuthState,
-  formData: FormData,
-): Promise<AuthState> {
+export async function login(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password, next } = readCredentials(formData);
   if (!email || !password) return { error: "Enter your email and password." };
 
@@ -36,10 +33,7 @@ export async function login(
   redirect(safeNext(next));
 }
 
-export async function signup(
-  _prev: AuthState,
-  formData: FormData,
-): Promise<AuthState> {
+export async function signup(_prev: AuthState, formData: FormData): Promise<AuthState> {
   const { email, password } = readCredentials(formData);
   if (!email || !password) return { error: "Enter your email and password." };
   if (password.length < 8) {

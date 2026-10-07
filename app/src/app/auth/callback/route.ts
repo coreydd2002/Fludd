@@ -44,7 +44,9 @@ export async function GET(request: Request) {
   }
 
   return NextResponse.redirect(
-    failure ? new URL("/login?confirm=failed", origin(request)) : new URL(safeNext(next), origin(request)),
+    failure
+      ? new URL("/login?confirm=failed", origin(request))
+      : new URL(safeNext(next), origin(request)),
   );
 }
 

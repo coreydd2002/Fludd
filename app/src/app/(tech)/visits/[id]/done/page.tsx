@@ -3,12 +3,7 @@ import { notFound } from "next/navigation";
 import { EmailNotice } from "@/components/EmailNotice";
 import { ButtonLink } from "@/components/ui";
 import { requireTech } from "@/lib/auth";
-import {
-  allReadingsHealthy,
-  formatReading,
-  READINGS,
-  statusOf,
-} from "@/lib/readings";
+import { allReadingsHealthy, formatReading, READINGS, statusOf } from "@/lib/readings";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata = { title: "Visit complete" };
@@ -54,43 +49,36 @@ export default async function VisitDonePage({
       })
     : null;
 
-  const name = [visit.customers?.first_name, visit.customers?.last_name]
-    .filter(Boolean)
-    .join(" ");
+  const name = [visit.customers?.first_name, visit.customers?.last_name].filter(Boolean).join(" ");
 
   return (
     <>
-      <div className="rounded-card bg-ok-tint p-5 ring-1 ring-ok/30">
-        <h1 className="text-2xl text-ok-deep">Visit complete</h1>
-        <p className="mt-1 text-sm text-ok-deep/80">
+      <div className="rounded-card bg-ok-tint ring-ok/30 p-5 ring-1">
+        <h1 className="text-ok-deep text-2xl">Visit complete</h1>
+        <p className="text-ok-deep/80 mt-1 text-sm">
           {name}
           {finished ? ` · ${finished}` : null}
         </p>
       </div>
 
-      <div className="mt-5 rounded-card bg-card p-5 shadow-sm ring-1 ring-line">
+      <div className="rounded-card bg-card ring-line mt-5 p-5 shadow-sm ring-1">
         <h2 className="eyebrow">Readings</h2>
         <div className="mt-3 grid grid-cols-3 gap-2">
           {READINGS.map((spec) => (
-            <div
-              key={spec.key}
-              className="rounded-sm bg-brand-tint-2 p-3 text-center"
-            >
-              <p className="text-[11px] font-bold tracking-wider text-ink-soft uppercase">
+            <div key={spec.key} className="bg-brand-tint-2 rounded-sm p-3 text-center">
+              <p className="text-ink-soft text-[11px] font-bold tracking-wider uppercase">
                 {spec.short}
               </p>
-              <p className="text-xl font-extrabold">
-                {formatReading(spec, readings[spec.key])}
-              </p>
+              <p className="text-xl font-extrabold">{formatReading(spec, readings[spec.key])}</p>
               {statusOf(spec, readings[spec.key]) === "empty" ? (
-                <p className="text-[11px] text-ink-faint">not tested</p>
+                <p className="text-ink-faint text-[11px]">not tested</p>
               ) : null}
             </div>
           ))}
         </div>
 
         {allReadingsHealthy(readings) ? (
-          <p className="mt-3 rounded-sm bg-ok-tint px-3 py-2 text-sm font-medium text-ok-deep">
+          <p className="bg-ok-tint text-ok-deep mt-3 rounded-sm px-3 py-2 text-sm font-medium">
             All readings in the healthy range
           </p>
         ) : null}
@@ -112,9 +100,7 @@ export default async function VisitDonePage({
         {visit.tech_notes ? (
           <>
             <h2 className="eyebrow mt-5">Your notes</h2>
-            <p className="mt-2 text-sm whitespace-pre-wrap text-ink-soft">
-              {visit.tech_notes}
-            </p>
+            <p className="text-ink-soft mt-2 text-sm whitespace-pre-wrap">{visit.tech_notes}</p>
           </>
         ) : null}
       </div>
@@ -126,9 +112,9 @@ export default async function VisitDonePage({
         sentLabel={`Report emailed to ${visit.customers?.first_name ?? "the owner"}.`}
       />
 
-      <p className="mt-4 rounded-card bg-brand-tint-2 px-4 py-3 text-sm text-ink-soft ring-1 ring-line">
-        The report link in that email opens in Phase 4 — the address is already
-        correct, so the email won&apos;t need resending.
+      <p className="rounded-card bg-brand-tint-2 text-ink-soft ring-line mt-4 px-4 py-3 text-sm ring-1">
+        The report link in that email opens in Phase 4 — the address is already correct, so the
+        email won&apos;t need resending.
       </p>
 
       <div className="mt-5">

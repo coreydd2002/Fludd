@@ -29,13 +29,10 @@ export function ReadingsPanel({
         const value = values[spec.key];
         const status = statusOf(spec, value);
         return (
-          <div
-            key={spec.key}
-            className={`rounded-card p-3 ring-1 ${TONE[status]}`}
-          >
+          <div key={spec.key} className={`rounded-card p-3 ring-1 ${TONE[status]}`}>
             <label
               htmlFor={spec.key}
-              className="block text-[11px] font-bold uppercase tracking-wider text-ink-soft"
+              className="text-ink-soft block text-[11px] font-bold tracking-wider uppercase"
             >
               {spec.short}
             </label>
@@ -52,9 +49,9 @@ export function ReadingsPanel({
                 const raw = e.target.value;
                 onChange(spec.key, raw === "" ? null : Number(raw));
               }}
-              className="mt-1 w-full bg-transparent text-2xl font-extrabold tracking-tight text-ink placeholder:text-ink-faint focus:outline-none"
+              className="text-ink placeholder:text-ink-faint mt-1 w-full bg-transparent text-2xl font-extrabold tracking-tight focus:outline-none"
             />
-            <p className="text-[11px] text-ink-faint">
+            <p className="text-ink-faint text-[11px]">
               {status === "empty"
                 ? `${spec.min}–${spec.max}${spec.unit ? ` ${spec.unit}` : ""}`
                 : LABEL[status]}

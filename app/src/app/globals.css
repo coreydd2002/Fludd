@@ -55,8 +55,9 @@
 }
 
 @theme inline {
-  --font-sans: var(--font-plus-jakarta), system-ui, -apple-system, "Segoe UI",
-    Roboto, Helvetica, Arial, sans-serif;
+  --font-sans:
+    var(--font-plus-jakarta), system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
 }
 
 @layer base {

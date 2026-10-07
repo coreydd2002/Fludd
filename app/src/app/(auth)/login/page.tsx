@@ -21,11 +21,10 @@ function LoginForm() {
       {confirmFailed ? (
         <p
           role="alert"
-          className="mt-4 rounded-sm bg-warn-tint px-3 py-2 text-sm font-medium text-warn"
+          className="bg-warn-tint text-warn mt-4 rounded-sm px-3 py-2 text-sm font-medium"
         >
-          That confirmation link didn&apos;t work — it may have expired or
-          already been used. Try signing in, and request a new one if that
-          fails.
+          That confirmation link didn&apos;t work — it may have expired or already been used. Try
+          signing in, and request a new one if that fails.
         </p>
       ) : null}
 
@@ -55,9 +54,9 @@ function LoginForm() {
           {pending ? "Signing in…" : "Sign in"}
         </Button>
       </form>
-      <p className="mt-5 text-sm text-ink-soft">
+      <p className="text-ink-soft mt-5 text-sm">
         No account yet?{" "}
-        <Link href="/signup" className="font-bold text-brand-dark underline">
+        <Link href="/signup" className="text-brand-dark font-bold underline">
           Create one
         </Link>
       </p>
