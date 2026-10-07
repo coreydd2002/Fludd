@@ -1,0 +1,27 @@
+name: Bug
+description: Something is broken.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to …
+        2. Tap …
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      placeholder: "app.fludd.work on iPhone Safari / fludd.work / local"
+  - type: markdown
+    attributes:
+      value: "**Do not paste API keys, passwords or real customer details.**"

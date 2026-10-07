@@ -1,0 +1,4 @@
+# LF everywhere, so Prettier's check gives the same answer on Windows and in CI.
+* text=auto eol=lf
+*.png binary
+*.jpg binary

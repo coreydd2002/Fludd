@@ -17,6 +17,7 @@ No build step, no framework, no runtime npm dependencies.
 | `index.html` | The whole page |
 | `styles.css` | Hand-written styles (design tokens in `:root`) |
 | `script.js` | Progressive enhancement: form submit, footer year |
+| `playbook.html` · `playbook.css` | The team playbook at `/playbook` (linked from the footer) |
 | `logo.jpg` | The Fludd duck logo (source asset) |
 | `favicon.png` · `apple-touch-icon.png` · `og-image.jpg` | Icons and social-preview image derived from the logo |
 | `refraction.jpg` | Full-bleed hero background photo |
@@ -47,6 +48,13 @@ Details:
   To turn it on: verify a domain in Resend, then set the `CONFIRM_FROM` env var in
   Vercel to an address on it, e.g. `Fludd <hello@yourdomain.com>`.
 - Change `NOTIFY_TO` / `FROM` at the top of `api/subscribe.js` if the inbox changes.
+
+## New to the team?
+
+Start with the **[team playbook](https://fludd.work/playbook)** (source:
+[`playbook.html`](playbook.html)): tools, process, git rules, the board, AI policy
+and how to get the app running. The short version is in
+[`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 ## Run locally
 

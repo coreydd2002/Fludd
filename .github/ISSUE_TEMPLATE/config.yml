@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Team playbook
+    url: https://fludd.work/playbook
+    about: How we work, before you file anything.
