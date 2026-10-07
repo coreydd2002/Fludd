@@ -28,7 +28,7 @@ jobs:
     name: quality
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -47,7 +47,7 @@ jobs:
     name: e2e
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - uses: actions/setup-node@v5
         with:
           node-version: 22
@@ -82,7 +82,7 @@ jobs:
       PGPASSWORD: postgres
       PGDATABASE: fludd_test
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - name: Apply migration and run row-level-security tests
         run: |
           psql -v ON_ERROR_STOP=1 -f supabase/tests/00_supabase_stub.sql
