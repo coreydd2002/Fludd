@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { requireTech } from "@/lib/auth";
 import { parseChecklist } from "@/lib/checklist";
+import type { ServiceCadence } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
 export type CustomerState = { error?: string };
@@ -18,6 +19,10 @@ type Parsed = {
     est_duration_minutes: number;
     start_email_enabled: boolean;
     internal_notes: string | null;
+    assigned_tech_id: string | null;
+    service_weekday: number | null;
+    service_cadence: ServiceCadence;
+    service_week_parity: number | null;
   };
   checklist: string[];
 };
@@ -37,6 +42,24 @@ function parse(formData: FormData): Parsed | { error: string } {
     return { error: "Estimated time should be between 1 and 600 minutes." };
   }
 
+  // "" is the "not scheduled" option, which is a real choice rather than a
+  // missing value — a pool can exist before anyone decides which day it is on.
+  const weekdayRaw = String(formData.get("service_weekday") ?? "");
+  const weekday = weekdayRaw === "" ? null : Number(weekdayRaw);
+  if (weekday !== null && (!Number.isInteger(weekday) || weekday < 0 || weekday > 6)) {
+    return { error: "Pick a day of the week, or leave it unscheduled." };
+  }
+
+  const cadence = String(formData.get("service_cadence") ?? "weekly");
+  if (cadence !== "weekly" && cadence !== "biweekly") {
+    return { error: "Service frequency must be weekly or every other week." };
+  }
+
+  const parityRaw = String(formData.get("service_week_parity") ?? "");
+  // The database rejects a biweekly pool with no parity, so default rather than
+  // let a half-filled form reach it.
+  const parity = cadence === "biweekly" ? (parityRaw === "1" ? 1 : 0) : null;
+
   return {
     values: {
       first_name: first,
@@ -46,6 +69,10 @@ function parse(formData: FormData): Parsed | { error: string } {
       est_duration_minutes: Math.round(duration),
       start_email_enabled: formData.get("start_email_enabled") === "on",
       internal_notes: String(formData.get("internal_notes") ?? "").trim() || null,
+      assigned_tech_id: String(formData.get("assigned_tech_id") ?? "").trim() || null,
+      service_weekday: weekday,
+      service_cadence: cadence,
+      service_week_parity: parity,
     },
     checklist: parseChecklist(formData.get("checklist")),
   };
@@ -81,6 +108,7 @@ export async function createCustomer(
 
   await replaceChecklist(data.id, parsed.checklist);
   revalidatePath("/");
+  revalidatePath("/schedule");
   redirect("/");
 }
 
@@ -102,6 +130,7 @@ export async function updateCustomer(
 
   await replaceChecklist(id, parsed.checklist);
   revalidatePath("/");
+  revalidatePath("/schedule");
   redirect("/");
 }
 

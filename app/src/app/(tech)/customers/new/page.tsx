@@ -18,6 +18,13 @@ export default async function NewCustomerPage() {
     .eq("company_id", company.id)
     .order("position");
 
+  // The roster this pool can be assigned to. RLS scopes it to the company, so
+  // no company_id filter is needed.
+  const { data: techs } = await supabase
+    .from("techs")
+    .select("id, display_name")
+    .order("display_name");
+
   return (
     <>
       <h1 className="text-2xl">Add a pool</h1>
@@ -25,6 +32,7 @@ export default async function NewCustomerPage() {
         <CustomerForm
           action={createCustomer}
           checklist={(defaults ?? []).map((d) => d.label)}
+          techs={techs ?? []}
           submitLabel="Add pool"
         />
       </div>

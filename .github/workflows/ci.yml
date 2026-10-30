@@ -83,8 +83,15 @@ jobs:
       PGDATABASE: fludd_test
     steps:
       - uses: actions/checkout@v5
-      - name: Apply migration and run row-level-security tests
+      - name: Apply migrations and run row-level-security tests
         run: |
           psql -v ON_ERROR_STOP=1 -f supabase/tests/00_supabase_stub.sql
-          psql -v ON_ERROR_STOP=1 -f supabase/migrations/0001_init.sql
+          # Every migration, not a hard-coded list: this job used to name
+          # 0001 alone, so 0002 went unapplied and the RLS tests failed on
+          # tables that were never created. The numeric filename prefix is
+          # what makes a plain glob apply them in the right order.
+          for migration in supabase/migrations/*.sql; do
+            echo "== $migration"
+            psql -v ON_ERROR_STOP=1 -f "$migration"
+          done
           psql -v ON_ERROR_STOP=1 -f supabase/tests/01_rls_test.sql

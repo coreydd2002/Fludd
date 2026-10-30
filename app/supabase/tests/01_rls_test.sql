@@ -141,5 +141,119 @@ end
 $$;
 reset role;
 
+-- --- Routing: scheduling and route ownership (0002) ----------------------
+\echo ''
+\echo '--- As Bob: scheduling a pool and building a route ---'
+set role authenticated;
+set test.user_id = '22222222-2222-2222-2222-222222222222';
+
+update public.customers
+   set assigned_tech_id = '22222222-2222-2222-2222-222222222222',
+       service_weekday = 2,
+       service_cadence = 'weekly';
+
+insert into public.routes (company_id, tech_id, service_date)
+select public.current_company_id(), '22222222-2222-2222-2222-222222222222', date '2026-11-03';
+
+insert into public.route_stops (route_id, customer_id, position)
+select r.id, c.id, 0
+from public.routes r, public.customers c
+where r.service_date = date '2026-11-03'
+limit 1;
+
+insert into public.travel_times (company_id, from_customer_id, to_customer_id, seconds, meters)
+select public.current_company_id(), c.id, c.id, 0, 0 from public.customers c limit 1;
+
+select count(*) as bob_routes from public.routes;
+select count(*) as bob_stops from public.route_stops;
+
+\echo '--- As Bob: one route per tech per day ---'
+do $$
+begin
+  insert into public.routes (company_id, tech_id, service_date)
+  values (public.current_company_id(), '22222222-2222-2222-2222-222222222222', date '2026-11-03');
+  raise exception 'FAIL: a second route for the same tech and day was allowed';
+exception
+  when unique_violation then
+    raise notice 'PASS: one route per tech per day';
+end
+$$;
+
+\echo '--- As Bob: a pool cannot appear twice in one route ---'
+do $$
+declare v_route uuid; v_customer uuid;
+begin
+  select r.id into v_route from public.routes r limit 1;
+  select rs.customer_id into v_customer from public.route_stops rs limit 1;
+  insert into public.route_stops (route_id, customer_id, position)
+  values (v_route, v_customer, 1);
+  raise exception 'FAIL: the same pool was added to a route twice';
+exception
+  when unique_violation then
+    raise notice 'PASS: a pool appears at most once per route';
+end
+$$;
+
+reset role;
+
+\echo '--- As Alice: none of Bob routing data is visible ---'
+set role authenticated;
+set test.user_id = '11111111-1111-1111-1111-111111111111';
+select count(*) as routes_alice_can_see from public.routes;
+select count(*) as stops_alice_can_see from public.route_stops;
+select count(*) as travel_times_alice_can_see from public.travel_times;
+
+\echo '--- As Alice: cannot create a route inside another company ---'
+do $$
+declare v_other uuid;
+begin
+  select company_id into v_other from public.techs
+   where id = '22222222-2222-2222-2222-222222222222';
+  if v_other is not null then
+    raise exception 'FAIL: Alice can read company B''s tech row';
+  end if;
+  raise notice 'PASS: company B is invisible to Alice';
+end
+$$;
+
+do $$
+begin
+  -- Forging a route for a tech in another company must fail the WITH CHECK.
+  insert into public.routes (company_id, tech_id, service_date)
+  values (gen_random_uuid(), '22222222-2222-2222-2222-222222222222', date '2026-11-04');
+  raise exception 'FAIL: Alice created a route in another company';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: cross-company route insert blocked by RLS';
+  when foreign_key_violation then
+    raise exception 'FAIL: RLS let the insert through to the FK check';
+end
+$$;
+
+reset role;
+
+\echo ''
+\echo '--- As anon: routing tables must be unreadable ---'
+set role anon;
+do $$
+begin
+  perform 1 from public.routes;
+  raise exception 'FAIL: anon could read routes';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: anon has no privilege on routes';
+end
+$$;
+do $$
+begin
+  perform 1 from public.travel_times;
+  raise exception 'FAIL: anon could read travel_times';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: anon has no privilege on travel_times';
+end
+$$;
+reset role;
+
 \echo ''
 \echo 'ALL CHECKS COMPLETE'

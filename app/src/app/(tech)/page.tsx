@@ -3,18 +3,21 @@ import Link from "next/link";
 import { ButtonLink, EmptyState, Eyebrow } from "@/components/ui";
 import { requireTech } from "@/lib/auth";
 import { directionsUrl } from "@/lib/maps";
+import { localDateISO, weekdayName, weekdayOf } from "@/lib/routing/schedule";
 import { createClient } from "@/lib/supabase/server";
 
+import { duePoolsFor, moveStop } from "./routes/actions";
 import { startVisit } from "./visits/actions";
 
 export const metadata = { title: "Today's route" };
 
-export default async function RoutePage({ searchParams }: PageProps<"/">) {
+export default async function RoutePage() {
   const { tech, company } = await requireTech();
-  const { q } = await searchParams;
-  const search = typeof q === "string" ? q.trim() : "";
-
   const supabase = await createClient();
+
+  // Every date decision is made in the company's timezone. Using the server's
+  // clock would roll a Phoenix company onto tomorrow's route each evening.
+  const today = localDateISO(new Date(), company.timezone);
 
   // An unfinished visit is the most important thing on this screen — a tech who
   // backgrounds the app at a pool must land straight back in it.
@@ -26,18 +29,29 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
     .limit(1)
     .maybeSingle();
 
-  let query = supabase
-    .from("customers")
-    .select("id, first_name, last_name, address, est_duration_minutes, internal_notes")
-    .eq("archived", false)
-    .order("first_name");
+  const duePools = await duePoolsFor(tech.id, today);
 
-  if (search) {
-    // Row-level security still scopes this; the filter only narrows further.
-    query = query.or(`first_name.ilike.%${search}%,last_name.ilike.%${search}%`);
-  }
+  // If the tech has already ordered today, honour it. The route is created on
+  // first interaction, not on render, so most mornings there is none yet and
+  // the list falls back to alphabetical.
+  const { data: route } = await supabase
+    .from("routes")
+    .select("id, route_stops(customer_id, position, status)")
+    .eq("tech_id", tech.id)
+    .eq("service_date", today)
+    .maybeSingle();
 
-  const { data: customers, error } = await query;
+  const orderOf = new Map<string, number>(
+    (route?.route_stops ?? []).map((s) => [s.customer_id, s.position]),
+  );
+  const stops =
+    orderOf.size > 0
+      ? [...duePools].sort(
+          (a, b) =>
+            (orderOf.get(a.id) ?? Number.MAX_SAFE_INTEGER) -
+            (orderOf.get(b.id) ?? Number.MAX_SAFE_INTEGER),
+        )
+      : duePools;
 
   // One query for the whole list rather than one per pool. RLS scopes it to the
   // company, and the join gives us which customer each piece of feedback is for.
@@ -57,16 +71,25 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
     });
   }
 
-  const hour = new Date().getHours();
+  // Also from the company's zone, so the greeting agrees with the route.
+  const hour = Number(
+    new Intl.DateTimeFormat("en-US", {
+      timeZone: company.timezone,
+      hour: "numeric",
+      hour12: false,
+    }).format(new Date()),
+  );
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
 
   const openCustomerId = openVisit?.customer_id;
+  const dayName = weekdayName(weekdayOf(today));
+  const totalMinutes = stops.reduce((sum, p) => sum + p.est_duration_minutes, 0);
 
   return (
     <>
       <div className="flex items-baseline justify-between gap-3">
         <div>
-          <Eyebrow>Today</Eyebrow>
+          <Eyebrow>{dayName}</Eyebrow>
           <h1 className="mt-1 text-2xl">
             {greeting}, {tech.display_name}
           </h1>
@@ -96,27 +119,19 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
         </Link>
       ) : null}
 
-      <form className="mt-5" role="search">
-        <input
-          type="search"
-          name="q"
-          defaultValue={search}
-          placeholder="Search pools by name"
-          aria-label="Search pools by name"
-          className="min-h-tap rounded-pill bg-card text-ink ring-line placeholder:text-ink-faint focus:ring-brand w-full px-4 py-2.5 ring-1 focus:ring-2 focus:outline-none"
-        />
-      </form>
-
-      {error ? (
-        <p role="alert" className="bg-err/10 text-err mt-5 rounded-sm px-3 py-2 text-sm">
-          Could not load your pools: {error.message}
+      {stops.length > 0 ? (
+        <p className="text-ink-soft mt-5 text-sm">
+          <span className="text-ink font-bold">
+            {stops.length} {stops.length === 1 ? "pool" : "pools"}
+          </span>{" "}
+          · about {Math.round(totalMinutes / 60)}h {totalMinutes % 60}m of service time
         </p>
       ) : null}
 
-      <div className="mt-5">
-        {customers && customers.length > 0 ? (
+      <div className="mt-4">
+        {stops.length > 0 ? (
           <ul className="flex flex-col gap-3">
-            {customers.map((customer) => {
+            {stops.map((customer, index) => {
               const name = [customer.first_name, customer.last_name].filter(Boolean).join(" ");
               const isOpen = customer.id === openCustomerId;
               const flag = waiting.get(customer.id);
@@ -126,11 +141,18 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
                   key={customer.id}
                   className="rounded-card bg-card ring-line p-4 shadow-sm ring-1"
                 >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="min-w-0">
+                  <div className="flex items-start gap-3">
+                    <span
+                      aria-hidden
+                      className="bg-brand-tint text-brand-dark rounded-pill mt-0.5 grid size-7 shrink-0 place-items-center text-sm font-bold"
+                    >
+                      {index + 1}
+                    </span>
+
+                    <div className="min-w-0 flex-1">
                       <Link
                         href={`/customers/${customer.id}`}
-                        className="text-ink hover:text-brand-dark font-bold"
+                        className="hover:text-brand-dark text-ink font-bold"
                       >
                         {name}
                       </Link>
@@ -139,6 +161,37 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
                         About {customer.est_duration_minutes} min
                       </p>
                     </div>
+
+                    {/* Up/down rather than drag: this is used one-handed on a
+                        phone, where dragging inside a scrolling page is
+                        unreliable and inaccessible. */}
+                    <div className="flex shrink-0 flex-col">
+                      <form action={moveStop}>
+                        <input type="hidden" name="customer_id" value={customer.id} />
+                        <input type="hidden" name="direction" value="up" />
+                        <button
+                          type="submit"
+                          disabled={index === 0}
+                          aria-label={`Move ${name} earlier`}
+                          className="text-ink-faint hover:text-brand px-2 disabled:opacity-30"
+                        >
+                          ↑
+                        </button>
+                      </form>
+                      <form action={moveStop}>
+                        <input type="hidden" name="customer_id" value={customer.id} />
+                        <input type="hidden" name="direction" value="down" />
+                        <button
+                          type="submit"
+                          disabled={index === stops.length - 1}
+                          aria-label={`Move ${name} later`}
+                          className="text-ink-faint hover:text-brand px-2 disabled:opacity-30"
+                        >
+                          ↓
+                        </button>
+                      </form>
+                    </div>
+
                     <a
                       href={directionsUrl(customer.address, company.maps_pref)}
                       target="_blank"
@@ -197,21 +250,11 @@ export default async function RoutePage({ searchParams }: PageProps<"/">) {
               );
             })}
           </ul>
-        ) : search ? (
-          <EmptyState
-            title="No pools match that search"
-            body={`Nothing found for “${search}”.`}
-            action={
-              <ButtonLink href="/" variant="secondary">
-                Clear search
-              </ButtonLink>
-            }
-          />
         ) : (
           <EmptyState
-            title="No pools yet"
-            body="Add your first customer and Fludd will copy your default checklist onto their pool."
-            action={<ButtonLink href="/customers/new">Add your first pool</ButtonLink>}
+            title={`Nothing scheduled for ${dayName}`}
+            body="Pools appear here on the weekday they're assigned to. Open a pool and set its service day, or add a new one."
+            action={<ButtonLink href="/customers">See all pools</ButtonLink>}
           />
         )}
       </div>

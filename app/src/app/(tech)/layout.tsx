@@ -40,6 +40,12 @@ export default async function TechLayout({ children }: LayoutProps<"/">) {
 
           <div className="ml-auto flex items-center gap-1">
             <Link
+              href="/customers"
+              className="rounded-pill text-ink-soft hover:bg-brand-tint px-3 py-2 text-sm font-bold"
+            >
+              Pools
+            </Link>
+            <Link
               href="/inbox"
               className="rounded-pill text-ink-soft hover:bg-brand-tint relative px-3 py-2 text-sm font-bold"
             >

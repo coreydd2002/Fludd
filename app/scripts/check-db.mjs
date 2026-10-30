@@ -34,6 +34,10 @@ const TABLES = [
   "visit_items",
   "visit_photos",
   "feedback",
+  // 0002_routing.sql
+  "routes",
+  "route_stops",
+  "travel_times",
 ];
 
 const supabase = createClient(url, key, {
