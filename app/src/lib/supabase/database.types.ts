@@ -21,6 +21,14 @@ export type MapsPref = "google" | "apple";
 
 export type TechRole = "owner" | "tech";
 
+export type ServiceCadence = "weekly" | "biweekly";
+
+export type GeocodeStatus = "pending" | "ok" | "failed" | "confirmed";
+
+export type RouteStatus = "planned" | "optimized" | "in_progress" | "done";
+
+export type RouteStopStatus = "pending" | "done" | "skipped" | "moved";
+
 export type Database = {
   public: {
     Tables: {
@@ -126,6 +134,14 @@ export type Database = {
           start_email_enabled: boolean;
           internal_notes: string | null;
           archived: boolean;
+          lat: number | null;
+          lng: number | null;
+          geocoded_address: string | null;
+          geocode_status: GeocodeStatus;
+          geocoded_at: string | null;
+          service_weekday: number | null;
+          service_cadence: ServiceCadence;
+          service_week_parity: number | null;
         };
         Insert: {
           id?: string;
@@ -140,6 +156,14 @@ export type Database = {
           start_email_enabled?: boolean;
           internal_notes?: string | null;
           archived?: boolean;
+          lat?: number | null;
+          lng?: number | null;
+          geocoded_address?: string | null;
+          geocode_status?: GeocodeStatus;
+          geocoded_at?: string | null;
+          service_weekday?: number | null;
+          service_cadence?: ServiceCadence;
+          service_week_parity?: number | null;
         };
         Update: {
           assigned_tech_id?: string | null;
@@ -151,6 +175,14 @@ export type Database = {
           start_email_enabled?: boolean;
           internal_notes?: string | null;
           archived?: boolean;
+          lat?: number | null;
+          lng?: number | null;
+          geocoded_address?: string | null;
+          geocode_status?: GeocodeStatus;
+          geocoded_at?: string | null;
+          service_weekday?: number | null;
+          service_cadence?: ServiceCadence;
+          service_week_parity?: number | null;
         };
         Relationships: [
         {
@@ -359,6 +391,152 @@ export type Database = {
         },
         ];
       };
+      routes: {
+        Row: {
+          id: string;
+          created_at: string;
+          company_id: string;
+          tech_id: string;
+          /** A calendar date in the company's timezone, as YYYY-MM-DD. */
+          service_date: string;
+          status: RouteStatus;
+          optimized_at: string | null;
+          total_drive_seconds: number | null;
+          total_meters: number | null;
+          baseline_drive_seconds: number | null;
+          matrix_elements: number;
+          provider: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          company_id: string;
+          tech_id: string;
+          service_date: string;
+          status?: RouteStatus;
+          optimized_at?: string | null;
+          total_drive_seconds?: number | null;
+          total_meters?: number | null;
+          baseline_drive_seconds?: number | null;
+          matrix_elements?: number;
+          provider?: string | null;
+        };
+        Update: {
+          status?: RouteStatus;
+          optimized_at?: string | null;
+          total_drive_seconds?: number | null;
+          total_meters?: number | null;
+          baseline_drive_seconds?: number | null;
+          matrix_elements?: number;
+          provider?: string | null;
+        };
+        Relationships: [
+        {
+          foreignKeyName: "routes_company_id_fkey";
+          columns: ["company_id"];
+          isOneToOne: false;
+          referencedRelation: "companies";
+          referencedColumns: ["id"];
+        },
+        {
+          foreignKeyName: "routes_tech_id_fkey";
+          columns: ["tech_id"];
+          isOneToOne: false;
+          referencedRelation: "techs";
+          referencedColumns: ["id"];
+        },
+        ];
+      };
+      route_stops: {
+        Row: {
+          id: string;
+          created_at: string;
+          route_id: string;
+          customer_id: string;
+          position: number;
+          locked: boolean;
+          status: RouteStopStatus;
+          eta: string | null;
+          visit_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          route_id: string;
+          customer_id: string;
+          position?: number;
+          locked?: boolean;
+          status?: RouteStopStatus;
+          eta?: string | null;
+          visit_id?: string | null;
+        };
+        Update: {
+          position?: number;
+          locked?: boolean;
+          status?: RouteStopStatus;
+          eta?: string | null;
+          visit_id?: string | null;
+        };
+        Relationships: [
+        {
+          foreignKeyName: "route_stops_route_id_fkey";
+          columns: ["route_id"];
+          isOneToOne: false;
+          referencedRelation: "routes";
+          referencedColumns: ["id"];
+        },
+        {
+          foreignKeyName: "route_stops_customer_id_fkey";
+          columns: ["customer_id"];
+          isOneToOne: false;
+          referencedRelation: "customers";
+          referencedColumns: ["id"];
+        },
+        {
+          foreignKeyName: "route_stops_visit_id_fkey";
+          columns: ["visit_id"];
+          isOneToOne: false;
+          referencedRelation: "visits";
+          referencedColumns: ["id"];
+        },
+        ];
+      };
+      travel_times: {
+        Row: {
+          id: string;
+          created_at: string;
+          company_id: string;
+          from_customer_id: string;
+          to_customer_id: string;
+          seconds: number;
+          meters: number;
+          fetched_at: string;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          company_id: string;
+          from_customer_id: string;
+          to_customer_id: string;
+          seconds: number;
+          meters: number;
+          fetched_at?: string;
+        };
+        Update: {
+          seconds?: number;
+          meters?: number;
+          fetched_at?: string;
+        };
+        Relationships: [
+        {
+          foreignKeyName: "travel_times_company_id_fkey";
+          columns: ["company_id"];
+          isOneToOne: false;
+          referencedRelation: "companies";
+          referencedColumns: ["id"];
+        },
+        ];
+      };
     };
     Views: Record<never, never>;
     Functions: {
@@ -396,3 +574,6 @@ export type Visit = PublicTables["visits"]["Row"];
 export type VisitItem = PublicTables["visit_items"]["Row"];
 export type VisitPhoto = PublicTables["visit_photos"]["Row"];
 export type Feedback = PublicTables["feedback"]["Row"];
+export type Route = PublicTables["routes"]["Row"];
+export type RouteStop = PublicTables["route_stops"]["Row"];
+export type TravelTime = PublicTables["travel_times"]["Row"];
