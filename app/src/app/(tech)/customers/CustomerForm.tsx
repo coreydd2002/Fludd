@@ -7,6 +7,7 @@ import { ChecklistEditor } from "@/components/ChecklistEditor";
 import { Button, Card, Field, FormError, Input, Textarea } from "@/components/ui";
 
 import type { CustomerState } from "./actions";
+import { ScheduleFields, type ScheduleValues, type TechOption } from "./ScheduleFields";
 
 type Values = {
   id?: string;
@@ -17,17 +18,19 @@ type Values = {
   est_duration_minutes?: number;
   start_email_enabled?: boolean;
   internal_notes?: string | null;
-};
+} & ScheduleValues;
 
 export function CustomerForm({
   action,
   values = {},
   checklist,
+  techs,
   submitLabel,
 }: {
   action: (prev: CustomerState, formData: FormData) => Promise<CustomerState>;
   values?: Values;
   checklist: string[];
+  techs: TechOption[];
   submitLabel: string;
 }) {
   const [state, formAction, pending] = useActionState<CustomerState, FormData>(action, {});
@@ -107,6 +110,14 @@ export function CustomerForm({
             />
           </Field>
         </div>
+      </Card>
+
+      <Card>
+        <h2 className="text-lg">Schedule</h2>
+        <p className="text-ink-soft mt-1 text-sm">
+          Decides whose route this pool appears on, and which days.
+        </p>
+        <ScheduleFields values={values} techs={techs} />
       </Card>
 
       <Card>

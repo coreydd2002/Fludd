@@ -29,6 +29,13 @@ export default async function EditCustomerPage({ params }: PageProps<"/customers
     .eq("customer_id", id)
     .order("position");
 
+  // The roster this pool can be assigned to. RLS scopes it to the company, so
+  // no company_id filter is needed.
+  const { data: techs } = await supabase
+    .from("techs")
+    .select("id, display_name")
+    .order("display_name");
+
   return (
     <>
       <div className="flex items-start justify-between gap-3">
@@ -50,6 +57,7 @@ export default async function EditCustomerPage({ params }: PageProps<"/customers
           action={updateCustomer}
           values={customer}
           checklist={(items ?? []).map((i) => i.label)}
+          techs={techs ?? []}
           submitLabel="Save changes"
         />
       </div>
