@@ -25,14 +25,14 @@
   },
   "dependencies": {
     "@react-email/components": "^1.0.12",
-    "@react-email/render": "^2.1.1",
+    "@react-email/render": "^2.2.0",
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "browser-image-compression": "^2.0.2",
-    "next": "16.4.2",
+    "next": "16.4.3",
     "react": "19.3.1",
     "react-dom": "19.3.1",
-    "resend": "^6.34.1",
+    "resend": "^6.36.0",
     "server-only": "^0.0.1"
   },
   "devDependencies": {
@@ -42,7 +42,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.4.2",
+    "eslint-config-next": "16.4.3",
     "eslint-config-prettier": "^10.1.8",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
