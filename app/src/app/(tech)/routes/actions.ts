@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { requireTech } from "@/lib/auth";
+import { logEvent } from "@/lib/events";
 import { dueOn, localDateISO } from "@/lib/routing/schedule";
 import { createClient } from "@/lib/supabase/server";
 
@@ -146,5 +147,31 @@ export async function moveStop(formData: FormData): Promise<void> {
     ),
   );
 
+  // The trust signal. A tech who reorders every morning is fighting the order
+  // we gave them; a count that falls as the week goes on means they have
+  // stopped having to. `stops` is the day's length, so the rate can be read per
+  // stop rather than per route.
+  await logEvent({
+    name: "route_reordered",
+    companyId: company.id,
+    techId: tech.id,
+    customerId,
+    props: { direction, stops: stops.length },
+  });
+
   revalidatePath("/");
+}
+
+/**
+ * Records that the route screen was opened — the closest signal we have to
+ * "used Fludd today", which was the headline metric cycle 2 could only measure
+ * by asking four people.
+ *
+ * Called from a client effect rather than during render, for the same reason
+ * `ensureRoute` is: a Server Component is a function React may re-run, and a
+ * view counted twice is a metric that lies.
+ */
+export async function recordTodayViewed(): Promise<void> {
+  const { tech, company } = await requireTech();
+  await logEvent({ name: "today_viewed", companyId: company.id, techId: tech.id });
 }

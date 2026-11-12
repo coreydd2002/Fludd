@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 import { requireTech } from "@/lib/auth";
 import { parseChecklist } from "@/lib/checklist";
+import { logEvent } from "@/lib/events";
 import type { ServiceCadence } from "@/lib/supabase/database.types";
 import { createClient } from "@/lib/supabase/server";
 
@@ -89,11 +90,34 @@ async function replaceChecklist(customerId: string, labels: string[]) {
   }
 }
 
+/**
+ * Records that a pool was given a service day.
+ *
+ * Only when one is actually set: the metric this feeds is adoption of
+ * scheduling, so a pool saved with no weekday is not a scheduling event and
+ * counting it would flatter the number.
+ */
+async function logScheduled(
+  values: { service_weekday: number | null; service_cadence: ServiceCadence },
+  companyId: string,
+  techId: string,
+  customerId: string,
+) {
+  if (values.service_weekday === null) return;
+  await logEvent({
+    name: "pool_scheduled",
+    companyId,
+    techId,
+    customerId,
+    props: { weekday: values.service_weekday, cadence: values.service_cadence },
+  });
+}
+
 export async function createCustomer(
   _prev: CustomerState,
   formData: FormData,
 ): Promise<CustomerState> {
-  const { company } = await requireTech();
+  const { tech, company } = await requireTech();
   const parsed = parse(formData);
   if ("error" in parsed) return parsed;
 
@@ -106,6 +130,7 @@ export async function createCustomer(
 
   if (error) return { error: error.message };
 
+  await logScheduled(parsed.values, company.id, tech.id, data.id);
   await replaceChecklist(data.id, parsed.checklist);
   revalidatePath("/");
   revalidatePath("/schedule");
@@ -116,7 +141,7 @@ export async function updateCustomer(
   _prev: CustomerState,
   formData: FormData,
 ): Promise<CustomerState> {
-  await requireTech();
+  const { tech, company } = await requireTech();
   const id = String(formData.get("id") ?? "");
   if (!id) return { error: "Missing customer." };
 
@@ -128,6 +153,7 @@ export async function updateCustomer(
   const { error } = await supabase.from("customers").update(parsed.values).eq("id", id);
   if (error) return { error: error.message };
 
+  await logScheduled(parsed.values, company.id, tech.id, id);
   await replaceChecklist(id, parsed.checklist);
   revalidatePath("/");
   revalidatePath("/schedule");

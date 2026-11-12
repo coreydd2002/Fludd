@@ -17,7 +17,30 @@ const supabaseOrigin = (() => {
   }
 })();
 
-const connectSrc = ["'self'", supabaseOrigin, supabaseOrigin?.replace(/^https/, "wss")]
+/**
+ * Sentry's ingest host, taken from the DSN rather than hard-coded: the host
+ * carries the org and region (`https://<key>@<org>.ingest.us.sentry.io/<id>`),
+ * so writing it out by hand would break on a different account or region.
+ *
+ * Without this entry the browser SDK fails silently — the CSP blocks the
+ * request and the errors you most wanted to see never arrive.
+ */
+const sentryOrigin = (() => {
+  const raw = process.env.NEXT_PUBLIC_SENTRY_DSN;
+  if (!raw) return null;
+  try {
+    return new URL(raw).origin;
+  } catch {
+    return null;
+  }
+})();
+
+const connectSrc = [
+  "'self'",
+  supabaseOrigin,
+  supabaseOrigin?.replace(/^https/, "wss"),
+  sentryOrigin,
+]
   .filter(Boolean)
   .join(" ");
 
