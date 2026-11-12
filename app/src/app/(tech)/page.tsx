@@ -7,6 +7,7 @@ import { localDateISO, weekdayName, weekdayOf } from "@/lib/routing/schedule";
 import { createClient } from "@/lib/supabase/server";
 
 import { duePoolsFor, moveStop } from "./routes/actions";
+import { TrackTodayView } from "./TrackTodayView";
 import { startVisit } from "./visits/actions";
 
 export const metadata = { title: "Today's route" };
@@ -87,6 +88,8 @@ export default async function RoutePage() {
 
   return (
     <>
+      <TrackTodayView />
+
       <div className="flex items-baseline justify-between gap-3">
         <div>
           <Eyebrow>{dayName}</Eyebrow>

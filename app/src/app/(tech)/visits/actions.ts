@@ -8,6 +8,7 @@ import { StartEmail, startEmailSubject } from "@/emails/StartEmail";
 import { requireTech } from "@/lib/auth";
 import { sendOwnerEmail, type SendOutcome } from "@/lib/email/send";
 import { appUrl } from "@/lib/env";
+import { logEvent } from "@/lib/events";
 import { allReadingsHealthy, readingsSummary } from "@/lib/readings";
 import { createClient } from "@/lib/supabase/server";
 
@@ -90,6 +91,13 @@ export async function startVisit(formData: FormData) {
     if (existing) redirect(`/visits/${existing.id}`);
     throw new Error(error.message);
   }
+
+  await logEvent({
+    name: "visit_started",
+    companyId: company.id,
+    techId: tech.id,
+    customerId,
+  });
 
   const { data: items } = await supabase
     .from("customer_checklist_items")
@@ -182,6 +190,12 @@ export async function finishVisit(formData: FormData) {
 
   // Already finished, or someone else's visit. Either way, nothing to send.
   if (!visit) redirect(`/visits/${visitId}/done`);
+
+  await logEvent({
+    name: "visit_completed",
+    companyId: company.id,
+    techId: tech.id,
+  });
 
   const [{ data: items }, { count: photoCount }] = await Promise.all([
     supabase
