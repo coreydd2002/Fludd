@@ -233,6 +233,80 @@ $$;
 reset role;
 
 \echo ''
+\echo '--- app_events: company-scoped, and append-only ---'
+
+set role authenticated;
+set test.user_id = '22222222-2222-2222-2222-222222222222';
+
+-- Bob's own id spelled out: `authenticated` has no USAGE on schema auth, so
+-- auth.uid() is not callable from here. current_company_id() works because it
+-- is SECURITY DEFINER.
+insert into public.app_events (company_id, tech_id, name, props)
+values (
+  public.current_company_id(),
+  '22222222-2222-2222-2222-222222222222',
+  'today_viewed',
+  '{"src":"test"}'::jsonb
+);
+
+do $$
+begin
+  if (select count(*) from public.app_events) <> 1 then
+    raise exception 'FAIL: Bob should see exactly his own 1 event';
+  end if;
+  raise notice 'PASS: Bob sees his own event';
+end
+$$;
+
+do $$
+begin
+  -- Logging as somebody else must fail the WITH CHECK, or one tech could
+  -- manufacture another's activity and the metrics stop meaning anything.
+  insert into public.app_events (company_id, tech_id, name)
+  values (public.current_company_id(), '11111111-1111-1111-1111-111111111111', 'visit_started');
+  raise exception 'FAIL: Bob logged an event as Alice';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: cannot log an event as another tech';
+end
+$$;
+
+do $$
+begin
+  -- Append-only is enforced by the absent grant, not just by policy.
+  update public.app_events set name = 'tampered';
+  raise exception 'FAIL: an event was rewritten after the fact';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: events cannot be updated';
+end
+$$;
+
+do $$
+begin
+  delete from public.app_events;
+  raise exception 'FAIL: an event was deleted';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: events cannot be deleted';
+end
+$$;
+
+reset role;
+
+set role authenticated;
+set test.user_id = '11111111-1111-1111-1111-111111111111';
+do $$
+begin
+  if (select count(*) from public.app_events) <> 0 then
+    raise exception 'FAIL: Alice can see company B activity';
+  end if;
+  raise notice 'PASS: Bob''s events are invisible to Alice';
+end
+$$;
+reset role;
+
+\echo ''
 \echo '--- As anon: routing tables must be unreadable ---'
 set role anon;
 do $$
@@ -251,6 +325,15 @@ begin
 exception
   when insufficient_privilege then
     raise notice 'PASS: anon has no privilege on travel_times';
+end
+$$;
+do $$
+begin
+  perform 1 from public.app_events;
+  raise exception 'FAIL: anon could read app_events';
+exception
+  when insufficient_privilege then
+    raise notice 'PASS: anon has no privilege on app_events';
 end
 $$;
 reset role;

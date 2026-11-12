@@ -537,6 +537,52 @@ export type Database = {
         },
         ];
       };
+      app_events: {
+        Row: {
+          /** bigint identity, not a uuid — this table is an append-only log. */
+          id: number;
+          created_at: string;
+          company_id: string;
+          tech_id: string | null;
+          customer_id: string | null;
+          name: string;
+          props: Record<string, unknown>;
+        };
+        Insert: {
+          id?: never;
+          created_at?: string;
+          company_id: string;
+          tech_id?: string | null;
+          customer_id?: string | null;
+          name: string;
+          props?: Record<string, unknown>;
+        };
+        /** Append-only: no update policy and no update grant exist. */
+        Update: never;
+        Relationships: [
+        {
+          foreignKeyName: "app_events_company_id_fkey";
+          columns: ["company_id"];
+          isOneToOne: false;
+          referencedRelation: "companies";
+          referencedColumns: ["id"];
+        },
+        {
+          foreignKeyName: "app_events_tech_id_fkey";
+          columns: ["tech_id"];
+          isOneToOne: false;
+          referencedRelation: "techs";
+          referencedColumns: ["id"];
+        },
+        {
+          foreignKeyName: "app_events_customer_id_fkey";
+          columns: ["customer_id"];
+          isOneToOne: false;
+          referencedRelation: "customers";
+          referencedColumns: ["id"];
+        },
+        ];
+      };
     };
     Views: Record<never, never>;
     Functions: {
@@ -577,3 +623,4 @@ export type Feedback = PublicTables["feedback"]["Row"];
 export type Route = PublicTables["routes"]["Row"];
 export type RouteStop = PublicTables["route_stops"]["Row"];
 export type TravelTime = PublicTables["travel_times"]["Row"];
+export type AppEvent = PublicTables["app_events"]["Row"];
