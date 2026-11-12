@@ -482,7 +482,8 @@ psql -d fludd_test -v ON_ERROR_STOP=1 -f app/supabase/tests/01_rls_test.sql</cod
             <li>Real values live <strong>only</strong> in Vercel (Project → Settings → Environment Variables) and in your local, git-ignored <code>.env.local</code>.</li>
             <li><code>.env.example</code> files are committed with <strong>names and comments only</strong>. Check them before every commit that touches them.</li>
             <li><strong>Variables don't cross projects.</strong> A key set on <code>fludd-landing</code> isn't visible to <code>fludd-app</code>. When something env-related fails, check which project holds it first.</li>
-            <li><code>NEXT_PUBLIC_*</code> values are compiled into the browser bundle at build time. Changing one requires a <strong>redeploy</strong>, and they must never hold anything secret.</li>
+            <li><code>NEXT_PUBLIC_*</code> values are compiled into the browser bundle at build time. Changing one requires a <strong>redeploy</strong>, and they must never hold anything secret. To confirm a change actually took, read the <code>Content-Security-Policy</code> header on a response: <code>next.config.ts</code> builds <code>connect-src</code> from the values present at build time, so the header names whichever Supabase and Sentry projects the deployment was built against.</li>
+            <li>Each variable is scoped to Production, Preview and Development <em>separately</em>. Preview must point at the <strong>staging</strong> Supabase project: on one shared value, every pull request's deployment reads and writes live customer data. Previews are behind Vercel SSO, so the risk is a branch we open ourselves rather than the public, but a half-finished branch can still corrupt real records.</li>
             <li><code>SUPABASE_SERVICE_ROLE_KEY</code> bypasses all row-level security. It is imported only through <code>src/lib/env.server.ts</code>, which is guarded by <code>server-only</code>.</li>
             <li>Never send a secret over email, text or chat.</li>
           </ul>
@@ -495,7 +496,8 @@ psql -d fludd_test -v ON_ERROR_STOP=1 -f app/supabase/tests/01_rls_test.sql</cod
             <li>Add a <strong>new</strong> numbered file, e.g. <code>app/supabase/migrations/0002_add_photo_captions.sql</code>. Never edit a migration that has already shipped.</li>
             <li>Every new table enables RLS and gets policies scoped by <code>current_company_id()</code>. <code>anon</code> is granted nothing.</li>
             <li>Add RLS assertions; regenerate <code>database.types.ts</code>; apply to your dev project.</li>
-            <li>After merge, the founder applies the migration to production <em>before</em> the code that depends on it is promoted.</li>
+            <li>The founder applies the migration to production <strong>before the PR is merged</strong>, not after. Merging deploys within about a minute, so there is no window between the two — code that queries a column the database does not have yet will error in production. Every migration is additive and the deployed code ignores columns it does not know about, so applying early is always safe; merging early is not.</li>
+            <li>Check the count the migration prints at the end against the expectation in its header, then run <code>npm run check:db</code>, which names the project host it checked.</li>
           </ol>
 
           <h3>Incidents and on-call</h3>
