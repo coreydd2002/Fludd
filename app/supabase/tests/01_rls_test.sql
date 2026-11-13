@@ -11,11 +11,17 @@ $$;
 -- Re-runnable: clear anything a previous run left behind. Deleting the
 -- companies cascades to techs, customers and visits.
 delete from public.companies;
-delete from auth.users where email in ('alice@example.com', 'bob@example.com');
+delete from auth.users
+  where email in ('alice@example.com', 'bob@example.com',
+                  'carol@example.com', 'dave@example.com');
 
 insert into auth.users (id, email) values
   ('11111111-1111-1111-1111-111111111111', 'alice@example.com'),
-  ('22222222-2222-2222-2222-222222222222', 'bob@example.com');
+  ('22222222-2222-2222-2222-222222222222', 'bob@example.com'),
+  -- Carol is invited into Bob's company; Dave never is, and is used to prove
+  -- a token alone is not enough.
+  ('33333333-3333-3333-3333-333333333333', 'carol@example.com'),
+  ('44444444-4444-4444-4444-444444444444', 'dave@example.com');
 
 -- --- Company A bootstraps -----------------------------------------------
 set role authenticated;
@@ -302,6 +308,134 @@ begin
     raise exception 'FAIL: Alice can see company B activity';
   end if;
   raise notice 'PASS: Bob''s events are invisible to Alice';
+end
+$$;
+reset role;
+
+\echo ''
+\echo '--- Teams: invites, roles, deactivation ---'
+
+-- Bob (owner of company B) invites Carol.
+set role authenticated;
+set test.user_id = '22222222-2222-2222-2222-222222222222';
+insert into public.invites (company_id, email, role, invited_by)
+values (public.current_company_id(), 'carol@example.com', 'tech',
+        '22222222-2222-2222-2222-222222222222');
+select token as carol_token from public.invites limit 1 \gset
+-- Through a GUC, not a psql variable: psql does not substitute :'name' inside
+-- a dollar-quoted block, so the do $$ ... $$ tests below cannot see it.
+set test.invite_token = :'carol_token';
+reset role;
+
+-- Dave holds the token but it was not sent to him.
+set role authenticated;
+set test.user_id = '44444444-4444-4444-4444-444444444444';
+do $$
+begin
+  perform public.accept_invite(current_setting('test.invite_token'));
+  raise exception 'FAIL: a forwarded invite let the wrong account in';
+exception
+  when sqlstate 'P0001' then
+    if sqlerrm not like '%different email%' then raise; end if;
+    raise notice 'PASS: an invite is refused when the email does not match';
+end
+$$;
+reset role;
+
+-- Carol, the actual recipient, joins.
+set role authenticated;
+set test.user_id = '33333333-3333-3333-3333-333333333333';
+select public.accept_invite(:'carol_token') as joined_company \gset
+do $$
+begin
+  if (select company_id from public.techs where id = '33333333-3333-3333-3333-333333333333')
+     is distinct from (select company_id from public.techs where id = '22222222-2222-2222-2222-222222222222')
+  then
+    raise exception 'FAIL: Carol did not land in Bob''s company';
+  end if;
+  raise notice 'PASS: a valid invite joins the inviter''s company';
+end
+$$;
+
+do $$
+begin
+  -- A token is single use; accepting twice would also mean one person could
+  -- hold rows in two companies.
+  perform public.accept_invite(current_setting('test.invite_token'));
+  raise exception 'FAIL: an invite was accepted twice';
+exception
+  when sqlstate 'P0001' then
+    raise notice 'PASS: an invite cannot be reused';
+end
+$$;
+
+-- Carol is a 'tech', so invites must be invisible to her: the rows carry
+-- tokens that grant entry to the company.
+do $$
+begin
+  if (select count(*) from public.invites) <> 0 then
+    raise exception 'FAIL: a non-owner can read invites';
+  end if;
+  raise notice 'PASS: invites are invisible to a non-owner';
+end
+$$;
+
+do $$
+begin
+  perform public.set_tech_active('22222222-2222-2222-2222-222222222222', false);
+  raise exception 'FAIL: a tech deactivated an owner';
+exception
+  when sqlstate 'P0001' then
+    raise notice 'PASS: only an owner can deactivate';
+end
+$$;
+reset role;
+
+-- Alice owns a different company and must not reach into Bob's.
+set role authenticated;
+set test.user_id = '11111111-1111-1111-1111-111111111111';
+do $$
+begin
+  perform public.set_tech_role('33333333-3333-3333-3333-333333333333', 'owner');
+  raise exception 'FAIL: Alice promoted someone in another company';
+exception
+  when sqlstate 'P0001' then
+    if sqlerrm not like '%not in your company%' then raise; end if;
+    raise notice 'PASS: an owner cannot touch another company''s people';
+end
+$$;
+reset role;
+
+-- Bob is the only owner of his company.
+set role authenticated;
+set test.user_id = '22222222-2222-2222-2222-222222222222';
+do $$
+begin
+  perform public.set_tech_role('22222222-2222-2222-2222-222222222222', 'tech');
+  raise exception 'FAIL: the last owner demoted themselves';
+exception
+  when sqlstate 'P0001' then
+    raise notice 'PASS: a company must keep an owner';
+end
+$$;
+
+do $$
+begin
+  perform public.set_tech_active('22222222-2222-2222-2222-222222222222', false);
+  raise exception 'FAIL: an owner deactivated themselves';
+exception
+  when sqlstate 'P0001' then
+    raise notice 'PASS: nobody can deactivate themselves';
+end
+$$;
+
+do $$
+begin
+  perform public.set_tech_active('33333333-3333-3333-3333-333333333333', false);
+  if (select active from public.techs where id = '33333333-3333-3333-3333-333333333333') then
+    raise exception 'FAIL: deactivation did not take';
+  end if;
+  raise notice 'PASS: an owner can deactivate a tech';
 end
 $$;
 reset role;

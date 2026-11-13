@@ -66,6 +66,8 @@ export type Database = {
           email: string;
           phone: string | null;
           role: TechRole;
+          /** Deactivated people keep their row: visits.tech_id is `on delete restrict`. */
+          active: boolean;
         };
         Insert: {
           id: string;
@@ -75,11 +77,13 @@ export type Database = {
           email: string;
           phone?: string | null;
           role?: TechRole;
+          active?: boolean;
         };
         Update: {
           display_name?: string;
           email?: string;
           phone?: string | null;
+          /** `role` and `active` are set through the guarded functions, never directly. */
         };
         Relationships: [
         {
@@ -583,6 +587,49 @@ export type Database = {
         },
         ];
       };
+      invites: {
+        Row: {
+          id: string;
+          created_at: string;
+          company_id: string;
+          email: string;
+          role: TechRole;
+          /** The mailed half of the credential; the other half is a matching email. */
+          token: string;
+          invited_by: string | null;
+          expires_at: string;
+          accepted_at: string | null;
+          accepted_by: string | null;
+        };
+        Insert: {
+          id?: string;
+          created_at?: string;
+          company_id: string;
+          email: string;
+          role?: TechRole;
+          token?: string;
+          invited_by?: string | null;
+          expires_at?: string;
+        };
+        /** Acceptance is stamped by accept_invite(); nothing else updates a row. */
+        Update: never;
+        Relationships: [
+        {
+          foreignKeyName: "invites_company_id_fkey";
+          columns: ["company_id"];
+          isOneToOne: false;
+          referencedRelation: "companies";
+          referencedColumns: ["id"];
+        },
+        {
+          foreignKeyName: "invites_invited_by_fkey";
+          columns: ["invited_by"];
+          isOneToOne: false;
+          referencedRelation: "techs";
+          referencedColumns: ["id"];
+        },
+        ];
+      };
     };
     Views: Record<never, never>;
     Functions: {
@@ -601,6 +648,31 @@ export type Database = {
       generate_public_token: {
         Args: Record<string, never>;
         Returns: string;
+      };
+      current_is_owner: {
+        Args: Record<string, never>;
+        Returns: boolean;
+      };
+      accept_invite: {
+        Args: { p_token: string };
+        /** The company joined. */
+        Returns: string;
+      };
+      invite_preview: {
+        Args: { p_token: string };
+        Returns: { email: string; business_name: string }[];
+      };
+      my_pending_invite: {
+        Args: Record<string, never>;
+        Returns: { token: string; business_name: string; role: TechRole }[];
+      };
+      set_tech_role: {
+        Args: { p_tech: string; p_role: TechRole };
+        Returns: undefined;
+      };
+      set_tech_active: {
+        Args: { p_tech: string; p_active: boolean };
+        Returns: undefined;
       };
     };
     Enums: Record<never, never>;
@@ -624,3 +696,4 @@ export type Route = PublicTables["routes"]["Row"];
 export type RouteStop = PublicTables["route_stops"]["Row"];
 export type TravelTime = PublicTables["travel_times"]["Row"];
 export type AppEvent = PublicTables["app_events"]["Row"];
+export type Invite = PublicTables["invites"]["Row"];
