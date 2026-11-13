@@ -27,6 +27,12 @@ export async function requireTech(): Promise<{ tech: Tech; company: Company }> {
   const { data: tech } = await supabase.from("techs").select("*").eq("id", user.id).maybeSingle();
   if (!tech) redirect("/onboarding");
 
+  // A deactivated person keeps their row — visits.tech_id is `on delete
+  // restrict`, so a finished report must go on saying who serviced the pool —
+  // but they must not get in. Not /onboarding: that would invite them to
+  // create a company of their own, which is not what being removed means.
+  if (!tech.active) redirect("/login?status=deactivated");
+
   const { data: company } = await supabase
     .from("companies")
     .select("*")
@@ -35,6 +41,21 @@ export async function requireTech(): Promise<{ tech: Tech; company: Company }> {
   if (!company) redirect("/onboarding");
 
   return { tech, company };
+}
+
+/**
+ * The signed-in tech, who must be an owner.
+ *
+ * For the screens and actions that manage people and company settings. The
+ * database enforces this too — `set_tech_role` and `set_tech_active` re-check
+ * it, and the `invites` policy requires it — because a Server Action is
+ * reachable by direct POST, not only through a page that hid the button.
+ * This check is what makes the UI agree with the database, not what secures it.
+ */
+export async function requireOwner(): Promise<{ tech: Tech; company: Company }> {
+  const context = await requireTech();
+  if (context.tech.role !== "owner") redirect("/");
+  return context;
 }
 
 /** The auth user, or null. For pages that must render either way. */

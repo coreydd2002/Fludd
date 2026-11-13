@@ -40,6 +40,8 @@ const TABLES = [
   "travel_times",
   // 0003_events.sql
   "app_events",
+  // 0004_team.sql
+  "invites",
 ];
 
 const supabase = createClient(url, key, {

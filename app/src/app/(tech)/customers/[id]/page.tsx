@@ -31,9 +31,13 @@ export default async function EditCustomerPage({ params }: PageProps<"/customers
 
   // The roster this pool can be assigned to. RLS scopes it to the company, so
   // no company_id filter is needed.
+  // Active only: a deactivated person must not be offered as somebody to
+  // assign work to. The all-pools list still resolves their name, so a pool
+  // assigned before they left keeps showing who had it.
   const { data: techs } = await supabase
     .from("techs")
     .select("id, display_name")
+    .eq("active", true)
     .order("display_name");
 
   return (

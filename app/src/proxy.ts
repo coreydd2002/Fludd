@@ -10,7 +10,10 @@ import { supabaseAnonKey, supabaseUrl } from "@/lib/env";
  * route itself calls notFound() when NODE_ENV is production, so it cannot be
  * reached on a deployed app regardless of this list.
  */
-const PUBLIC_PREFIXES = ["/login", "/signup", "/r/", "/auth/", "/dev/"];
+// "/invite/" is public because the recipient usually has no account yet;
+// the page reads the invitation through a SECURITY DEFINER function that
+// returns only the company name and the address it was sent to.
+const PUBLIC_PREFIXES = ["/login", "/signup", "/r/", "/auth/", "/dev/", "/invite/"];
 
 function isPublic(pathname: string) {
   return PUBLIC_PREFIXES.some((p) => pathname === p.replace(/\/$/, "") || pathname.startsWith(p));

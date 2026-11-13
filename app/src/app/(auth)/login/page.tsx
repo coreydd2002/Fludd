@@ -12,11 +12,21 @@ function LoginForm() {
   const params = useSearchParams();
   const next = params.get("next") ?? "";
   const confirmFailed = params.get("confirm") === "failed";
+  const deactivated = params.get("status") === "deactivated";
   const [state, formAction, pending] = useActionState<AuthState, FormData>(login, {});
 
   return (
     <Card>
       <h1 className="text-xl">Sign in</h1>
+
+      {deactivated ? (
+        <p
+          role="alert"
+          className="bg-warn-tint text-warn mt-4 rounded-sm px-3 py-2 text-sm font-medium"
+        >
+          Your access to this company has been turned off. Ask an owner to restore it.
+        </p>
+      ) : null}
 
       {confirmFailed ? (
         <p

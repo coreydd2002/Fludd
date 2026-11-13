@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { requireTech } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 
@@ -28,6 +30,23 @@ export default async function SettingsPage() {
           checklist={(defaults ?? []).map((d) => d.label)}
         />
       </div>
+
+      {tech.role === "owner" ? (
+        <Link
+          href="/settings/team"
+          className="rounded-card bg-card ring-line hover:ring-brand/30 mt-5 flex items-center justify-between gap-3 p-4 shadow-sm ring-1"
+        >
+          <span>
+            <span className="text-ink block font-bold">Team</span>
+            <span className="text-ink-soft mt-0.5 block text-sm">
+              Invite cleaners, set who owns the account
+            </span>
+          </span>
+          <span aria-hidden className="text-ink-faint">
+            →
+          </span>
+        </Link>
+      ) : null}
 
       <div className="mt-8">
         <ConfigHealth />
