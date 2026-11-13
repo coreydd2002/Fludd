@@ -17,10 +17,22 @@ Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind v4 · Supabase
 
 1. **Create a Supabase project** at <https://supabase.com/dashboard>.
 
-2. **Run the migration.** Open the project's SQL Editor and paste the contents
-   of [`supabase/migrations/0001_init.sql`](supabase/migrations/0001_init.sql),
-   then run it. It creates every table, all row-level security policies, the
-   `bootstrap_company()` signup function and the private `visit-photos` bucket.
+2. **Run the migrations.** There is more than one now, and they must be applied
+   in order. Bundle them into a single paste:
+
+   ```bash
+   npm run migrations:bundle
+   ```
+
+   Open the project's SQL Editor, paste the contents of the generated
+   `supabase/bundle.generated.sql`, and run it. Between them the migrations
+   create every table, all row-level security policies, the
+   `bootstrap_company()` signup function, the private `visit-photos` bucket,
+   the routing tables and the `app_events` log.
+
+   The last statement prints a count to check against — currently
+   **13 tables, 17 policies**. If those numbers do not match, something did not
+   apply; read up for the first error rather than re-running.
 
    With the Supabase CLI linked, `npx supabase db push` does the same thing.
 
@@ -67,6 +79,7 @@ Next.js 16 (App Router, Turbopack) · TypeScript · Tailwind v4 · Supabase
 | `npm run lint`                | ESLint (`next lint` was removed in Next 16)                                                                                            |
 | `npx tsc --noEmit`            | Type-check without emitting                                                                                                            |
 | `npm run check:db`            | Confirms the migration is applied to the live project                                                                                  |
+| `npm run migrations:bundle`   | Writes every migration, in order, to one file to paste into a fresh project                                                            |
 | `npm run check:anon`          | Confirms logged-out requests cannot read customer data                                                                                 |
 | `npm run check:phase1`        | End-to-end: signup, onboarding, customers, and two-account isolation. Creates two throwaway users and deletes them afterwards.         |
 | `npm run check:phase2`        | End-to-end: a whole visit — one-open-visit-per-pool, the checklist snapshot, readings, private photos, and the feedback window.        |
@@ -129,6 +142,37 @@ a pool owner's feedback cannot be inserted by a signed-in tech; that a customer
 can only have one open visit at a time; and that `anon` is refused outright.
 Every check prints `PASS`, and the script exits non-zero on failure.
 
+## Applying a migration
+
+Schema changes are not deployed by CI. The code path is automated — merge to
+`main` and Vercel ships it — but the database is applied by hand, so the two
+can get out of step. The order below is what keeps them together.
+
+1. **Write it as a new file.** `supabase/migrations/NNNN_name.sql`, never an
+   edit to one that has shipped. Add RLS assertions to
+   `supabase/tests/01_rls_test.sql` in the same change.
+
+2. **Let CI prove it.** The `db-rls` job applies every migration to a real
+   Postgres and runs the assertions. A green check means the SQL is valid and
+   the policies hold; it does **not** mean anything was applied anywhere real.
+
+3. **Apply to staging first**, through the SQL Editor. Open the migration file
+   in your editor and copy its **contents** — pasting the file _path_ produces
+   `syntax error at or near "app"`, which has happened.
+
+4. **Apply to production, then merge.** In that order. Every migration here is
+   additive, and the currently deployed code ignores columns it does not know
+   about, so applying early is safe. Merging first is not: Vercel ships the new
+   code within a minute, and it will query columns that do not exist yet.
+
+5. **Check the report row.** Each migration ends with a count of tables and
+   policies, and its header says what to expect. Mismatch means something did
+   not apply.
+
+6. **Confirm from outside.** `npm run check:db` reads every table through
+   PostgREST and prints which project host it checked, so there is no doubt
+   about which database you just looked at.
+
 ## Installing on a phone
 
 The app is a PWA: `src/app/manifest.ts` is served at `/manifest.webmanifest`,
@@ -153,11 +197,44 @@ repository as the landing page (`fludd-landing`) with **Root Directory** set to
 `app`. It serves `app.fludd.work`; the landing page serves `fludd.work`.
 
 Environment variables are scoped per project and do **not** cross between the
-two — a key set on `fludd-landing` is invisible to `fludd-app`. The repo root has a `.vercelignore` containing
-`/app` so the landing page's deployment does not publish this source tree.
+two — a key set on `fludd-landing` is invisible to `fludd-app`. The landing
+page's [`vercel.json`](../vercel.json) redirects `/app/*` to `/` so its own
+deployment does not try to serve this source tree.
+
+> A repo-root `.vercelignore` listing `/app` was tried first and removed: Vercel
+> applies that file to **every** project built from the repo, before descending
+> into each one's Root Directory, so it deleted the app from its own build.
 
 Production needs the same variables as `.env.local`, plus
 `NEXT_PUBLIC_APP_URL` once a domain exists.
+
+### Environments
+
+Vercel scopes each variable to Production, Preview and Development separately.
+That matters most for `NEXT_PUBLIC_SUPABASE_URL` and its keys: set to a single
+shared value, **every preview deployment reads and writes the live database**,
+so an unfinished branch can corrupt real customer records.
+
+| Environment | Supabase project            | Used by                       |
+| ----------- | --------------------------- | ----------------------------- |
+| Production  | the live project            | `app.fludd.work`, from `main` |
+| Preview     | a separate staging project  | every pull request            |
+| Development | whatever is in `.env.local` | local `npm run dev`           |
+
+Previews sit behind Vercel SSO, so they are not reachable by the public — the
+risk is a branch the team opens itself, not the open internet. That lowers the
+severity; it does not remove it.
+
+When creating the staging project, apply the schema with
+`npm run migrations:bundle` exactly as in Setup above, and give it its own
+`SUPABASE_SERVICE_ROLE_KEY` in Vercel's Preview scope.
+
+⚠️ `NEXT_PUBLIC_` variables are inlined into the browser bundle at **build**
+time, so changing one has no effect until the project is redeployed. The
+quickest way to confirm a change took is the Content-Security-Policy header on
+a response: [`next.config.ts`](next.config.ts) builds `connect-src` from the
+Supabase and Sentry values present at build time, so the header names whichever
+project the deployment was actually built against.
 
 ## Email
 
