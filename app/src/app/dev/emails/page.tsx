@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { FinishEmail, finishEmailSample } from "@/emails/FinishEmail";
+import { InviteEmail, inviteEmailSample, inviteEmailSubject } from "@/emails/InviteEmail";
 import { StartEmail, startEmailSample } from "@/emails/StartEmail";
 import { UrgentAlertEmail, urgentAlertSample, urgentAlertSubject } from "@/emails/UrgentAlertEmail";
 
@@ -31,6 +32,11 @@ const TEMPLATES = {
     name: "Urgent alert",
     subject: urgentAlertSubject(urgentAlertSample.customerName),
     element: UrgentAlertEmail(urgentAlertSample),
+  },
+  invite: {
+    name: "Team invitation",
+    subject: inviteEmailSubject(inviteEmailSample.businessName),
+    element: InviteEmail(inviteEmailSample),
   },
 } as const;
 
